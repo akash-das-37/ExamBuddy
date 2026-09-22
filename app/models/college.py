@@ -1,7 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import DateTime, String, func
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy import DateTime, JSON, String, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base, UUIDMixin
@@ -10,7 +9,7 @@ from app.models.base import Base, UUIDMixin
 class College(Base, UUIDMixin):
     __tablename__ = "colleges"
 
-    name: Mapped[str] = mapped_column(String(500), nullable=True)
+    name: Mapped[str | None] = mapped_column(String(500), nullable=True)
     base_url: Mapped[str] = mapped_column(String(2048), unique=True, nullable=False)
     last_scraped_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True
@@ -18,7 +17,7 @@ class College(Base, UUIDMixin):
     scrape_status: Mapped[str] = mapped_column(
         String(50), default="idle", server_default="idle", nullable=False
     )
-    scrape_config: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
+    scrape_config: Mapped[dict | None] = mapped_column(JSON, nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )

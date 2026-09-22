@@ -4,9 +4,12 @@ uvicorn[standard]==0.34.0
 
 # Database
 sqlalchemy[asyncio]==2.0.36
-asyncpg==0.30.0
+aiosqlite==0.20.0
 alembic==1.14.1
 greenlet==3.1.1
+
+# Optional Postgres driver (used in deployment)
+# asyncpg==0.30.0
 
 # Settings
 pydantic==2.10.4
@@ -17,14 +20,22 @@ python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
 bcrypt==4.2.1
 
-# Redis (needed for Celery broker in later phases)
-redis==5.2.1
-
-# Celery (stub for now, full use in Phase 2)
-celery==5.4.0
-
 # Email validation
 email-validator==2.2.0
 
-# HTTP client (used by services in later phases)
+# HTTP client
 httpx==0.28.1
+
+# Phase 2: Scraping & HTML Parsing
+beautifulsoup4==4.12.3
+playwright==1.49.1
+
+# Phase 2: PDF & OCR extraction
+pymupdf==1.25.1
+pdfplumber==0.11.5
+pytesseract==0.3.13
+pillow==11.0.0
+
+# Testing
+pytest==8.3.4
+pytest-asyncio==0.25.0

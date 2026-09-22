@@ -1,8 +1,7 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import DateTime, Float, ForeignKey, String, Text, func
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import DateTime, Float, ForeignKey, String, Text, Uuid, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base, UUIDMixin
@@ -12,7 +11,7 @@ class SyllabusEntry(Base, UUIDMixin):
     __tablename__ = "syllabus_entries"
 
     college_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        Uuid(as_uuid=True),
         ForeignKey("colleges.id", ondelete="CASCADE"),
         nullable=False,
     )
@@ -22,7 +21,7 @@ class SyllabusEntry(Base, UUIDMixin):
     topic_title: Mapped[str] = mapped_column(String(500), nullable=False)
     topic_description: Mapped[str | None] = mapped_column(Text, nullable=True)
     source_document_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        Uuid(as_uuid=True),
         ForeignKey("documents.id", ondelete="CASCADE"),
         nullable=False,
     )
@@ -41,7 +40,7 @@ class TopicImportanceScore(Base, UUIDMixin):
     __tablename__ = "topic_importance_scores"
 
     syllabus_entry_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        Uuid(as_uuid=True),
         ForeignKey("syllabus_entries.id", ondelete="CASCADE"),
         nullable=False,
     )

@@ -1,15 +1,12 @@
-from pydantic_settings import BaseSettings
 from functools import lru_cache
+from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
     """Application settings loaded from environment variables / .env file."""
 
-    # Database
-    DATABASE_URL: str = "postgresql+asyncpg://exambuddy:exambuddy_pass@db:5432/exambuddy"
-
-    # Redis
-    REDIS_URL: str = "redis://redis:6379/0"
+    # Database: SQLite async by default for low-RAM local dev; swap to PostgreSQL via env var
+    DATABASE_URL: str = "sqlite+aiosqlite:///./exambuddy.db"
 
     # JWT
     JWT_SECRET_KEY: str = "change-me-to-a-long-random-secret-in-production"
@@ -19,6 +16,15 @@ class Settings(BaseSettings):
     # App
     APP_NAME: str = "ExamBuddy"
     DEBUG: bool = True
+
+    # Storage
+    STORAGE_DIR: str = "./storage"
+
+    # Crawler settings
+    CRAWLER_MAX_DEPTH: int = 3
+    CRAWLER_REQUEST_DELAY: float = 1.0
+    CRAWLER_RECENCY_SKIP_HOURS: int = 24
+    CRAWLER_USER_AGENT: str = "ExamBuddyBot/1.0 (+http://localhost:8000/bot-info)"
 
     model_config = {
         "env_file": ".env",

@@ -1,8 +1,7 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import DateTime, Index, String, Text, ForeignKey, func
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import DateTime, Index, String, Text, ForeignKey, Uuid, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base, UUIDMixin
@@ -12,12 +11,12 @@ class ScrapedPage(Base, UUIDMixin):
     __tablename__ = "scraped_pages"
 
     college_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        Uuid(as_uuid=True),
         ForeignKey("colleges.id", ondelete="CASCADE"),
         nullable=False,
     )
     url: Mapped[str] = mapped_column(String(2048), nullable=False)
-    content_hash: Mapped[str] = mapped_column(String(64), nullable=True)
+    content_hash: Mapped[str | None] = mapped_column(String(64), nullable=True)
     raw_html: Mapped[str | None] = mapped_column(Text, nullable=True)
     extracted_text: Mapped[str | None] = mapped_column(Text, nullable=True)
     page_type: Mapped[str] = mapped_column(

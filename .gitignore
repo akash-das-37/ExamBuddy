@@ -18,6 +18,11 @@ env/
 # Alembic
 alembic/versions/__pycache__/
 
+# SQLite databases
+*.db
+*.sqlite
+*.sqlite3
+
 # IDE
 .vscode/
 .idea/

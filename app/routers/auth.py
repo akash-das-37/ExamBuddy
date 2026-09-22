@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, BackgroundTasks, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.security import get_current_student
@@ -11,19 +11,27 @@ from app.schemas.auth import (
     TokenResponse,
 )
 from app.services import auth_service
+from app.services.crawler import crawl_college
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 
 @router.post("/signup", response_model=TokenResponse, status_code=201)
-async def signup(data: SignupRequest, db: AsyncSession = Depends(get_db)):
+async def signup(
+    data: SignupRequest,
+    background_tasks: BackgroundTasks,
+    db: AsyncSession = Depends(get_db),
+):
     """
     Create a new student account.
 
     Looks up or creates the college by base_url, hashes the password,
     creates the student, and returns a JWT access token.
+    If a new college was created, initiates an asynchronous crawl task.
     """
-    _student, token = await auth_service.signup(data, db)
+    _student, token, is_new_college = await auth_service.signup(data, db)
+    if is_new_college:
+        background_tasks.add_task(crawl_college, _student.college_id)
     return TokenResponse(access_token=token)
 
 

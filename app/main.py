@@ -1,18 +1,28 @@
 import logging
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.core.config import get_settings
-from app.routers import auth
+from app.routers import auth, colleges
 
 settings = get_settings()
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    logging.basicConfig(level=logging.INFO)
+    logging.info("🚀 ExamBuddy API starting up with SQLite & BackgroundTasks...")
+    yield
+
 
 app = FastAPI(
     title="ExamBuddy API",
     description="AI-powered exam preparation agent for college students",
-    version="0.1.0",
+    version="0.2.0",
+    lifespan=lifespan,
 )
 
 # CORS — allow all origins in dev, lock down in production
@@ -26,6 +36,7 @@ app.add_middleware(
 
 # Register routers
 app.include_router(auth.router)
+app.include_router(colleges.router)
 
 
 @app.get("/health", tags=["System"])
@@ -42,9 +53,3 @@ async def global_exception_handler(request: Request, exc: Exception):
         status_code=500,
         content={"detail": "Internal server error"},
     )
-
-
-@app.on_event("startup")
-async def startup_event():
-    logging.basicConfig(level=logging.INFO)
-    logging.info("🚀 ExamBuddy API starting up...")

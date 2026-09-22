@@ -18,12 +18,12 @@ def _normalize_base_url(url: str) -> str:
     return f"{parsed.scheme}://{parsed.netloc}".rstrip("/")
 
 
-async def signup(data: SignupRequest, db: AsyncSession) -> tuple[Student, str]:
+async def signup(data: SignupRequest, db: AsyncSession) -> tuple[Student, str, bool]:
     """
     Create a new student account.
     - Upserts the college by base_url (creates if not found).
     - Hashes the password and creates the student.
-    - Returns (student, access_token).
+    - Returns (student, access_token, is_new_college).
     Raises HTTPException 409 if email already exists.
     """
     # Check for duplicate email
@@ -42,11 +42,13 @@ async def signup(data: SignupRequest, db: AsyncSession) -> tuple[Student, str]:
         select(College).where(College.base_url == base_url)
     )
     college = result.scalar_one_or_none()
+    is_new_college = False
 
     if college is None:
         college = College(base_url=base_url)
         db.add(college)
         await db.flush()  # Assign college.id before using it
+        is_new_college = True
 
     # Create student
     student = Student(
@@ -64,7 +66,7 @@ async def signup(data: SignupRequest, db: AsyncSession) -> tuple[Student, str]:
     # Generate JWT
     token = create_access_token(data={"sub": str(student.id)})
 
-    return student, token
+    return student, token, is_new_college
 
 
 async def login(email: str, password: str, db: AsyncSession) -> tuple[Student, str]:

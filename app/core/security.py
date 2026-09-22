@@ -1,9 +1,10 @@
+import uuid
 from datetime import datetime, timedelta, timezone
 
-from jose import JWTError, jwt
-from passlib.context import CryptContext
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
+from jose import JWTError, jwt
+from passlib.context import CryptContext
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -60,10 +61,11 @@ async def get_current_student(
             settings.JWT_SECRET_KEY,
             algorithms=[settings.JWT_ALGORITHM],
         )
-        student_id: str | None = payload.get("sub")
-        if student_id is None:
+        student_id_str: str | None = payload.get("sub")
+        if student_id_str is None:
             raise credentials_exception
-    except JWTError:
+        student_id = uuid.UUID(student_id_str)
+    except (JWTError, ValueError, TypeError):
         raise credentials_exception
 
     result = await db.execute(select(Student).where(Student.id == student_id))
