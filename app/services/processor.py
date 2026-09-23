@@ -137,6 +137,14 @@ async def process_college_documents(
             await session.commit()
             processed_count += 1
 
+            # Dispatch alerts if a notice was created
+            if classification.doc_type == "notice" and notice_record.id:
+                try:
+                    from app.services.notification_service import dispatch_notice_alerts
+                    await dispatch_notice_alerts(notice_record.id)
+                except Exception as ne:
+                    logger.warning("Auto-dispatch alerts failed for notice %s: %s", notice_record.id, ne)
+
     # 2. Process unclassified ScrapedPage records (HTML pages)
     async with async_session_factory() as session:
         page_query = select(ScrapedPage).where(ScrapedPage.college_id == college_id)
@@ -217,6 +225,13 @@ async def process_college_documents(
 
             await session.commit()
             processed_count += 1
+
+            if classification.doc_type == "notice" and notice_record.id:
+                try:
+                    from app.services.notification_service import dispatch_notice_alerts
+                    await dispatch_notice_alerts(notice_record.id)
+                except Exception as ne:
+                    logger.warning("Auto-dispatch alerts failed for page notice %s: %s", notice_record.id, ne)
 
     logger.info(
         "Finished document processing for college %s: %d processed, %d syllabus topics, %d PYQs, %d notices",

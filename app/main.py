@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.core.config import get_settings
-from app.routers import auth, colleges
+from app.routers import auth, colleges, notifications
 
 settings = get_settings()
 
@@ -37,6 +37,7 @@ app.add_middleware(
 # Register routers
 app.include_router(auth.router)
 app.include_router(colleges.router)
+app.include_router(notifications.router)
 
 
 @app.get("/health", tags=["System"])

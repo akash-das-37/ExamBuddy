@@ -32,6 +32,11 @@ class Settings(BaseSettings):
     ANTHROPIC_EXTRACT_MODEL: str = "claude-3-5-sonnet-20241022"
     LLM_MAX_INPUT_TOKENS: int = 25000
 
+    # Email Settings (Resend API)
+    RESEND_API_KEY: str | None = None
+    EMAIL_FROM: str = "ExamBuddy <notices@exambuddy.app>"
+    EMAIL_BACKEND: str = "mock"  # "mock" or "resend"
+
     model_config = {
         "env_file": ".env",
         "env_file_encoding": "utf-8",
