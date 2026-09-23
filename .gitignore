@@ -45,3 +45,8 @@ htmlcov/
 
 # Storage (local file uploads)
 storage/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
