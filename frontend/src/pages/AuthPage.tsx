@@ -7,6 +7,7 @@ interface AuthPageProps {
 }
 
 export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess }) => {
+  const [modalOpen, setModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'signin' | 'register'>('register');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -25,6 +26,12 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess }) => {
   const [semester, setSemester] = useState<number>(6);
   const [emailNotifications, setEmailNotifications] = useState(true);
 
+  const openAuthModal = (tab: 'signin' | 'register') => {
+    setActiveTab(tab);
+    setError(null);
+    setModalOpen(true);
+  };
+
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -32,6 +39,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess }) => {
     try {
       await api.login(signInEmail, signInPassword);
       const student = await api.getMe();
+      setModalOpen(false);
       onAuthSuccess(student);
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -60,8 +68,9 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess }) => {
         email_notifications_enabled: emailNotifications,
       });
 
-      // Auto login right after signup
+      // Automatically log in after registration
       await api.login(email, password);
+      setModalOpen(false);
       onAuthSuccess(student);
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -75,89 +84,172 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess }) => {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center p-4 sm:p-6 lg:p-10">
-      <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-        {/* Left Side: Value Prop Hero */}
-        <div className="lg:col-span-6 space-y-6 text-left">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-950/60 border border-indigo-500/30 text-indigo-300 text-xs font-mono">
-            <span className="pulse-dot" />
-            <span>AI-Powered Autonomous Exam Prep Agent</span>
+    <div className="min-h-screen w-full flex flex-col justify-between relative selection:bg-purple-600 selection:text-white">
+      {/* Top Navigation Bar matching reference image */}
+      <header className="w-full max-w-7xl mx-auto px-6 py-6 flex items-center justify-between z-10">
+        {/* Left: Brand Logo & Title */}
+        <div className="flex items-center gap-3 cursor-pointer">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center shadow-[0_0_20px_rgba(168,85,247,0.5)]">
+            <span className="material-symbols-outlined text-white text-[24px]">
+              psychology
+            </span>
           </div>
-
-          <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-white leading-tight">
-            Ace Your University Exams with <span className="text-indigo-400">AI</span>
-          </h1>
-
-          <p className="text-slate-300 text-base leading-relaxed">
-            ExamBuddy autonomously crawls your university portal, extracts your syllabus and Previous Year Questions (PYQs), predicts high-yield topics using recency-weighted algorithms, and alerts you to official schedule changes.
-          </p>
-
-          {/* Feature Highlights Cards */}
-          <div className="space-y-3 pt-2">
-            <div className="glass-card p-4 flex items-start gap-3.5 border-l-4 border-l-emerald-500">
-              <div className="w-9 h-9 rounded-lg bg-emerald-950/60 border border-emerald-500/40 flex items-center justify-center text-emerald-400 flex-shrink-0">
-                <span className="material-symbols-outlined text-[20px]">travel_explore</span>
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h4 className="text-sm font-semibold text-white">Auto-Crawls College Portal</h4>
-                  <span className="badge badge-emerald">100% Curriculum Sync</span>
-                </div>
-                <p className="text-xs text-slate-400 mt-1">
-                  Indexes curriculum PDFs, question paper banks, and notice board circulars directly from your college website.
-                </p>
-              </div>
-            </div>
-
-            <div className="glass-card p-4 flex items-start gap-3.5 border-l-4 border-l-indigo-500">
-              <div className="w-9 h-9 rounded-lg bg-indigo-950/60 border border-indigo-500/40 flex items-center justify-center text-indigo-400 flex-shrink-0">
-                <span className="material-symbols-outlined text-[20px]">psychology</span>
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h4 className="text-sm font-semibold text-white">Recency-Weighted Importance</h4>
-                  <span className="badge badge-indigo">88–95% Weight Coverage</span>
-                </div>
-                <p className="text-xs text-slate-400 mt-1">
-                  Applies mathematical decay and marks weighting to rank topics into 3 clear priorities (Must Master, Core, Quick Review).
-                </p>
-              </div>
-            </div>
-
-            <div className="glass-card p-4 flex items-start gap-3.5 border-l-4 border-l-amber-500">
-              <div className="w-9 h-9 rounded-lg bg-amber-950/60 border border-amber-500/40 flex items-center justify-center text-amber-400 flex-shrink-0">
-                <span className="material-symbols-outlined text-[20px]">notifications_active</span>
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h4 className="text-sm font-semibold text-white">Targeted Circular & Date Alerts</h4>
-                  <span className="badge badge-amber">Instant Delivery</span>
-                </div>
-                <p className="text-xs text-slate-400 mt-1">
-                  Filters official notices for your exact branch and semester, delivering instant alerts when datesheets change.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="pt-2 text-xs font-mono text-slate-500 flex items-center gap-3">
-            <span>🔒 Lightweight 8GB RAM Stack</span>
-            <span>•</span>
-            <span>⚡ Zero Celery / Pure Async</span>
-          </div>
+          <span className="text-xl font-bold tracking-tight text-white flex items-center gap-1.5">
+            ExamMind <span className="text-purple-400">AI</span>
+          </span>
         </div>
 
-        {/* Right Side: Auth Form Card */}
-        <div className="lg:col-span-6">
-          <div className="glass-card p-6 sm:p-8 relative border border-slate-700/80 shadow-2xl">
+        {/* Right: Nav Links + Get Started Button */}
+        <div className="flex items-center gap-6 sm:gap-8">
+          <a
+            href="#features"
+            className="hidden sm:inline-block text-sm font-medium text-slate-300 hover:text-white transition-colors"
+          >
+            Features
+          </a>
+          <a
+            href="#about"
+            className="hidden sm:inline-block text-sm font-medium text-slate-300 hover:text-white transition-colors"
+          >
+            About
+          </a>
+          <button
+            onClick={() => openAuthModal('signin')}
+            className="text-sm font-medium text-slate-300 hover:text-white transition-colors cursor-pointer"
+          >
+            Login
+          </button>
+          <button
+            onClick={() => openAuthModal('register')}
+            className="btn-nav-gradient cursor-pointer"
+          >
+            Get Started
+          </button>
+        </div>
+      </header>
+
+      {/* Hero Section matching exact reference image */}
+      <main className="flex-1 flex flex-col items-center justify-center text-center px-4 pt-12 pb-16 max-w-5xl mx-auto space-y-7 z-10">
+        {/* Floating Top Badge */}
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#161426] border border-purple-500/40 text-purple-300 text-xs sm:text-sm font-medium shadow-[0_0_20px_rgba(168,85,247,0.2)]">
+          <span className="text-purple-400">✦</span>
+          <span>AI-Powered Study Planning</span>
+        </div>
+
+        {/* Massive Headline */}
+        <h1 className="hero-title max-w-4xl">
+          Stop Guessing What to <br />
+          <span className="hero-gradient">Study for Exams.</span>
+        </h1>
+
+        {/* Subtitle */}
+        <p className="hero-subtitle">
+          Let AI analyze your syllabus and past papers to tell you what actually matters.
+          <br className="hidden sm:inline" />
+          Personalized study plans generated in seconds.
+        </p>
+
+        {/* Giant Gradient Pill CTA Button */}
+        <div className="pt-3">
+          <button
+            onClick={() => openAuthModal('register')}
+            className="btn-gradient-pill text-base sm:text-lg cursor-pointer"
+          >
+            <span>Start Planning Now</span>
+            <span className="text-xl">➔</span>
+          </button>
+        </div>
+      </main>
+
+      {/* Bottom 3 Feature Cards matching reference image */}
+      <section id="features" className="w-full max-w-6xl mx-auto px-6 pb-12 z-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Card 1: Secure Data */}
+          <div className="feature-card flex flex-col justify-between">
+            <div>
+              <div className="w-10 h-10 rounded-xl bg-purple-950/60 border border-purple-500/40 flex items-center justify-center text-purple-400 mb-4">
+                <span className="material-symbols-outlined text-[22px]">
+                  security
+                </span>
+              </div>
+              <h3 className="text-lg font-bold text-white mb-2">Secure Data</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Connects directly to your university portal and question archives with encrypted token authentication and zero leaks.
+              </p>
+            </div>
+            <div className="mt-4 pt-3 border-t border-slate-800/80 text-[11px] font-mono text-purple-400">
+              100% Portal Sync
+            </div>
+          </div>
+
+          {/* Card 2: Smart Priority */}
+          <div className="feature-card flex flex-col justify-between">
+            <div>
+              <div className="w-10 h-10 rounded-xl bg-purple-950/60 border border-purple-500/40 flex items-center justify-center text-purple-400 mb-4">
+                <span className="material-symbols-outlined text-[22px]">
+                  psychology
+                </span>
+              </div>
+              <h3 className="text-lg font-bold text-white mb-2">Smart Priority</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Mathematical recency-decay formula scores historical question frequencies to predict must-master topics.
+              </p>
+            </div>
+            <div className="mt-4 pt-3 border-t border-slate-800/80 text-[11px] font-mono text-cyan-400">
+              88–95% Weight Coverage
+            </div>
+          </div>
+
+          {/* Card 3: Fast Execution */}
+          <div className="feature-card flex flex-col justify-between">
+            <div>
+              <div className="w-10 h-10 rounded-xl bg-purple-950/60 border border-purple-500/40 flex items-center justify-center text-purple-400 mb-4">
+                <span className="material-symbols-outlined text-[22px]">
+                  rocket_launch
+                </span>
+              </div>
+              <h3 className="text-lg font-bold text-white mb-2">Fast Execution</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Generates actionable 3-tier study plans in seconds and emails alerts for rescheduled datesheets and circulars.
+              </p>
+            </div>
+            <div className="mt-4 pt-3 border-t border-slate-800/80 text-[11px] font-mono text-emerald-400">
+              Real-time Feeds
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Interactive Auth Modal (Sign In / Register) */}
+      {modalOpen && (
+        <div className="modal-overlay" onClick={() => setModalOpen(false)}>
+          <div className="modal-content p-6 sm:p-8" onClick={(e) => e.stopPropagation()}>
+            {/* Modal Header & Close Button */}
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center text-white">
+                  <span className="material-symbols-outlined text-[18px]">school</span>
+                </div>
+                <h3 className="text-lg font-bold text-white">
+                  {activeTab === 'register' ? 'Create Student Account' : 'Welcome Back'}
+                </h3>
+              </div>
+              <button
+                onClick={() => setModalOpen(false)}
+                className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"
+              >
+                <span className="material-symbols-outlined text-[20px]">close</span>
+              </button>
+            </div>
+
             {/* Tab Switcher */}
-            <div className="flex bg-[#070a13] p-1 rounded-xl mb-6 border border-slate-800">
+            <div className="flex bg-[#070910] p-1 rounded-xl mb-6 border border-slate-800">
               <button
                 type="button"
                 onClick={() => { setActiveTab('register'); setError(null); }}
-                className={`flex-1 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all ${
+                className={`flex-1 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all cursor-pointer ${
                   activeTab === 'register'
-                    ? 'bg-indigo-600 text-white shadow-md'
+                    ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md'
                     : 'text-slate-400 hover:text-white'
                 }`}
               >
@@ -166,9 +258,9 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess }) => {
               <button
                 type="button"
                 onClick={() => { setActiveTab('signin'); setError(null); }}
-                className={`flex-1 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all ${
+                className={`flex-1 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all cursor-pointer ${
                   activeTab === 'signin'
-                    ? 'bg-indigo-600 text-white shadow-md'
+                    ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md'
                     : 'text-slate-400 hover:text-white'
                 }`}
               >
@@ -177,7 +269,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess }) => {
             </div>
 
             {error && (
-              <div className="mb-5 p-3 rounded-lg bg-rose-950/50 border border-rose-500/40 text-rose-300 text-xs flex items-center gap-2">
+              <div className="mb-4 p-3 rounded-xl bg-rose-950/60 border border-rose-500/50 text-rose-300 text-xs flex items-center gap-2">
                 <span className="material-symbols-outlined text-[16px]">error</span>
                 <span>{error}</span>
               </div>
@@ -213,9 +305,9 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess }) => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="btn-primary w-full py-2.5 mt-2 text-sm justify-center"
+                  className="btn-primary w-full py-3 mt-3 text-sm justify-center cursor-pointer"
                 >
-                  {loading ? 'Signing in...' : 'Sign In to ExamBuddy ➔'}
+                  {loading ? 'Authenticating...' : 'Sign In to ExamMind ➔'}
                 </button>
               </form>
             ) : (
@@ -252,7 +344,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess }) => {
                       required
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Minimum 6 characters"
+                      placeholder="Min 6 characters"
                       className="form-input"
                     />
                   </div>
@@ -260,19 +352,14 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess }) => {
 
                 <div>
                   <label className="form-label">College Website URL</label>
-                  <div className="relative">
-                    <input
-                      type="url"
-                      required
-                      value={collegeUrl}
-                      onChange={(e) => setCollegeUrl(e.target.value)}
-                      placeholder="https://apex-tech.edu"
-                      className="form-input"
-                    />
-                    <span className="material-symbols-outlined text-slate-500 absolute right-3 top-2.5 text-[18px]">
-                      link
-                    </span>
-                  </div>
+                  <input
+                    type="url"
+                    required
+                    value={collegeUrl}
+                    onChange={(e) => setCollegeUrl(e.target.value)}
+                    placeholder="https://apex-tech.edu"
+                    className="form-input"
+                  />
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -308,10 +395,10 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess }) => {
                         key={s}
                         type="button"
                         onClick={() => setSemester(s)}
-                        className={`py-1.5 rounded-lg text-xs font-mono font-semibold transition-all ${
+                        className={`py-1.5 rounded-lg text-xs font-mono font-semibold transition-all cursor-pointer ${
                           semester === s
-                            ? 'bg-indigo-600 text-white shadow-[0_0_10px_rgba(99,102,241,0.5)] border border-indigo-400'
-                            : 'bg-[#0f172a] text-slate-400 border border-slate-800 hover:border-slate-700'
+                            ? 'bg-purple-600 text-white shadow-[0_0_12px_rgba(168,85,247,0.6)] border border-purple-400'
+                            : 'bg-[#141724] text-slate-400 border border-slate-800 hover:border-slate-700'
                         }`}
                       >
                         Sem {s}
@@ -323,12 +410,12 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess }) => {
                 <div className="flex items-center gap-2.5 pt-1">
                   <input
                     type="checkbox"
-                    id="notifyToggle"
+                    id="notifyToggleModal"
                     checked={emailNotifications}
                     onChange={(e) => setEmailNotifications(e.target.checked)}
-                    className="w-4 h-4 rounded text-indigo-600 bg-slate-900 border-slate-700 focus:ring-indigo-500"
+                    className="w-4 h-4 rounded text-purple-600 bg-slate-900 border-slate-700 focus:ring-purple-500"
                   />
-                  <label htmlFor="notifyToggle" className="text-xs text-slate-300 cursor-pointer">
+                  <label htmlFor="notifyToggleModal" className="text-xs text-slate-300 cursor-pointer">
                     Email me when new notices or rescheduled exam circulars appear
                   </label>
                 </div>
@@ -336,19 +423,15 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess }) => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="btn-primary w-full py-2.5 mt-2 text-sm justify-center"
+                  className="btn-primary w-full py-3 mt-3 text-sm justify-center cursor-pointer"
                 >
-                  {loading ? 'Creating Account & Crawling Portal...' : 'Start AI Exam Prep ➔'}
+                  {loading ? 'Crawling Portal & Creating Plan...' : 'Start AI Exam Prep ➔'}
                 </button>
               </form>
             )}
-
-            <div className="mt-4 pt-3 border-t border-slate-800/80 text-center text-[11px] font-mono text-slate-500">
-              Powered by Anthropic Claude AI • Playwright Web Crawler
-            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

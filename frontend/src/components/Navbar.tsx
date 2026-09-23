@@ -30,26 +30,25 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <header className="glass-nav sticky top-0 z-50 px-6 py-3 flex justify-between items-center w-full">
-      {/* Brand & AI Badge */}
+    <header className="glass-nav sticky top-0 z-50 px-6 py-4 flex justify-between items-center w-full">
+      {/* Brand & AI Badge matching reference image */}
       <div className="flex items-center gap-6">
         <div
           onClick={() => setActiveTab('dashboard')}
           className="flex items-center gap-3 cursor-pointer group"
         >
-          <div className="relative flex items-center justify-center w-9 h-9 rounded-lg bg-[#171f33] border border-indigo-500/40 shadow-[0_0_12px_rgba(99,102,241,0.35)] group-hover:scale-105 transition-transform">
-            <span className="material-symbols-outlined text-indigo-400 text-[20px]">
-              school
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center shadow-[0_0_15px_rgba(168,85,247,0.5)] group-hover:scale-105 transition-transform">
+            <span className="material-symbols-outlined text-white text-[20px]">
+              psychology
             </span>
-            <span className="pulse-dot absolute -top-1 -right-1" />
           </div>
           <div>
             <div className="flex items-center gap-2">
               <span className="text-xl font-bold tracking-tight text-white">
-                ExamBuddy
+                ExamMind <span className="text-purple-400">AI</span>
               </span>
-              <span className="px-1.5 py-0.5 rounded text-[10px] font-mono uppercase tracking-wider bg-indigo-950/70 text-indigo-300 border border-indigo-500/30">
-                AI Exam Copilot
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider bg-purple-950/70 text-purple-300 border border-purple-500/30">
+                Copilot
               </span>
             </div>
           </div>
@@ -57,7 +56,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       </div>
 
       {/* Center Nav Tabs */}
-      <nav className="hidden md:flex items-center gap-2 lg:gap-4">
+      <nav className="hidden md:flex items-center gap-2 lg:gap-3">
         {[
           { id: 'dashboard', label: 'Dashboard', icon: 'dashboard' },
           { id: 'study-report', label: 'Study Report', icon: 'analytics' },
@@ -69,10 +68,10 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-sm font-medium transition-all cursor-pointer ${
                 isActive
-                  ? 'bg-indigo-600/20 text-indigo-300 border border-indigo-500/40 shadow-[0_0_10px_rgba(99,102,241,0.25)]'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
+                  ? 'bg-purple-600/25 text-purple-200 border border-purple-500/50 shadow-[0_0_12px_rgba(168,85,247,0.3)]'
+                  : 'text-slate-400 hover:text-white hover:bg-white/5'
               }`}
             >
               <span className="material-symbols-outlined text-[17px]">
@@ -87,14 +86,14 @@ export const Navbar: React.FC<NavbarProps> = ({
       {/* Right: Portal Status & Student Profile */}
       <div className="flex items-center gap-3">
         {/* Scrape Status Pill */}
-        <div className="hidden lg:flex items-center gap-2 px-3 py-1 rounded-full bg-[#070a13] border border-slate-700/60 text-xs">
+        <div className="hidden lg:flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#11131c] border border-slate-800 text-xs">
           <span
             className={`w-2 h-2 rounded-full ${
               isScraping
                 ? 'bg-amber-400 animate-ping'
                 : college?.scrape_status === 'completed'
                 ? 'bg-emerald-400'
-                : 'bg-indigo-400'
+                : 'bg-purple-400'
             }`}
           />
           <span className="font-mono text-slate-300">
@@ -110,7 +109,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         <button
           onClick={onTriggerScrape}
           disabled={isScraping}
-          className="btn-secondary text-xs py-1.5 px-2.5 hidden sm:inline-flex"
+          className="btn-secondary text-xs py-1.5 px-3 hidden sm:inline-flex cursor-pointer"
           title="Scrape and extract latest syllabus, PYQs, and notices"
         >
           <span
@@ -125,12 +124,12 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Student Avatar & Logout */}
         {student && (
-          <div className="flex items-center gap-2.5 pl-2 border-l border-slate-700/60">
-            <div className="w-8 h-8 rounded-full bg-indigo-950/80 border border-indigo-500/50 flex items-center justify-center text-xs font-bold text-indigo-300 shadow-sm">
+          <div className="flex items-center gap-3 pl-2 border-l border-slate-800">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center text-xs font-bold text-white shadow-sm">
               {getInitials(student.name)}
             </div>
             <div className="hidden xl:flex flex-col text-left">
-              <span className="text-xs font-semibold text-slate-200 leading-tight">
+              <span className="text-xs font-semibold text-white leading-tight">
                 {student.name}
               </span>
               <span className="text-[10px] font-mono text-slate-400 leading-tight">
@@ -139,7 +138,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
             <button
               onClick={onLogout}
-              className="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-rose-950/20 rounded-lg transition-colors ml-1"
+              className="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-rose-950/20 rounded-lg transition-colors ml-1 cursor-pointer"
               title="Sign Out"
             >
               <span className="material-symbols-outlined text-[18px]">
