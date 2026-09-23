@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { api } from './api/client';
 import { Navbar } from './components/Navbar';
-import { AuthPage } from './pages/AuthPage';
+import { HomePage } from './pages/HomePage';
+import { LoginPage } from './pages/LoginPage';
 import { Dashboard } from './pages/Dashboard';
 import { NoticesPage } from './pages/NoticesPage';
 import { StudyReportPage } from './pages/StudyReportPage';
@@ -15,6 +16,8 @@ export const App: React.FC = () => {
   const [totalTopics, setTotalTopics] = useState(0);
   const [totalPYQs, setTotalPYQs] = useState(0);
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [publicView, setPublicView] = useState<'home' | 'login'>('home');
+  const [loginInitialTab, setLoginInitialTab] = useState<'signin' | 'register'>('signin');
   const [isScraping, setIsScraping] = useState(false);
   const [initializing, setInitializing] = useState(true);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
@@ -67,6 +70,7 @@ export const App: React.FC = () => {
     setCollege(null);
     setNotices([]);
     setActiveTab('dashboard');
+    setPublicView('home');
     showToast('Signed out successfully', 'info');
   };
 
@@ -127,11 +131,24 @@ export const App: React.FC = () => {
   }
 
   if (!student) {
+    if (publicView === 'home') {
+      return (
+        <HomePage
+          onNavigateToLogin={(tab = 'signin') => {
+            setLoginInitialTab(tab);
+            setPublicView('login');
+          }}
+        />
+      );
+    }
+
     return (
-      <AuthPage
+      <LoginPage
+        initialTab={loginInitialTab}
+        onNavigateToHome={() => setPublicView('home')}
         onAuthSuccess={async (newStudent) => {
           await loadStudentData(newStudent);
-          showToast(`Welcome to ExamBuddy, ${newStudent.name}!`, 'success');
+          showToast(`Welcome back, ${newStudent.name}!`, 'success');
         }}
       />
     );
