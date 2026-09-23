@@ -382,6 +382,13 @@ async def crawl_college(college_id: uuid.UUID, force: bool = False) -> None:
                 await session.commit()
         logger.info("Finished crawl for college %s. Visited %d URLs.", college_id, len(visited_urls))
 
+        # Auto-chain Phase 3 document processing & extraction
+        try:
+            from app.services.processor import process_college_documents
+            await process_college_documents(college_id)
+        except Exception as pe:
+            logger.warning("Auto-processing documents after crawl failed: %s", pe)
+
     except Exception as e:
         logger.exception("Error during crawl for college %s: %s", college_id, e)
         async with async_session_factory() as session:

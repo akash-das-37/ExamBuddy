@@ -26,6 +26,12 @@ class Settings(BaseSettings):
     CRAWLER_RECENCY_SKIP_HOURS: int = 24
     CRAWLER_USER_AGENT: str = "ExamBuddyBot/1.0 (+http://localhost:8000/bot-info)"
 
+    # LLM Settings (Anthropic Claude API)
+    ANTHROPIC_API_KEY: str | None = None
+    ANTHROPIC_FAST_MODEL: str = "claude-3-5-haiku-20241022"
+    ANTHROPIC_EXTRACT_MODEL: str = "claude-3-5-sonnet-20241022"
+    LLM_MAX_INPUT_TOKENS: int = 25000
+
     model_config = {
         "env_file": ".env",
         "env_file_encoding": "utf-8",
