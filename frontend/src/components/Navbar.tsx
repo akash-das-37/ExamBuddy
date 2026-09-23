@@ -30,25 +30,25 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <header className="glass-nav sticky top-0 z-50 px-6 py-4 flex justify-between items-center w-full">
-      {/* Brand & AI Badge matching reference image */}
+    <header className="header-glass sticky top-0 z-50 px-6 py-3.5 flex justify-between items-center w-full">
+      {/* Brand & AI Badge */}
       <div className="flex items-center gap-6">
         <div
           onClick={() => setActiveTab('dashboard')}
           className="flex items-center gap-3 cursor-pointer group"
         >
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center shadow-[0_0_15px_rgba(168,85,247,0.5)] group-hover:scale-105 transition-transform">
-            <span className="material-symbols-outlined text-white text-[20px]">
-              psychology
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-600 to-cyan-500 flex items-center justify-center shadow-[0_0_20px_rgba(99,102,241,0.5)] group-hover:scale-105 transition-transform">
+            <span className="material-symbols-outlined text-white text-[22px]">
+              school
             </span>
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xl font-bold tracking-tight text-white">
-                ExamMind <span className="text-purple-400">AI</span>
+              <span className="text-xl font-extrabold tracking-tight text-white">
+                ExamBuddy
               </span>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider bg-purple-950/70 text-purple-300 border border-purple-500/30">
-                Copilot
+              <span className="badge badge-indigo">
+                AI Copilot
               </span>
             </div>
           </div>
@@ -56,7 +56,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       </div>
 
       {/* Center Nav Tabs */}
-      <nav className="hidden md:flex items-center gap-2 lg:gap-3">
+      <nav className="hidden md:flex items-center bg-[#0d101c] p-1 rounded-2xl border border-white/5">
         {[
           { id: 'dashboard', label: 'Dashboard', icon: 'dashboard' },
           { id: 'study-report', label: 'Study Report', icon: 'analytics' },
@@ -68,9 +68,9 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-sm font-medium transition-all cursor-pointer ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                 isActive
-                  ? 'bg-purple-600/25 text-purple-200 border border-purple-500/50 shadow-[0_0_12px_rgba(168,85,247,0.3)]'
+                  ? 'bg-indigo-600 text-white shadow-[0_0_15px_rgba(99,102,241,0.4)]'
                   : 'text-slate-400 hover:text-white hover:bg-white/5'
               }`}
             >
@@ -86,14 +86,14 @@ export const Navbar: React.FC<NavbarProps> = ({
       {/* Right: Portal Status & Student Profile */}
       <div className="flex items-center gap-3">
         {/* Scrape Status Pill */}
-        <div className="hidden lg:flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#11131c] border border-slate-800 text-xs">
+        <div className="hidden lg:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0d101c] border border-white/10 text-xs">
           <span
             className={`w-2 h-2 rounded-full ${
               isScraping
                 ? 'bg-amber-400 animate-ping'
                 : college?.scrape_status === 'completed'
                 ? 'bg-emerald-400'
-                : 'bg-purple-400'
+                : 'bg-indigo-400'
             }`}
           />
           <span className="font-mono text-slate-300">
@@ -109,12 +109,12 @@ export const Navbar: React.FC<NavbarProps> = ({
         <button
           onClick={onTriggerScrape}
           disabled={isScraping}
-          className="btn-secondary text-xs py-1.5 px-3 hidden sm:inline-flex cursor-pointer"
+          className="btn-outline text-xs py-1.5 px-3.5 hidden sm:inline-flex cursor-pointer"
           title="Scrape and extract latest syllabus, PYQs, and notices"
         >
           <span
-            className={`material-symbols-outlined text-[15px] ${
-              isScraping ? 'animate-spin' : ''
+            className={`material-symbols-outlined text-[16px] ${
+              isScraping ? 'animate-spin text-amber-400' : 'text-indigo-400'
             }`}
           >
             sync
@@ -124,8 +124,8 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Student Avatar & Logout */}
         {student && (
-          <div className="flex items-center gap-3 pl-2 border-l border-slate-800">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center text-xs font-bold text-white shadow-sm">
+          <div className="flex items-center gap-3 pl-3 border-l border-white/10">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-xs font-bold text-white shadow-sm">
               {getInitials(student.name)}
             </div>
             <div className="hidden xl:flex flex-col text-left">

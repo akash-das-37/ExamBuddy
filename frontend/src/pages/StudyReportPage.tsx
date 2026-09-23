@@ -73,19 +73,19 @@ export const StudyReportPage: React.FC<StudyReportPageProps> = ({ student }) => 
   return (
     <div className="space-y-6 text-left max-w-7xl mx-auto">
       {/* Header & Subject Controller */}
-      <div className="glass-card p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="card-elevated p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <div className="flex items-center gap-2 mb-1">
+          <div className="flex items-center gap-2 mb-2">
             <span className="badge badge-emerald">AI Exam Readiness Intelligence</span>
             <span className="text-xs font-mono text-slate-400">
               {student.course} • Sem {student.semester}
             </span>
           </div>
-          <h2 className="text-2xl font-bold text-white tracking-tight">
-            Personalized Study Report: <span className="text-indigo-400">{subject}</span>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+            Personalized Study Report: <span className="text-gradient-purple-cyan">{subject}</span>
           </h2>
           <p className="text-sm text-slate-300 mt-1">
-            Historical question analysis with recency weighting and AI prioritization.
+            Historical question analysis with mathematical recency-decay scoring and AI prioritization.
           </p>
         </div>
 
@@ -94,7 +94,7 @@ export const StudyReportPage: React.FC<StudyReportPageProps> = ({ student }) => 
           <select
             value={subject}
             onChange={(e) => handleSubjectChange(e.target.value)}
-            className="form-input text-xs sm:text-sm py-2 px-3 w-auto min-w-[200px]"
+            className="form-input text-xs sm:text-sm py-2.5 px-3.5 w-auto min-w-[220px] cursor-pointer"
           >
             {COMMON_SUBJECTS.map((s) => (
               <option key={s} value={s}>
@@ -106,7 +106,7 @@ export const StudyReportPage: React.FC<StudyReportPageProps> = ({ student }) => 
           <button
             onClick={handleRecompute}
             disabled={recomputing}
-            className="btn-primary text-xs sm:text-sm py-2 px-4"
+            className="btn-pill-primary text-xs sm:text-sm py-2.5 px-5 cursor-pointer"
           >
             <span
               className={`material-symbols-outlined text-[17px] ${
@@ -128,7 +128,7 @@ export const StudyReportPage: React.FC<StudyReportPageProps> = ({ student }) => 
           </div>
           <button
             onClick={() => handleRecompute()}
-            className="btn-secondary text-xs py-1 px-2.5"
+            className="btn-outline text-xs py-1 px-3 cursor-pointer"
           >
             Run Initial Scorer
           </button>
@@ -136,42 +136,42 @@ export const StudyReportPage: React.FC<StudyReportPageProps> = ({ student }) => 
       )}
 
       {loading ? (
-        <div className="text-center py-16 space-y-3">
-          <div className="w-10 h-10 border-4 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin mx-auto" />
+        <div className="text-center py-20 space-y-4">
+          <div className="w-12 h-12 border-4 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin mx-auto" />
           <p className="text-sm text-slate-400 font-mono">
-            Analyzing syllabus modules & past examination questions...
+            Analyzing curriculum modules &amp; past examination question weights...
           </p>
         </div>
       ) : report ? (
         <div className="space-y-6">
           {/* Actionable Strategy Banner */}
-          <div className="p-5 rounded-xl bg-gradient-to-r from-indigo-950/80 via-slate-900 to-indigo-950/60 border border-indigo-500/40 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="space-y-1">
+          <div className="p-6 rounded-2xl bg-gradient-to-r from-indigo-950/70 via-slate-900 to-purple-950/50 border border-indigo-500/40 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="space-y-1.5">
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-indigo-400 text-[20px]">
+                <span className="material-symbols-outlined text-indigo-400 text-[22px]">
                   psychology
                 </span>
-                <h4 className="text-sm font-bold text-white uppercase tracking-wider font-mono">
-                  Recommended Revision Strategy
+                <h4 className="text-xs font-bold text-white uppercase tracking-wider font-mono">
+                  Recommended Revision Roadmap
                 </h4>
               </div>
-              <p className="text-sm text-slate-200 leading-relaxed">
+              <p className="text-sm sm:text-base text-slate-200 leading-relaxed font-medium">
                 {report.suggested_revision_strategy}
               </p>
             </div>
 
             <div className="flex items-center gap-3 flex-shrink-0">
-              <div className="px-3 py-2 rounded-lg bg-emerald-950/70 border border-emerald-500/40 text-center">
-                <span className="text-[10px] font-mono text-emerald-400 uppercase block">Tier 1 Must Master</span>
-                <span className="text-lg font-bold text-white font-mono">{report.high_priority_count} topics</span>
+              <div className="px-4 py-2.5 rounded-xl bg-emerald-950/80 border border-emerald-500/40 text-center shadow-md">
+                <span className="text-[10px] font-mono text-emerald-400 uppercase block font-bold">Tier 1 Must Master</span>
+                <span className="text-xl font-bold text-white font-mono">{report.high_priority_count} topics</span>
               </div>
-              <div className="px-3 py-2 rounded-lg bg-amber-950/70 border border-amber-500/40 text-center">
-                <span className="text-[10px] font-mono text-amber-400 uppercase block">Tier 2 Core</span>
-                <span className="text-lg font-bold text-white font-mono">{report.medium_priority_count} topics</span>
+              <div className="px-4 py-2.5 rounded-xl bg-amber-950/80 border border-amber-500/40 text-center shadow-md">
+                <span className="text-[10px] font-mono text-amber-400 uppercase block font-bold">Tier 2 Core</span>
+                <span className="text-xl font-bold text-white font-mono">{report.medium_priority_count} topics</span>
               </div>
-              <div className="px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-center">
-                <span className="text-[10px] font-mono text-slate-400 uppercase block">Tier 3 Review</span>
-                <span className="text-lg font-bold text-white font-mono">{report.low_priority_count} topics</span>
+              <div className="px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-center shadow-md">
+                <span className="text-[10px] font-mono text-slate-400 uppercase block font-bold">Tier 3 Review</span>
+                <span className="text-xl font-bold text-white font-mono">{report.low_priority_count} topics</span>
               </div>
             </div>
           </div>
@@ -185,8 +185,8 @@ export const StudyReportPage: React.FC<StudyReportPageProps> = ({ student }) => 
               return (
                 <div key={tier.tier_name} className="space-y-3">
                   {/* Tier Title */}
-                  <div className="flex items-center justify-between pb-1 border-b border-slate-800">
-                    <div className="flex items-center gap-2">
+                  <div className="flex items-center justify-between pb-1.5 border-b border-slate-800">
+                    <div className="flex items-center gap-2.5">
                       <span
                         className={`badge ${
                           isTier1
@@ -200,14 +200,14 @@ export const StudyReportPage: React.FC<StudyReportPageProps> = ({ student }) => 
                       </span>
                       <span className="text-xs text-slate-400">{tier.description}</span>
                     </div>
-                    <span className="text-xs font-mono text-slate-400">
+                    <span className="text-xs font-mono text-slate-400 font-semibold">
                       {tier.topics.length} topics
                     </span>
                   </div>
 
                   {/* Topic Cards */}
                   {tier.topics.length === 0 ? (
-                    <div className="glass-card p-4 text-center text-xs text-slate-500">
+                    <div className="card-base p-6 text-center text-xs text-slate-500">
                       No topics assigned to this tier yet.
                     </div>
                   ) : (
@@ -218,19 +218,19 @@ export const StudyReportPage: React.FC<StudyReportPageProps> = ({ student }) => 
                         return (
                           <div
                             key={topic.syllabus_entry_id}
-                            className={`p-4 transition-all ${
+                            className={`p-5 transition-all ${
                               isTier1
-                                ? 'glass-card-tier1'
+                                ? 'card-tier1'
                                 : isTier2
-                                ? 'glass-card-tier2'
-                                : 'glass-card-tier3'
+                                ? 'card-tier2'
+                                : 'card-tier3'
                             }`}
                           >
                             {/* Card Header */}
-                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                              <div className="flex items-start gap-2.5">
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                              <div className="flex items-start gap-3.5">
                                 <div
-                                  className={`w-10 h-10 rounded-lg flex items-center justify-center font-mono font-bold text-sm flex-shrink-0 border ${
+                                  className={`w-11 h-11 rounded-xl flex items-center justify-center font-mono font-bold text-base flex-shrink-0 border shadow-md ${
                                     isTier1
                                       ? 'bg-emerald-950/80 border-emerald-500/50 text-emerald-300'
                                       : isTier2
@@ -241,11 +241,11 @@ export const StudyReportPage: React.FC<StudyReportPageProps> = ({ student }) => 
                                   {Math.round(topic.final_importance_score)}
                                 </div>
                                 <div>
-                                  <h4 className="text-base font-semibold text-white">
+                                  <h4 className="text-base sm:text-lg font-bold text-white">
                                     {topic.topic_title}
                                   </h4>
                                   {topic.topic_description && (
-                                    <p className="text-xs text-slate-300 mt-0.5">
+                                    <p className="text-xs text-slate-300 mt-0.5 leading-relaxed">
                                       {topic.topic_description}
                                     </p>
                                   )}
@@ -263,10 +263,10 @@ export const StudyReportPage: React.FC<StudyReportPageProps> = ({ student }) => 
                                 {topic.matched_questions && topic.matched_questions.length > 0 && (
                                   <button
                                     onClick={() => toggleExpand(topic.syllabus_entry_id)}
-                                    className="btn-ghost text-xs"
+                                    className="btn-outline text-xs py-1.5 px-3 cursor-pointer"
                                   >
                                     <span>
-                                      {isExpanded ? 'Hide Questions' : 'View Past Questions'}
+                                      {isExpanded ? 'Hide Questions' : 'Inspect Past PYQs'}
                                     </span>
                                     <span
                                       className={`material-symbols-outlined text-[16px] transition-transform ${
@@ -282,9 +282,9 @@ export const StudyReportPage: React.FC<StudyReportPageProps> = ({ student }) => 
 
                             {/* AI Reasoning Summary */}
                             {topic.reasoning_summary && (
-                              <div className="mt-3 text-xs text-slate-400 bg-[#070a13]/70 p-2.5 rounded-lg border border-slate-800/80 flex items-start gap-2">
-                                <span className="material-symbols-outlined text-indigo-400 text-[15px] flex-shrink-0 mt-0.5">
-                                  info
+                              <div className="mt-3.5 text-xs text-slate-300 bg-[#080b12] p-3 rounded-xl border border-slate-800 flex items-start gap-2.5 font-mono">
+                                <span className="material-symbols-outlined text-indigo-400 text-[16px] flex-shrink-0 mt-0.5">
+                                  psychology
                                 </span>
                                 <span>{topic.reasoning_summary}</span>
                               </div>
@@ -292,14 +292,14 @@ export const StudyReportPage: React.FC<StudyReportPageProps> = ({ student }) => 
 
                             {/* Expandable Past Exam Questions Snippets */}
                             {isExpanded && topic.matched_questions && (
-                              <div className="mt-3 pt-3 border-t border-slate-800/80 space-y-2 animate-fade-in">
-                                <span className="text-[11px] font-mono text-slate-400 block uppercase">
-                                  Matched Exam Questions from University Archives:
+                              <div className="mt-3.5 pt-3.5 border-t border-slate-800/80 space-y-2.5 animate-fade-in">
+                                <span className="text-[11px] font-mono text-slate-400 block uppercase font-semibold">
+                                  Matched Questions from Past University Exam Papers:
                                 </span>
                                 {topic.matched_questions.map((q) => (
                                   <div
                                     key={q.id}
-                                    className="p-3 rounded-lg bg-[#070a13] border border-slate-800 text-xs space-y-1.5"
+                                    className="p-3.5 rounded-xl bg-[#090c14] border border-slate-800 text-xs space-y-1.5"
                                   >
                                     <div className="flex items-center justify-between">
                                       <div className="flex items-center gap-2">
@@ -313,12 +313,12 @@ export const StudyReportPage: React.FC<StudyReportPageProps> = ({ student }) => 
                                         )}
                                       </div>
                                       {q.match_confidence && (
-                                        <span className="text-[10px] font-mono text-slate-500">
+                                        <span className="text-[10px] font-mono text-emerald-400 font-semibold">
                                           Match Confidence: {Math.round(q.match_confidence * 100)}%
                                         </span>
                                       )}
                                     </div>
-                                    <p className="text-slate-200 font-serif leading-relaxed">
+                                    <p className="text-slate-200 font-serif leading-relaxed italic pt-0.5">
                                       &quot;{q.question_text}&quot;
                                     </p>
                                   </div>
@@ -336,7 +336,7 @@ export const StudyReportPage: React.FC<StudyReportPageProps> = ({ student }) => 
           </div>
         </div>
       ) : (
-        <div className="glass-card p-12 text-center text-slate-400 text-sm">
+        <div className="card-base p-16 text-center text-slate-400 text-sm">
           No analysis report found for {subject}. Click &quot;Recompute Scores&quot; above to calculate.
         </div>
       )}
