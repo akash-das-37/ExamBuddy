@@ -10,7 +10,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigateToLogin }) => {
 
   return (
     <div className="pm-hero-wrapper">
-      {/* Soft natural overlay ensuring high-contrast readability on any screen width */}
+      {/* Mobile-only subtle background veil */}
       <div className="pm-hero-overlay" />
 
       {/* Top Navigation Bar */}
@@ -20,21 +20,22 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigateToLogin }) => {
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           className="pm-brand"
         >
-          {/* Stylized organic leaf sprout icon matching design */}
-          <svg width="32" height="32" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Two stylized organic leaves in warm terracotta/copper matching design */}
+          <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
-              d="M14 6C14 6 11 14 17 19C23 24 31 19 31 19C31 19 30 28 20 28C10 28 6 21 6 15C6 9 14 6 14 6Z"
-              fill="#7a5538"
+              d="M12 7C12 7 9.5 13 13.5 16.5C17.5 20 23.5 17 23.5 17C23.5 17 23 23.5 17 24C11 24.5 8 19 8 14C8 9 12 7 12 7Z"
+              fill="#7d583b"
             />
             <path
-              d="M17 19C17 19 22 17 24 12C24.5 10.7 24.3 9.5 24 8.5C22.5 8 20.5 8.5 19 10C17.2 11.8 17 15 17 19Z"
-              fill="#9e724c"
-              opacity="0.9"
+              d="M18.5 10C18.5 10 21 12 21 15C21 18 18 19 18 19"
+              stroke="#5d3e26"
+              strokeWidth="1.6"
+              strokeLinecap="round"
             />
             <path
-              d="M9 29C11 26 15 21 17 19"
-              stroke="#593b23"
-              strokeWidth="2.2"
+              d="M7 24.5C9 22.5 12 18.5 13.5 14"
+              stroke="#7d583b"
+              strokeWidth="2"
               strokeLinecap="round"
             />
           </svg>
@@ -95,10 +96,28 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigateToLogin }) => {
       {/* Main Hero Body Section */}
       <main className="pm-hero-body">
         <div className="pm-hero-content">
-          {/* Subtle Tagline */}
+          {/* Subtle Tagline with hand-drawn sparkle */}
           <div className="pm-tagline">
-            <span className="pm-sparkle">✦</span>
-            <span>LEARN • PRACTICE • TRACK • GROW</span>
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              style={{ color: '#5b695a', flexShrink: 0 }}
+            >
+              <path
+                d="M12 2C12 2 12.5 7.5 14.5 9.5C16.5 11.5 22 12 22 12C22 12 16.5 12.5 14.5 14.5C12.5 16.5 12 22 12 22C12 22 11.5 16.5 9.5 14.5C7.5 12.5 2 12 2 12C2 12 7.5 11.5 9.5 9.5C11.5 7.5 12 2 12 2Z"
+                fill="#586857"
+              />
+              <path
+                d="M8 16L4 20"
+                stroke="#586857"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+              />
+            </svg>
+            <span>LEARN &nbsp;•&nbsp; PRACTICE &nbsp;•&nbsp; TRACK &nbsp;•&nbsp; GROW</span>
           </div>
 
           {/* Decorative Quotation Mark */}
@@ -112,9 +131,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigateToLogin }) => {
             <span className="pm-headline-green">Big Progress</span>
           </h1>
 
-          {/* Subtitle */}
+          {/* Subtitle with matching two-line break */}
           <p className="pm-subtitle">
-            A smarter way to study, stay consistent and become the best version of yourself.
+            A smarter way to study, stay consistent<br />
+            and become the best version of yourself.
           </p>
 
           {/* Primary Call to Action Button */}
@@ -125,14 +145,14 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigateToLogin }) => {
               className="pm-btn-cta"
             >
               <span>Start Learning Today</span>
-              <span style={{ fontSize: '18px', lineHeight: 1 }}>→</span>
+              <span className="pm-cta-arrow">→</span>
             </button>
           </div>
         </div>
       </main>
 
-      {/* Empty space for bottom balance without the requested excluded sections */}
-      <div style={{ height: '40px' }} />
+      {/* Spacing for bottom balance */}
+      <div style={{ height: '32px' }} />
 
       {/* Interactive Feature / Subjects / About Modals */}
       {activeModal && (
@@ -149,28 +169,28 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigateToLogin }) => {
 
             {activeModal === 'features' && (
               <div>
-                <span style={{ fontSize: '12px', fontWeight: 700, color: '#253a2a', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-                  Intelligence Engine
+                <span style={{ fontSize: '12px', fontWeight: 700, color: '#284232', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                  ExamBuddy Engine
                 </span>
-                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '26px', fontWeight: 800, marginTop: '6px', color: '#191c19' }}>
-                  Features Built for High Performance
+                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '26px', fontWeight: 800, marginTop: '6px', color: '#181b18' }}>
+                  Features Built for High-Performance Students
                 </h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '20px' }}>
-                  <div style={{ padding: '14px', background: 'rgba(37, 58, 42, 0.05)', borderRadius: '14px' }}>
-                    <h4 style={{ fontWeight: 700, color: '#1e382b', fontSize: '15px' }}>1-Click PyMuPDF Table Extractor</h4>
-                    <p style={{ fontSize: '13.5px', color: '#4d554d', marginTop: '4px', lineHeight: 1.5 }}>
-                      Crawl college syllabus PDFs and extract all theory and lab subjects, credits, and contact hours in seconds.
+                  <div style={{ padding: '14px', background: 'rgba(40, 66, 50, 0.05)', borderRadius: '14px' }}>
+                    <h4 style={{ fontWeight: 700, color: '#233f2e', fontSize: '15px' }}>1-Click PyMuPDF Table Extractor</h4>
+                    <p style={{ fontSize: '13.5px', color: '#485248', marginTop: '4px', lineHeight: 1.5 }}>
+                      Crawl university syllabus PDFs to automatically index all theory courses, lab subjects, and credits in seconds.
                     </p>
                   </div>
-                  <div style={{ padding: '14px', background: 'rgba(37, 58, 42, 0.05)', borderRadius: '14px' }}>
-                    <h4 style={{ fontWeight: 700, color: '#1e382b', fontSize: '15px' }}>Pareto 80/20 Revision Planner</h4>
-                    <p style={{ fontSize: '13.5px', color: '#4d554d', marginTop: '4px', lineHeight: 1.5 }}>
+                  <div style={{ padding: '14px', background: 'rgba(40, 66, 50, 0.05)', borderRadius: '14px' }}>
+                    <h4 style={{ fontWeight: 700, color: '#233f2e', fontSize: '15px' }}>Pareto 80/20 Revision Planner</h4>
+                    <p style={{ fontSize: '13.5px', color: '#485248', marginTop: '4px', lineHeight: 1.5 }}>
                       Isolates the top 20% high-yield concepts that generate 80% of examination marks using recency-decay scoring.
                     </p>
                   </div>
-                  <div style={{ padding: '14px', background: 'rgba(37, 58, 42, 0.05)', borderRadius: '14px' }}>
-                    <h4 style={{ fontWeight: 700, color: '#1e382b', fontSize: '15px' }}>Silent Circular Monitor</h4>
-                    <p style={{ fontSize: '13.5px', color: '#4d554d', marginTop: '4px', lineHeight: 1.5 }}>
+                  <div style={{ padding: '14px', background: 'rgba(40, 66, 50, 0.05)', borderRadius: '14px' }}>
+                    <h4 style={{ fontWeight: 700, color: '#233f2e', fontSize: '15px' }}>Silent Notice Monitor</h4>
+                    <p style={{ fontSize: '13.5px', color: '#485248', marginTop: '4px', lineHeight: 1.5 }}>
                       Real-time datesheet updates, form fill-up deadlines, and schedule change alerts delivered seamlessly.
                     </p>
                   </div>
@@ -180,30 +200,30 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigateToLogin }) => {
 
             {activeModal === 'subjects' && (
               <div>
-                <span style={{ fontSize: '12px', fontWeight: 700, color: '#253a2a', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                <span style={{ fontSize: '12px', fontWeight: 700, color: '#284232', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                   Curriculum Coverage
                 </span>
-                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '26px', fontWeight: 800, marginTop: '6px', color: '#191c19' }}>
+                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '26px', fontWeight: 800, marginTop: '6px', color: '#181b18' }}>
                   Indexed Technical Courses
                 </h3>
-                <p style={{ fontSize: '14px', color: '#4d554d', marginTop: '8px', lineHeight: 1.5 }}>
+                <p style={{ fontSize: '14px', color: '#485248', marginTop: '8px', lineHeight: 1.5 }}>
                   Autonomous college syllabus tables parsed with module-level topics and past exam papers:
                 </p>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px', marginTop: '16px' }}>
                   <div style={{ padding: '10px 14px', background: '#ffffff', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.06)' }}>
-                    <strong style={{ color: '#1e382b' }}>CS301</strong>
+                    <strong style={{ color: '#233f2e' }}>CS301</strong>
                     <div style={{ fontSize: '12px', color: '#666' }}>Data Structures & Algorithms</div>
                   </div>
                   <div style={{ padding: '10px 14px', background: '#ffffff', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.06)' }}>
-                    <strong style={{ color: '#1e382b' }}>CS302</strong>
+                    <strong style={{ color: '#233f2e' }}>CS302</strong>
                     <div style={{ fontSize: '12px', color: '#666' }}>Discrete Mathematics</div>
                   </div>
                   <div style={{ padding: '10px 14px', background: '#ffffff', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.06)' }}>
-                    <strong style={{ color: '#1e382b' }}>CS303</strong>
+                    <strong style={{ color: '#233f2e' }}>CS303</strong>
                     <div style={{ fontSize: '12px', color: '#666' }}>Computer Organization & Arch</div>
                   </div>
                   <div style={{ padding: '10px 14px', background: '#ffffff', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.06)' }}>
-                    <strong style={{ color: '#1e382b' }}>EC(CS)301</strong>
+                    <strong style={{ color: '#233f2e' }}>EC(CS)301</strong>
                     <div style={{ fontSize: '12px', color: '#666' }}>Digital Electronics & Circuits</div>
                   </div>
                 </div>
@@ -212,13 +232,13 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigateToLogin }) => {
 
             {activeModal === 'about' && (
               <div>
-                <span style={{ fontSize: '12px', fontWeight: 700, color: '#253a2a', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                <span style={{ fontSize: '12px', fontWeight: 700, color: '#284232', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                   Our Mission
                 </span>
-                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '26px', fontWeight: 800, marginTop: '6px', color: '#191c19' }}>
+                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '26px', fontWeight: 800, marginTop: '6px', color: '#181b18' }}>
                   Empowering Technical Minds
                 </h3>
-                <p style={{ fontSize: '14px', color: '#4d554d', marginTop: '12px', lineHeight: 1.6 }}>
+                <p style={{ fontSize: '14px', color: '#485248', marginTop: '12px', lineHeight: 1.6 }}>
                   Technical students focus on coding, projects, and building real-world skills. ExamBuddy bridges the gap
                   by taking the chaos out of semester exams—giving you structured, high-yield preparation without sacrificing your technical journey.
                 </p>
