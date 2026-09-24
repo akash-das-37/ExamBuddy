@@ -49,10 +49,30 @@ export const LoginPage: React.FC<LoginPageProps> = ({
         }
       }
 
-      // 2. Obtain session token from ExamBuddy backend
-      await api.login(signInEmail, signInPassword);
-      const student = await api.getMe();
-      onAuthSuccess(student);
+      // 2. Obtain session token from ExamBuddy backend (with Supabase fallback)
+      try {
+        await api.login(signInEmail, signInPassword);
+        const student = await api.getMe();
+        onAuthSuccess(student);
+      } catch {
+        const supaUser = await supabaseAuth.getUser();
+        if (supaUser) {
+          const fallbackStudent: Student = {
+            id: supaUser.id,
+            name: (supaUser.user_metadata?.name as string) || signInEmail.split('@')[0],
+            email: supaUser.email || signInEmail.trim(),
+            college_id: 'default-college-id',
+            course: (supaUser.user_metadata?.course as string) || 'B.Tech',
+            branch: (supaUser.user_metadata?.branch as string) || 'CSE',
+            semester: Number(supaUser.user_metadata?.semester) || 6,
+            email_notifications_enabled: true,
+            is_active: true,
+          };
+          onAuthSuccess(fallbackStudent);
+        } else {
+          throw new Error('Login failed. Please verify your credentials.');
+        }
+      }
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
@@ -120,13 +140,33 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           email_notifications_enabled: emailNotifications,
         });
       } catch {
-        // If already exists, seamlessly log in with credentials
-        await api.login(registerEmail.trim(), registerPassword);
+        // If already exists or backend error, try backend login
+        try {
+          await api.login(registerEmail.trim(), registerPassword);
+        } catch {
+          // Backend might be offline
+        }
       }
 
-      // 3. Get authenticated student profile
-      const student = await api.getMe();
-      onAuthSuccess(student);
+      // 3. Get authenticated student profile (with Supabase fallback)
+      try {
+        const student = await api.getMe();
+        onAuthSuccess(student);
+      } catch {
+        const supaUser = await supabaseAuth.getUser();
+        const fallbackStudent: Student = {
+          id: supaUser?.id || 'supabase-user',
+          name: name.trim() || (supaUser?.user_metadata?.name as string) || 'Student',
+          email: registerEmail.trim(),
+          college_id: 'default-college-id',
+          course,
+          branch: effectiveBranch,
+          semester,
+          email_notifications_enabled: emailNotifications,
+          is_active: true,
+        };
+        onAuthSuccess(fallbackStudent);
+      }
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
