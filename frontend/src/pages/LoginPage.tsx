@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { api } from '../api/client';
+import { isSupabaseConfigured, supabaseAuth } from '../lib/supabase';
 import type { Student } from '../types';
 
 interface LoginPageProps {
@@ -40,6 +41,15 @@ export const LoginPage: React.FC<LoginPageProps> = ({
     setError(null);
     setLoading(true);
     try {
+      // 1. Authenticate with Supabase Auth for authentic users
+      if (isSupabaseConfigured) {
+        const { error: supaError } = await supabaseAuth.signIn(signInEmail, signInPassword);
+        if (supaError) {
+          throw new Error(supaError.message);
+        }
+      }
+
+      // 2. Obtain session token from ExamBuddy backend
       await api.login(signInEmail, signInPassword);
       const student = await api.getMe();
       onAuthSuccess(student);
@@ -70,18 +80,36 @@ export const LoginPage: React.FC<LoginPageProps> = ({
     setLoading(true);
     const effectiveBranch = branch === 'Other' ? (customBranch.trim() || 'Other') : branch;
     try {
+      // 1. Register user authentic record in Supabase Auth
+      if (isSupabaseConfigured) {
+        const { error: supaError } = await supabaseAuth.signUp({
+          email: registerEmail.trim(),
+          password: registerPassword,
+          name: name.trim() || 'Student',
+          college_url: collegeUrl.trim() || 'https://www.jiscollege.ac.in/',
+          course,
+          branch: effectiveBranch,
+          semester,
+        });
+
+        if (supaError) {
+          throw new Error(supaError.message);
+        }
+      }
+
+      // 2. Initialize student profile in ExamBuddy backend
       await api.register({
-        name: name.trim() || 'Akash Das',
-        email: registerEmail.trim() || 'akashdas200x@gmail.com',
+        name: name.trim() || 'Student',
+        email: registerEmail.trim(),
         password: registerPassword,
-        college_url: collegeUrl.trim() || 'https://www.iitb.ac.in/',
+        college_url: collegeUrl.trim() || 'https://www.jiscollege.ac.in/',
         course,
         branch: effectiveBranch,
         semester,
         email_notifications_enabled: emailNotifications,
       });
 
-      // Get authenticated student profile
+      // 3. Get authenticated student profile
       const student = await api.getMe();
       onAuthSuccess(student);
     } catch (err: unknown) {
@@ -135,6 +163,26 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
           {/* Header Titles */}
           <div className="ex-auth-heading">
+            {isSupabaseConfigured && (
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '4px 12px',
+                  background: 'rgba(16, 185, 129, 0.1)',
+                  border: '1px solid rgba(16, 185, 129, 0.3)',
+                  borderRadius: '9999px',
+                  fontSize: '11px',
+                  color: '#6ee7b7',
+                  marginBottom: '10px',
+                  fontWeight: 500,
+                }}
+              >
+                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10b981' }} />
+                <span>Supabase Cloud Auth Active</span>
+              </div>
+            )}
             <h1 className="ex-auth-title">
               {activeTab === 'signin' ? 'Welcome Back' : 'Create Account'}
             </h1>

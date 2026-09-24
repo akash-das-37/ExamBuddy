@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { api } from './api/client';
+import { supabaseAuth } from './lib/supabase';
 import { Navbar } from './components/Navbar';
 import { Sidebar } from './components/Sidebar';
 import { HomePage } from './pages/HomePage';
@@ -66,7 +67,12 @@ export const App: React.FC = () => {
     initAuth();
   }, []);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await supabaseAuth.signOut();
+    } catch {
+      // ignore
+    }
     api.logout();
     setStudent(null);
     setCollege(null);
