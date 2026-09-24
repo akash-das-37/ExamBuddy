@@ -9,7 +9,7 @@ import type {
   TopicImportanceItem,
 } from '../types';
 
-const API_BASE = 'http://127.0.0.1:8000';
+const API_BASE = (import.meta.env.VITE_API_BASE as string) || 'http://127.0.0.1:8000';
 
 function getAuthHeader(): Record<string, string> {
   const token = localStorage.getItem('exambuddy_token');
