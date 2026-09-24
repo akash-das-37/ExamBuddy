@@ -6,7 +6,7 @@ interface HomePageProps {
 }
 
 export const HomePage: React.FC<HomePageProps> = ({ onNavigateToLogin }) => {
-  const [activeModal, setActiveModal] = useState<'features' | 'subjects' | 'about' | null>(null);
+  const [activeModal, setActiveModal] = useState<'features' | 'about' | null>(null);
 
   return (
     <div className="pm-hero-wrapper">
@@ -57,13 +57,6 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigateToLogin }) => {
             onClick={() => setActiveModal('features')}
           >
             Features
-          </button>
-          <button
-            type="button"
-            className="pm-nav-item"
-            onClick={() => setActiveModal('subjects')}
-          >
-            Subjects
           </button>
           <button
             type="button"
@@ -193,38 +186,6 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigateToLogin }) => {
                     <p style={{ fontSize: '13.5px', color: '#485248', marginTop: '4px', lineHeight: 1.5 }}>
                       Real-time datesheet updates, form fill-up deadlines, and schedule change alerts delivered seamlessly.
                     </p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {activeModal === 'subjects' && (
-              <div>
-                <span style={{ fontSize: '12px', fontWeight: 700, color: '#284232', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-                  Curriculum Coverage
-                </span>
-                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '26px', fontWeight: 800, marginTop: '6px', color: '#181b18' }}>
-                  Indexed Technical Courses
-                </h3>
-                <p style={{ fontSize: '14px', color: '#485248', marginTop: '8px', lineHeight: 1.5 }}>
-                  Autonomous college syllabus tables parsed with module-level topics and past exam papers:
-                </p>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px', marginTop: '16px' }}>
-                  <div style={{ padding: '10px 14px', background: '#ffffff', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.06)' }}>
-                    <strong style={{ color: '#233f2e' }}>CS301</strong>
-                    <div style={{ fontSize: '12px', color: '#666' }}>Data Structures & Algorithms</div>
-                  </div>
-                  <div style={{ padding: '10px 14px', background: '#ffffff', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.06)' }}>
-                    <strong style={{ color: '#233f2e' }}>CS302</strong>
-                    <div style={{ fontSize: '12px', color: '#666' }}>Discrete Mathematics</div>
-                  </div>
-                  <div style={{ padding: '10px 14px', background: '#ffffff', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.06)' }}>
-                    <strong style={{ color: '#233f2e' }}>CS303</strong>
-                    <div style={{ fontSize: '12px', color: '#666' }}>Computer Organization & Arch</div>
-                  </div>
-                  <div style={{ padding: '10px 14px', background: '#ffffff', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.06)' }}>
-                    <strong style={{ color: '#233f2e' }}>EC(CS)301</strong>
-                    <div style={{ fontSize: '12px', color: '#666' }}>Digital Electronics & Circuits</div>
                   </div>
                 </div>
               </div>
