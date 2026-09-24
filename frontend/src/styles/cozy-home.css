@@ -1,0 +1,321 @@
+/* ============================================================
+   EXAMBUDDY - WARM COZY EDITORIAL HOME PAGE
+   Aesthetic match: warm study desk, soft leaf shadows,
+   Playfair Display editorial serif typography & forest green accents.
+   ============================================================ */
+
+.pm-hero-wrapper {
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+  background-color: #f7f4ee;
+  background-image: url('/hero-study-bg.jpg');
+  background-size: cover;
+  background-position: center right;
+  background-repeat: no-repeat;
+  color: #191c19;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+/* Soft cream veil on the left to guarantee optimal contrast */
+.pm-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(247, 244, 238, 0.95) 0%,
+    rgba(247, 244, 238, 0.91) 40%,
+    rgba(247, 244, 238, 0.50) 58%,
+    rgba(247, 244, 238, 0) 80%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Top Navigation Bar */
+.pm-navbar {
+  position: relative;
+  z-index: 20;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 28px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.pm-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.pm-brand-name {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: #191c19;
+  letter-spacing: -0.015em;
+}
+
+.pm-nav-center {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+
+.pm-nav-item {
+  position: relative;
+  font-size: 15px;
+  font-weight: 500;
+  color: #3a423a;
+  cursor: pointer;
+  text-decoration: none;
+  background: none;
+  border: none;
+  padding: 6px 2px;
+  transition: color 0.18s ease;
+}
+
+.pm-nav-item:hover {
+  color: #191c19;
+}
+
+.pm-nav-item.active {
+  color: #191c19;
+  font-weight: 600;
+}
+
+.pm-nav-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #253a2a;
+  border-radius: 9999px;
+}
+
+.pm-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.pm-btn-login {
+  background: rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(80, 70, 60, 0.28);
+  color: #232824;
+  font-size: 14.5px;
+  font-weight: 500;
+  padding: 9px 24px;
+  border-radius: 9999px;
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pm-btn-login:hover {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(80, 70, 60, 0.45);
+  transform: translateY(-1px);
+}
+
+.pm-btn-signup {
+  background: #253a2a;
+  color: #ffffff;
+  font-size: 14.5px;
+  font-weight: 500;
+  padding: 9px 26px;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(37, 58, 42, 0.22);
+  transition: all 0.2s ease;
+}
+
+.pm-btn-signup:hover {
+  background: #1c2d20;
+  box-shadow: 0 6px 18px rgba(37, 58, 42, 0.32);
+  transform: translateY(-1px);
+}
+
+/* Hero Section */
+.pm-hero-body {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 48px 90px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.pm-hero-content {
+  max-width: 560px;
+}
+
+/* Tagline */
+.pm-tagline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  color: #5d685c;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.pm-sparkle {
+  color: #5d685c;
+  font-size: 14px;
+  display: inline-block;
+}
+
+/* Big Decorative Quote Mark */
+.pm-quote {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 96px;
+  line-height: 0.7;
+  color: #cbd5c7;
+  margin-bottom: -10px;
+  margin-left: -4px;
+  user-select: none;
+}
+
+/* Editorial Headline */
+.pm-headline {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(48px, 5.4vw, 76px);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  margin: 0;
+  padding: 0;
+}
+
+.pm-headline-black {
+  color: #191c19;
+  display: block;
+}
+
+.pm-headline-green {
+  color: #1e382b;
+  display: block;
+}
+
+/* Subtitle */
+.pm-subtitle {
+  font-size: 17px;
+  line-height: 1.6;
+  color: #444c44;
+  max-width: 440px;
+  margin-top: 18px;
+  margin-bottom: 32px;
+}
+
+/* Primary CTA Button */
+.pm-btn-cta {
+  background: #213928;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 14px 34px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(33, 57, 40, 0.28);
+  transition: all 0.22s ease;
+  text-decoration: none;
+}
+
+.pm-btn-cta:hover {
+  background: #172a1e;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(33, 57, 40, 0.38);
+}
+
+/* Interactive Details Modal or Tab */
+.pm-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 20, 16, 0.6);
+  backdrop-filter: blur(8px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.pm-modal-card {
+  background: #fbf9f5;
+  border-radius: 24px;
+  padding: 36px 32px;
+  max-width: 580px;
+  width: 100%;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+  position: relative;
+  color: #191c19;
+}
+
+.pm-modal-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #5a645a;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+
+.pm-modal-close:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+/* Mobile & Tablet Adjustments */
+@media (max-width: 900px) {
+  .pm-navbar {
+    padding: 20px 24px;
+  }
+  .pm-nav-center {
+    display: none;
+  }
+  .pm-hero-body {
+    padding: 30px 24px 60px;
+  }
+  .pm-hero-overlay {
+    background: linear-gradient(
+      180deg,
+      rgba(247, 244, 238, 0.97) 0%,
+      rgba(247, 244, 238, 0.94) 65%,
+      rgba(247, 244, 238, 0.88) 100%
+    );
+  }
+}

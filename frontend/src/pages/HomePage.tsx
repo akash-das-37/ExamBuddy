@@ -1,166 +1,245 @@
-import React from 'react';
+import React, { useState } from 'react';
+import '../styles/cozy-home.css';
 
 interface HomePageProps {
   onNavigateToLogin: (defaultTab?: 'signin' | 'register') => void;
 }
 
 export const HomePage: React.FC<HomePageProps> = ({ onNavigateToLogin }) => {
-  return (
-    <div className="ex-page-wrapper">
-      {/* Ambient background glows matching Stitch design */}
-      <div className="ex-glow-center" />
-      <div className="ex-glow-cyan" />
+  const [activeModal, setActiveModal] = useState<'features' | 'subjects' | 'about' | null>(null);
 
-      {/* Top Header Navigation */}
-      <header className="ex-header">
-        {/* Left: Brand Logo & Title */}
+  return (
+    <div className="pm-hero-wrapper">
+      {/* Soft natural overlay ensuring high-contrast readability on any screen width */}
+      <div className="pm-hero-overlay" />
+
+      {/* Top Navigation Bar */}
+      <header className="pm-navbar">
+        {/* Brand Logo & Name */}
         <div
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="ex-brand"
+          className="pm-brand"
         >
-          <div className="ex-brand-logo">
-            <span className="material-symbols-outlined">school</span>
-          </div>
-          <span className="ex-brand-name">ExamBuddy</span>
+          {/* Stylized organic leaf sprout icon matching design */}
+          <svg width="32" height="32" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M14 6C14 6 11 14 17 19C23 24 31 19 31 19C31 19 30 28 20 28C10 28 6 21 6 15C6 9 14 6 14 6Z"
+              fill="#7a5538"
+            />
+            <path
+              d="M17 19C17 19 22 17 24 12C24.5 10.7 24.3 9.5 24 8.5C22.5 8 20.5 8.5 19 10C17.2 11.8 17 15 17 19Z"
+              fill="#9e724c"
+              opacity="0.9"
+            />
+            <path
+              d="M9 29C11 26 15 21 17 19"
+              stroke="#593b23"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+            />
+          </svg>
+          <span className="pm-brand-name">ExamBuddy</span>
         </div>
 
-        {/* Right: Nav Links + Get Started Button */}
-        <div className="ex-nav-actions">
-          <a href="#features" className="ex-nav-link ex-nav-link-hide-mobile">
+        {/* Center Nav Links */}
+        <nav className="pm-nav-center">
+          <button
+            type="button"
+            className="pm-nav-item active"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          >
+            Home
+          </button>
+          <button
+            type="button"
+            className="pm-nav-item"
+            onClick={() => setActiveModal('features')}
+          >
             Features
-          </a>
-          <a href="#problem" className="ex-nav-link ex-nav-link-hide-mobile">
-            The Coder's Dilemma
-          </a>
+          </button>
+          <button
+            type="button"
+            className="pm-nav-item"
+            onClick={() => setActiveModal('subjects')}
+          >
+            Subjects
+          </button>
+          <button
+            type="button"
+            className="pm-nav-item"
+            onClick={() => setActiveModal('about')}
+          >
+            About
+          </button>
+        </nav>
+
+        {/* Right Nav Action Buttons */}
+        <div className="pm-nav-right">
           <button
             type="button"
             onClick={() => onNavigateToLogin('signin')}
-            className="ex-nav-link"
+            className="pm-btn-login"
           >
             Login
           </button>
           <button
             type="button"
             onClick={() => onNavigateToLogin('register')}
-            className="ex-btn-pill-gradient"
+            className="pm-btn-signup"
           >
-            Get Started
+            Sign Up
           </button>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <main className="ex-hero">
-        {/* Floating Top Badge */}
-        <div className="ex-badge">
-          <span>⚡</span>
-          <span>Built for Technical Students, Developers & Engineers</span>
-        </div>
+      {/* Main Hero Body Section */}
+      <main className="pm-hero-body">
+        <div className="pm-hero-content">
+          {/* Subtle Tagline */}
+          <div className="pm-tagline">
+            <span className="pm-sparkle">✦</span>
+            <span>LEARN • PRACTICE • TRACK • GROW</span>
+          </div>
 
-        {/* Large Centered Headline */}
-        <h1 className="ex-hero-title">
-          Focus on Coding.<br />
-          <span className="ex-gradient-text">Let AI Crack Your Exams.</span>
-        </h1>
+          {/* Decorative Quotation Mark */}
+          <div className="pm-quote" aria-hidden="true">
+            “
+          </div>
 
-        {/* Centered Subtitle */}
-        <p className="ex-hero-subtitle">
-          Tech students spend all semester building real projects, solving DSA, and mastering industry skills.
-          When semester exams knock at the door, ExamBuddy crawls your college portal and delivers 80/20 Pareto
-          intelligence so you can ace your GPA in minimal hours.
-        </p>
+          {/* Editorial Headline */}
+          <h1 className="pm-headline">
+            <span className="pm-headline-black">Small Steps</span>
+            <span className="pm-headline-green">Big Progress</span>
+          </h1>
 
-        {/* Main Pill CTA Button */}
-        <div>
-          <button
-            type="button"
-            onClick={() => onNavigateToLogin('register')}
-            className="ex-btn-cta-large"
-          >
-            <span>Rescue My Exam Prep</span>
-            <span style={{ fontSize: '18px' }}>➔</span>
-          </button>
+          {/* Subtitle */}
+          <p className="pm-subtitle">
+            A smarter way to study, stay consistent and become the best version of yourself.
+          </p>
+
+          {/* Primary Call to Action Button */}
+          <div>
+            <button
+              type="button"
+              onClick={() => onNavigateToLogin('register')}
+              className="pm-btn-cta"
+            >
+              <span>Start Learning Today</span>
+              <span style={{ fontSize: '18px', lineHeight: 1 }}>→</span>
+            </button>
+          </div>
         </div>
       </main>
 
-      {/* Why ExamBuddy / The Problem Section */}
-      <section id="problem" style={{ maxWidth: '960px', margin: '40px auto 20px', padding: '0 24px', textAlign: 'center' }}>
-        <div style={{
-          background: 'rgba(30, 41, 59, 0.45)',
-          backdropFilter: 'blur(16px)',
-          border: '1px solid rgba(99, 102, 241, 0.25)',
-          borderRadius: '20px',
-          padding: '36px 28px',
-          boxShadow: '0 12px 32px rgba(0, 0, 0, 0.35)'
-        }}>
-          <span style={{
-            fontSize: '11px',
-            fontWeight: 700,
-            color: '#818cf8',
-            textTransform: 'uppercase',
-            letterSpacing: '0.12em',
-            display: 'inline-block',
-            marginBottom: '8px'
-          }}>
-            The Reality of Engineering Academics
-          </span>
-          <h2 style={{ fontSize: '24px', fontWeight: 800, color: '#ffffff', marginBottom: '12px', lineHeight: 1.3 }}>
-            Why High-Skill Coders Get Messed Up When Exams Knock at the Door
-          </h2>
-          <p style={{ color: '#94a3b8', fontSize: '14px', lineHeight: 1.7, maxWidth: '820px', margin: '0 auto' }}>
-            You're shipping full-stack code, grinding LeetCode, and preparing for tech placements—not reading 500-page slide decks.
-            When exams suddenly arrive, college portals are labyrinths of broken links, syllabi are buried in deep PDFs, and PYQ scans are scattered across WhatsApp groups.
-            ExamBuddy automates the entire academic grunt work with mathematical 80/20 precision so you never compromise your technical focus.
-          </p>
+      {/* Empty space for bottom balance without the requested excluded sections */}
+      <div style={{ height: '40px' }} />
+
+      {/* Interactive Feature / Subjects / About Modals */}
+      {activeModal && (
+        <div className="pm-modal-overlay" onClick={() => setActiveModal(null)}>
+          <div className="pm-modal-card" onClick={(e) => e.stopPropagation()}>
+            <button
+              type="button"
+              className="pm-modal-close"
+              onClick={() => setActiveModal(null)}
+              aria-label="Close modal"
+            >
+              ✕
+            </button>
+
+            {activeModal === 'features' && (
+              <div>
+                <span style={{ fontSize: '12px', fontWeight: 700, color: '#253a2a', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                  Intelligence Engine
+                </span>
+                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '26px', fontWeight: 800, marginTop: '6px', color: '#191c19' }}>
+                  Features Built for High Performance
+                </h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '20px' }}>
+                  <div style={{ padding: '14px', background: 'rgba(37, 58, 42, 0.05)', borderRadius: '14px' }}>
+                    <h4 style={{ fontWeight: 700, color: '#1e382b', fontSize: '15px' }}>1-Click PyMuPDF Table Extractor</h4>
+                    <p style={{ fontSize: '13.5px', color: '#4d554d', marginTop: '4px', lineHeight: 1.5 }}>
+                      Crawl college syllabus PDFs and extract all theory and lab subjects, credits, and contact hours in seconds.
+                    </p>
+                  </div>
+                  <div style={{ padding: '14px', background: 'rgba(37, 58, 42, 0.05)', borderRadius: '14px' }}>
+                    <h4 style={{ fontWeight: 700, color: '#1e382b', fontSize: '15px' }}>Pareto 80/20 Revision Planner</h4>
+                    <p style={{ fontSize: '13.5px', color: '#4d554d', marginTop: '4px', lineHeight: 1.5 }}>
+                      Isolates the top 20% high-yield concepts that generate 80% of examination marks using recency-decay scoring.
+                    </p>
+                  </div>
+                  <div style={{ padding: '14px', background: 'rgba(37, 58, 42, 0.05)', borderRadius: '14px' }}>
+                    <h4 style={{ fontWeight: 700, color: '#1e382b', fontSize: '15px' }}>Silent Circular Monitor</h4>
+                    <p style={{ fontSize: '13.5px', color: '#4d554d', marginTop: '4px', lineHeight: 1.5 }}>
+                      Real-time datesheet updates, form fill-up deadlines, and schedule change alerts delivered seamlessly.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeModal === 'subjects' && (
+              <div>
+                <span style={{ fontSize: '12px', fontWeight: 700, color: '#253a2a', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                  Curriculum Coverage
+                </span>
+                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '26px', fontWeight: 800, marginTop: '6px', color: '#191c19' }}>
+                  Indexed Technical Courses
+                </h3>
+                <p style={{ fontSize: '14px', color: '#4d554d', marginTop: '8px', lineHeight: 1.5 }}>
+                  Autonomous college syllabus tables parsed with module-level topics and past exam papers:
+                </p>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px', marginTop: '16px' }}>
+                  <div style={{ padding: '10px 14px', background: '#ffffff', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.06)' }}>
+                    <strong style={{ color: '#1e382b' }}>CS301</strong>
+                    <div style={{ fontSize: '12px', color: '#666' }}>Data Structures & Algorithms</div>
+                  </div>
+                  <div style={{ padding: '10px 14px', background: '#ffffff', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.06)' }}>
+                    <strong style={{ color: '#1e382b' }}>CS302</strong>
+                    <div style={{ fontSize: '12px', color: '#666' }}>Discrete Mathematics</div>
+                  </div>
+                  <div style={{ padding: '10px 14px', background: '#ffffff', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.06)' }}>
+                    <strong style={{ color: '#1e382b' }}>CS303</strong>
+                    <div style={{ fontSize: '12px', color: '#666' }}>Computer Organization & Arch</div>
+                  </div>
+                  <div style={{ padding: '10px 14px', background: '#ffffff', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.06)' }}>
+                    <strong style={{ color: '#1e382b' }}>EC(CS)301</strong>
+                    <div style={{ fontSize: '12px', color: '#666' }}>Digital Electronics & Circuits</div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeModal === 'about' && (
+              <div>
+                <span style={{ fontSize: '12px', fontWeight: 700, color: '#253a2a', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                  Our Mission
+                </span>
+                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '26px', fontWeight: 800, marginTop: '6px', color: '#191c19' }}>
+                  Empowering Technical Minds
+                </h3>
+                <p style={{ fontSize: '14px', color: '#4d554d', marginTop: '12px', lineHeight: 1.6 }}>
+                  Technical students focus on coding, projects, and building real-world skills. ExamBuddy bridges the gap
+                  by taking the chaos out of semester exams—giving you structured, high-yield preparation without sacrificing your technical journey.
+                </p>
+                <div style={{ marginTop: '20px' }}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setActiveModal(null);
+                      onNavigateToLogin('register');
+                    }}
+                    className="pm-btn-signup"
+                    style={{ width: '100%', textAlign: 'center', padding: '12px' }}
+                  >
+                    Get Started Free
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
-      </section>
-
-      {/* Bottom 3 Feature Cards */}
-      <section id="features" className="ex-features">
-        <div className="ex-features-grid">
-          {/* Card 1: 1-Click PyMuPDF Extractor */}
-          <div
-            onClick={() => onNavigateToLogin('signin')}
-            className="ex-card"
-          >
-            <div className="ex-card-icon">
-              <span className="material-symbols-outlined">auto_stories</span>
-            </div>
-            <h3 className="ex-card-title">1-Click Syllabus Discovery</h3>
-            <p className="ex-card-desc">
-              PyMuPDF extraction parses messy college PDFs—instantly indexing all 6 theory courses, lab matrices, and modular sub-topics.
-            </p>
-          </div>
-
-          {/* Card 2: Pareto 80/20 Revision Planner */}
-          <div
-            onClick={() => onNavigateToLogin('signin')}
-            className="ex-card"
-          >
-            <div className="ex-card-icon">
-              <span className="material-symbols-outlined">psychology</span>
-            </div>
-            <h3 className="ex-card-title">Pareto 80/20 Planner</h3>
-            <p className="ex-card-desc">
-              Recency-weighted decay scoring isolates the top 20% high-yield concepts that deliver 80% of marks, organized into 3-tier study sprints.
-            </p>
-          </div>
-
-          {/* Card 3: Portal Notice Watchdog */}
-          <div
-            onClick={() => onNavigateToLogin('signin')}
-            className="ex-card"
-          >
-            <div className="ex-card-icon">
-              <span className="material-symbols-outlined">notifications_active</span>
-            </div>
-            <h3 className="ex-card-title">Silent Notice Watchdog</h3>
-            <p className="ex-card-desc">
-              Autonomous crawler tracks exam form deadlines, admit card releases, and schedule postponements buried in college circular boards.
-            </p>
-          </div>
-        </div>
-      </section>
+      )}
     </div>
   );
 };
