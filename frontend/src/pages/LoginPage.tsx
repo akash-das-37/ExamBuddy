@@ -93,21 +93,36 @@ export const LoginPage: React.FC<LoginPageProps> = ({
         });
 
         if (supaError) {
-          throw new Error(supaError.message);
+          if (
+            supaError.message.toLowerCase().includes('already registered') ||
+            supaError.message.toLowerCase().includes('already exists')
+          ) {
+            const { error: signInErr } = await supabaseAuth.signIn(registerEmail.trim(), registerPassword);
+            if (signInErr) {
+              throw new Error('This email is already registered in Supabase. Please switch to the Sign In tab or verify your password.');
+            }
+          } else {
+            throw new Error(supaError.message);
+          }
         }
       }
 
-      // 2. Initialize student profile in ExamBuddy backend
-      await api.register({
-        name: name.trim() || 'Student',
-        email: registerEmail.trim(),
-        password: registerPassword,
-        college_url: collegeUrl.trim() || 'https://www.jiscollege.ac.in/',
-        course,
-        branch: effectiveBranch,
-        semester,
-        email_notifications_enabled: emailNotifications,
-      });
+      // 2. Initialize or upsert student profile in ExamBuddy backend
+      try {
+        await api.register({
+          name: name.trim() || 'Student',
+          email: registerEmail.trim(),
+          password: registerPassword,
+          college_url: collegeUrl.trim() || 'https://www.jiscollege.ac.in/',
+          course,
+          branch: effectiveBranch,
+          semester,
+          email_notifications_enabled: emailNotifications,
+        });
+      } catch {
+        // If already exists, seamlessly log in with credentials
+        await api.login(registerEmail.trim(), registerPassword);
+      }
 
       // 3. Get authenticated student profile
       const student = await api.getMe();

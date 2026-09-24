@@ -26,15 +26,24 @@ async def signup(data: SignupRequest, db: AsyncSession) -> tuple[Student, str, b
     - Returns (student, access_token, is_new_college).
     Raises HTTPException 409 if email already exists.
     """
-    # Check for duplicate email
+    # Check for duplicate email — if exists, upsert and authenticate seamlessly
     existing = await db.execute(
         select(Student).where(Student.email == data.email)
     )
-    if existing.scalar_one_or_none():
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="An account with this email already exists",
-        )
+    existing_student = existing.scalar_one_or_none()
+    if existing_student:
+        existing_student.password_hash = hash_password(data.password)
+        if data.name:
+            existing_student.name = data.name
+        if data.course:
+            existing_student.course = data.course
+        if data.branch:
+            existing_student.branch = data.branch
+        if data.semester:
+            existing_student.semester = data.semester
+        await db.flush()
+        token = create_access_token(data={"sub": str(existing_student.id)})
+        return existing_student, token, False
 
     # Upsert college by base_url
     base_url = _normalize_base_url(str(data.college_url))
