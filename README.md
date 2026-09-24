@@ -8,14 +8,14 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org)
 [![Vite](https://img.shields.io/badge/Vite-6.1-646CFF?style=for-the-badge&logo=vite)](https://vitejs.dev)
 
-> **ExamBuddy** is an end-to-end, AI-powered academic copilot built for college and university students. It autonomously crawls official university websites, discovers curriculum regulations, parses syllabus tables & modular topics via **PyMuPDF**, matches previous year exam questions (PYQs), scores high-yield study topics using a **recency-weighted mathematical decay algorithm**, and dispatches targeted circular alerts.
+> **ExamBuddy** is an autonomous academic intelligence copilot built for developers, engineers, and technical students. Tech students spend their semester building real projects, grinding LeetCode, and developing industry skills—leaving college academics for the last minute. When exams knock at the door, ExamBuddy uses automated portal crawling, **PyMuPDF table extraction**, and a **recency-weighted mathematical decay algorithm** to distill massive syllabi and past papers into an actionable, high-yield revision blueprint.
 
 ---
 
 ## 📌 Table of Contents
 
-1. [The Problem](#-the-problem)
-2. [The Solution](#-the-solution)
+1. [The Real Problem: The Coder's Dilemma](#-the-real-problem-the-coders-dilemma)
+2. [The Solution: Pareto Exam Intelligence](#-the-solution-pareto-exam-intelligence)
 3. [Live Application](#-live-application)
 4. [High-Level Architecture](#-high-level-architecture)
 5. [Core Pipelines](#-core-pipelines)
@@ -33,27 +33,33 @@
 
 ---
 
-## 🛑 The Problem
+## 🛑 The Real Problem: The Coder's Dilemma
 
-College and university students face recurring academic hurdles every semester:
+Students in technical fields (Computer Science, Information Technology, AI/ML, Engineering) face a common, high-stakes dilemma every semester:
 
-1. **Fragmented & Chaotic College Portals**: Syllabi, course blueprints, academic notices, and exam routines are scattered across buried subpages, broken links, and hundreds of miscellaneous PDFs.
-2. **Regulation & Syllabus Ambiguity**: Autonomous institutions and state universities frequently update curriculum regulations (e.g., R18, R21, R23, R25). Students frequently study obsolete modules or struggle to find the exact syllabus for their batch.
-3. **Unstructured Exam Preparation**: Students collect past year question papers (PYQs) as unsearchable scans or images, forcing them to guess which topics carry the highest exam probability.
-4. **Missed Deadlines & Urgent Circulars**: Examination form fill-ups, PPR (post-publication review), admit card enrollment, and schedule postponements are posted as opaque PDF notices that students frequently overlook until late fees apply.
+* 💻 **Skills Over Slides**: Ambitious technical students spend 90% of their semester focusing on real-world engineering—writing code, building full-stack applications, solving DSA problems, hacking open-source, and preparing for tech interviews. They intentionally tune out dense, outdated classroom slide decks.
+* ⏰ **The Exam Panic Door**: When semester exams suddenly "knock at the door" (1–2 weeks before exam night), reality hits. Students are faced with 5–6 heavy theoretical papers with zero structured preparation.
+* 🌪️ **Chaos in the Portal**: They scramble to find what to study:
+  1. **Buried Regulations**: College websites are labyrinths of broken links, outdated PDF circulars, and conflicting curriculum versions (e.g., R18 vs R21 vs R23 vs R25).
+  2. **500-Page Overload**: Trying to read massive textbooks cover-to-cover in 48 hours is impossible and demoralizing.
+  3. **Blind PYQ Guesswork**: Past year question papers (PYQs) are unsearchable scans scattered across WhatsApp groups. Students have no data on which questions repeat or carry maximum marks.
+  4. **Missed Administrative Deadlines**: Important circulars regarding exam form fill-up deadlines, admit card enrollment, and schedule postponements get lost in bureaucratic portals.
+  5. **Unfair GPA Penalties**: Exceptionally talented programmers suffer GPA drops simply because they lack the time to manually decipher college exam patterns.
 
 ---
 
-## 💡 The Solution
+## 💡 The Solution: Pareto Exam Intelligence
 
-**ExamBuddy** transforms chaotic institutional websites into a personalized, data-driven academic intelligence hub:
+**ExamBuddy** bridges the gap between technical passion and academic survival. It applies the **Pareto Principle (the 80/20 Rule)** to semester exams: *identify the top ~20% of high-yield concepts that produce ~80% of examination marks.*
 
-* 🌐 **Autonomous University Portal Crawler**: An async, rate-limited bot that inspects college portals, handles robots.txt compliance, follows navigation hierarchies, and downloads relevant academic artifacts.
-* ⚡ **Deep Table & Module Extraction (PyMuPDF)**: Automatically scans university pages for syllabus regulations (e.g. `CSE-R25.pdf`), extracts semester-wise course tables (course codes like `CS201`, `EC(CS)301`, contact hours `3L-0T-0P`, credit points), and indexes granular module topics.
-* 📊 **Recency-Weighted PYQ Analytics**: Employs token-overlap matching and time-decay functions to calculate a quantitative importance score for each syllabus topic based on frequency, recency, and marks allotment.
-* 🎯 **3-Tiered AI Study Planner**: Segregates course topics into **Tier 1 (High Priority)**, **Tier 2 (Medium Priority)**, and **Tier 3 (Breadth Coverage)** with contextual preparation reasoning.
-* 🔔 **Targeted Notice Alerts**: Automatically classifies notices and alerts students enrolled in affected branches and semesters.
-* 🖥️ **Sleek Cyber-Dark Dashboard**: Built with a 250px glowing sidebar, glassmorphic card elevations, semester blueprint filters, and past-year question search.
+* ⚡ **1-Click Curriculum Discovery (PyMuPDF)**: Automatically scans university portals, discovers the official regulation PDF (e.g. `CSE-R25.pdf`), parses semester course tables (`CS301`, `EC(CS)301`, `M(CS)301`, labs, contact hours, and credits), and breaks down modular topics in seconds.
+* 🎯 **3-Tier Emergency Revision Planner**:
+  * **Tier 1 (Core Must-Pass)**: High-frequency, recurring exam topics to secure passing marks and strong baseline grades in minimal hours.
+  * **Tier 2 (Grade Booster)**: Moderately tested concepts to push from average to an 8.5+ GPA.
+  * **Tier 3 (Breadth Buffer)**: Peripheral syllabus items to review only if extra time permits.
+* 📊 **Recency-Weighted PYQ Analytics**: Quantifies topic importance using a mathematical time-decay formula—prioritizing recent exam patterns over questions from a decade ago.
+* 🔔 **Silent Notice Watchdog**: Continuously monitors college circular boards for examination schedules, postponements, and form deadlines, pushing targeted alerts to students based on branch and semester.
+* 🖥️ **Developer-Grade Dark UI**: Fast, responsive glassmorphic web dashboard with instant search, subject filters, and past-year question exploration.
 
 ---
 
