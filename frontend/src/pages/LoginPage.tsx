@@ -62,15 +62,15 @@ export const LoginPage: React.FC<LoginPageProps> = ({
       setError('Passwords do not match. Please re-enter your password.');
       return;
     }
-    if (registerPassword.length < 6) {
-      setError('Password must be at least 6 characters long.');
+    if (registerPassword.length < 8) {
+      setError('Password must be at least 8 characters long.');
       return;
     }
 
     setLoading(true);
     const effectiveBranch = branch === 'Other' ? (customBranch.trim() || 'Other') : branch;
     try {
-      const student = await api.register({
+      await api.register({
         name: name.trim() || 'Akash Das',
         email: registerEmail.trim() || 'akashdas200x@gmail.com',
         password: registerPassword,
@@ -81,8 +81,8 @@ export const LoginPage: React.FC<LoginPageProps> = ({
         email_notifications_enabled: emailNotifications,
       });
 
-      // Auto sign in
-      await api.login(registerEmail.trim() || 'akashdas200x@gmail.com', registerPassword);
+      // Get authenticated student profile
+      const student = await api.getMe();
       onAuthSuccess(student);
     } catch (err: unknown) {
       if (err instanceof Error) {

@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { api } from './api/client';
 import { Navbar } from './components/Navbar';
+import { Sidebar } from './components/Sidebar';
 import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage';
 import { Dashboard } from './pages/Dashboard';
 import { NoticesPage } from './pages/NoticesPage';
 import { StudyReportPage } from './pages/StudyReportPage';
-import { SyllabusPyqPage } from './pages/SyllabusPyqPage';
+import { SyllabusPage } from './pages/SyllabusPage';
+import { PyqPage } from './pages/PyqPage';
 import type { College, Notice, Student } from './types';
 
 export const App: React.FC = () => {
@@ -176,7 +178,6 @@ export const App: React.FC = () => {
 
       {/* Top Navbar */}
       <Navbar
-        activeTab={activeTab}
         setActiveTab={setActiveTab}
         student={student}
         college={college}
@@ -185,34 +186,46 @@ export const App: React.FC = () => {
         isScraping={isScraping}
       />
 
-      {/* Main Workspace Body */}
-      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 py-6">
-        {activeTab === 'dashboard' && (
-          <Dashboard
-            student={student}
-            college={college}
-            notices={notices}
-            totalTopics={totalTopics}
-            totalPYQs={totalPYQs}
-            onNavigateTab={setActiveTab}
-            onTriggerScrape={handleTriggerScrape}
-            onToggleNotifications={handleToggleNotifications}
-            isScraping={isScraping}
-          />
-        )}
+      {/* Workspace Body: Left Sidebar + Main Content */}
+      <div className="eb-layout-wrapper">
+        <Sidebar
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          student={student}
+          college={college}
+          noticesCount={notices.length}
+        />
 
-        {activeTab === 'study-report' && <StudyReportPage student={student} />}
+        <main className="eb-main-content">
+          {activeTab === 'dashboard' && (
+            <Dashboard
+              student={student}
+              college={college}
+              notices={notices}
+              totalTopics={totalTopics}
+              totalPYQs={totalPYQs}
+              onNavigateTab={setActiveTab}
+              onTriggerScrape={handleTriggerScrape}
+              onToggleNotifications={handleToggleNotifications}
+              isScraping={isScraping}
+            />
+          )}
 
-        {activeTab === 'syllabus-pyq' && <SyllabusPyqPage student={student} />}
+          {activeTab === 'study-report' && <StudyReportPage student={student} />}
 
-        {activeTab === 'notices' && (
-          <NoticesPage
-            student={student}
-            notices={notices}
-            onToggleNotifications={handleToggleNotifications}
-          />
-        )}
-      </main>
+          {activeTab === 'syllabus' && <SyllabusPage student={student} />}
+
+          {activeTab === 'pyqs' && <PyqPage student={student} />}
+
+          {activeTab === 'notices' && (
+            <NoticesPage
+              student={student}
+              notices={notices}
+              onToggleNotifications={handleToggleNotifications}
+            />
+          )}
+        </main>
+      </div>
 
       {/* Footer */}
       <footer className="w-full border-t border-slate-800/80 py-4 px-6 text-center text-xs font-mono text-slate-500">

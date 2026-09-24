@@ -389,6 +389,32 @@ async def crawl_college(college_id: uuid.UUID, force: bool = False) -> None:
         except Exception as pe:
             logger.warning("Auto-processing documents after crawl failed: %s", pe)
 
+        # Auto-chain targeted curriculum & syllabus discovery for enrolled students
+        try:
+            from app.models.student import Student
+            from app.services.syllabus_extractor import syllabus_extractor
+            async with async_session_factory() as session:
+                students = (await session.execute(select(Student).where(Student.college_id == college_id))).scalars().all()
+                processed_combos = set()
+                for st in students:
+                    target_course = st.branch or st.course or "CSE"
+                    target_sem = str(st.semester or "2")
+                    combo = (target_course.lower(), target_sem)
+                    if combo not in processed_combos:
+                        processed_combos.add(combo)
+                        try:
+                            await syllabus_extractor.search_and_import_syllabus(
+                                college_id=college_id,
+                                course=target_course,
+                                semester=target_sem,
+                                db=session,
+                                force_refresh=False,
+                            )
+                        except Exception as se_err:
+                            logger.info("Automatic syllabus extraction for %s Sem %s: %s", target_course, target_sem, se_err)
+        except Exception as se:
+            logger.warning("Auto syllabus extraction after crawl encountered error: %s", se)
+
     except Exception as e:
         logger.exception("Error during crawl for college %s: %s", college_id, e)
         async with async_session_factory() as session:

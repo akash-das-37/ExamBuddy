@@ -2,7 +2,6 @@ import React from 'react';
 import type { College, Student } from '../types';
 
 interface NavbarProps {
-  activeTab: string;
   setActiveTab: (tab: string) => void;
   student: Student | null;
   college: College | null;
@@ -12,7 +11,6 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
-  activeTab,
   setActiveTab,
   student,
   college,
@@ -54,34 +52,6 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
       </div>
-
-      {/* Center Nav Tabs */}
-      <nav className="hidden md:flex items-center bg-[#0d101c] p-1 rounded-2xl border border-white/5">
-        {[
-          { id: 'dashboard', label: 'Dashboard', icon: 'dashboard' },
-          { id: 'study-report', label: 'Study Report', icon: 'analytics' },
-          { id: 'syllabus-pyq', label: 'Syllabus & PYQs', icon: 'menu_book' },
-          { id: 'notices', label: 'Notices', icon: 'campaign' },
-        ].map((tab) => {
-          const isActive = activeTab === tab.id;
-          return (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
-                isActive
-                  ? 'bg-indigo-600 text-white shadow-[0_0_15px_rgba(99,102,241,0.4)]'
-                  : 'text-slate-400 hover:text-white hover:bg-white/5'
-              }`}
-            >
-              <span className="material-symbols-outlined text-[17px]">
-                {tab.icon}
-              </span>
-              {tab.label}
-            </button>
-          );
-        })}
-      </nav>
 
       {/* Right: Portal Status & Student Profile */}
       <div className="flex items-center gap-3">

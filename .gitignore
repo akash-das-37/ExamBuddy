@@ -50,3 +50,5 @@ storage/
 frontend/node_modules/
 frontend/dist/
 
+# Scratch & temporary testing
+scratch/

@@ -15,6 +15,13 @@ settings = get_settings()
 async def lifespan(app: FastAPI):
     logging.basicConfig(level=logging.INFO)
     logging.info("🚀 ExamBuddy API starting up with SQLite & BackgroundTasks...")
+    # Ensure all tables exist in database
+    import app.models  # noqa: F401
+    from app.db import engine
+    from app.models import Base
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+    logging.info("✅ Database tables initialized.")
     yield
 
 

@@ -73,7 +73,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Stat 1: Topics Analyzed */}
         <div
-          onClick={() => onNavigateTab('study-report')}
+          onClick={() => onNavigateTab('syllabus')}
           className="card-base p-5 flex items-center justify-between cursor-pointer group hover:border-indigo-500/40"
         >
           <div>
@@ -93,7 +93,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
         {/* Stat 2: Historical PYQs Indexed */}
         <div
-          onClick={() => onNavigateTab('syllabus-pyq')}
+          onClick={() => onNavigateTab('pyqs')}
           className="card-base p-5 flex items-center justify-between cursor-pointer group hover:border-cyan-500/40"
         >
           <div>

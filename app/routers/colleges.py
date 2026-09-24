@@ -21,8 +21,21 @@ from app.schemas.extraction import (
 )
 from app.services.crawler import crawl_college
 from app.services.processor import process_college_documents
+from app.services.syllabus_extractor import syllabus_extractor
 
 router = APIRouter(prefix="/colleges", tags=["Colleges"])
+
+
+class CollegeResponse(BaseModel):
+    id: uuid.UUID
+    name: str | None = None
+    base_url: str
+    portal_url: str | None = None
+    scrape_status: str
+    last_scraped_at: datetime | None = None
+
+    class Config:
+        from_attributes = True
 
 
 class ScrapeStatusResponse(BaseModel):
@@ -46,8 +59,46 @@ class TriggerProcessingResponse(BaseModel):
     status: str
 
 
+class SearchSyllabusRequest(BaseModel):
+    course: str = "CSE"
+    semester: str = "2"
+    regulation: str | None = None
+    force_refresh: bool = True
+
+
+class SearchSyllabusResponse(BaseModel):
+    message: str
+    college_id: uuid.UUID
+    course: str
+    semester: str
+    source_pdf_url: str
+    total_courses_found: int
+    total_entries_created: int
+    entries: list[SyllabusEntryResponse]
+
+
+@router.get("/{college_id}", response_model=CollegeResponse)
+async def get_college_by_id(
+    college_id: uuid.UUID,
+    db: AsyncSession = Depends(get_db),
+):
+    """Retrieve details for a specific college."""
+    college = await db.get(College, college_id)
+    if not college:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"College with id {college_id} not found",
+        )
+    return college
+
+
 @router.post(
     "/{college_id}/trigger-scrape",
+    response_model=TriggerScrapeResponse,
+    status_code=status.HTTP_202_ACCEPTED,
+)
+@router.post(
+    "/{college_id}/scrape",
     response_model=TriggerScrapeResponse,
     status_code=status.HTTP_202_ACCEPTED,
 )
@@ -86,6 +137,7 @@ async def trigger_scrape(
 
 
 @router.get("/{college_id}/scrape-status", response_model=ScrapeStatusResponse)
+@router.get("/{college_id}/scrape/status", response_model=ScrapeStatusResponse)
 async def get_scrape_status(
     college_id: uuid.UUID,
     db: AsyncSession = Depends(get_db),
@@ -156,6 +208,43 @@ async def trigger_document_processing(
         college_id=college.id,
         status="processing_queued",
     )
+
+
+@router.post("/{college_id}/search-syllabus", response_model=SearchSyllabusResponse)
+@router.get("/{college_id}/search-syllabus", response_model=SearchSyllabusResponse)
+async def search_and_extract_college_syllabus(
+    college_id: uuid.UUID,
+    course: str = Query("CSE", description="Course or department branch name (e.g. CSE, IT, ECE)"),
+    semester: str = Query("2", description="Target semester number (e.g. 2, 6)"),
+    regulation: str | None = Query(None, description="Preferred regulation (e.g. R25, R23)"),
+    force_refresh: bool = Query(True, description="Whether to overwrite existing syllabus topics for this semester"),
+    payload: SearchSyllabusRequest | None = None,
+    db: AsyncSession = Depends(get_db),
+):
+    """
+    Search college portal for curriculum blueprints, download the relevant course regulation PDF,
+    parse course tables and syllabus modules with PyMuPDF, and save to syllabus_entries.
+    """
+    selected_course = payload.course if payload and payload.course else course
+    selected_semester = payload.semester if payload and payload.semester else semester
+    selected_regulation = (payload.regulation if payload and payload.regulation else regulation)
+    selected_force = payload.force_refresh if payload and payload.force_refresh is not None else force_refresh
+
+    try:
+        result = await syllabus_extractor.search_and_import_syllabus(
+            college_id=college_id,
+            course=selected_course,
+            semester=selected_semester,
+            db=db,
+            regulation=selected_regulation,
+            force_refresh=selected_force,
+        )
+        return result
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e),
+        )
 
 
 @router.get("/{college_id}/syllabus", response_model=list[SyllabusEntryResponse])

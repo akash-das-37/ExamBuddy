@@ -52,7 +52,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess }) => {
     setError(null);
     setLoading(true);
     try {
-      const student = await api.register({
+      await api.register({
         name,
         email,
         password,
@@ -63,8 +63,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess }) => {
         email_notifications_enabled: emailNotifications,
       });
 
-      // Automatically log in after registration
-      await api.login(email, password);
+      const student = await api.getMe();
       onAuthSuccess(student);
     } catch (err: unknown) {
       if (err instanceof Error) {

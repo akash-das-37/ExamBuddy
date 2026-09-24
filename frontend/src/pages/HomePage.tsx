@@ -74,7 +74,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigateToLogin }) => {
         <div>
           <button
             type="button"
-            onClick={() => onNavigateToLogin('register')}
+            onClick={() => onNavigateToLogin('signin')}
             className="ex-btn-cta-large"
           >
             <span>Start Planning Now</span>
@@ -88,7 +88,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigateToLogin }) => {
         <div className="ex-features-grid">
           {/* Card 1: Secure Data */}
           <div
-            onClick={() => onNavigateToLogin('register')}
+            onClick={() => onNavigateToLogin('signin')}
             className="ex-card"
           >
             <div className="ex-card-icon">
@@ -102,7 +102,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigateToLogin }) => {
 
           {/* Card 2: Smart Priority */}
           <div
-            onClick={() => onNavigateToLogin('register')}
+            onClick={() => onNavigateToLogin('signin')}
             className="ex-card"
           >
             <div className="ex-card-icon">
@@ -116,7 +116,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigateToLogin }) => {
 
           {/* Card 3: Fast Execution */}
           <div
-            onClick={() => onNavigateToLogin('register')}
+            onClick={() => onNavigateToLogin('signin')}
             className="ex-card"
           >
             <div className="ex-card-icon">

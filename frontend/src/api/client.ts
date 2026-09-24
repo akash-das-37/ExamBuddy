@@ -51,17 +51,13 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
 
 export const api = {
   // Auth
-  async login(username: string, password: string): Promise<{ access_token: string; token_type: string }> {
-    const formData = new URLSearchParams();
-    formData.append('username', username);
-    formData.append('password', password);
-
+  async login(email: string, password: string): Promise<{ access_token: string; token_type: string }> {
     const response = await fetch(`${API_BASE}/auth/login`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/json',
       },
-      body: formData.toString(),
+      body: JSON.stringify({ email, password }),
     });
 
     if (!response.ok) {
@@ -89,11 +85,15 @@ export const api = {
     branch: string;
     semester: number;
     email_notifications_enabled?: boolean;
-  }): Promise<Student> {
-    return request<Student>('/auth/signup', {
+  }): Promise<{ access_token: string; token_type: string }> {
+    const data = await request<{ access_token: string; token_type: string }>('/auth/signup', {
       method: 'POST',
       body: JSON.stringify(studentData),
     });
+    if (data && data.access_token) {
+      localStorage.setItem('exambuddy_token', data.access_token);
+    }
+    return data;
   },
 
   async getMe(): Promise<Student> {
@@ -126,6 +126,33 @@ export const api = {
   },
 
   // Content (Syllabus, PYQs, Notices)
+  async searchAndImportSyllabus(
+    collegeId: string,
+    course: string,
+    semester: string,
+    regulation?: string,
+    forceRefresh: boolean = true
+  ): Promise<{
+    message: string;
+    college_id: string;
+    course: string;
+    semester: string;
+    source_pdf_url: string;
+    total_courses_found: number;
+    total_entries_created: number;
+    entries: SyllabusEntry[];
+  }> {
+    return request(`/colleges/${collegeId}/search-syllabus`, {
+      method: 'POST',
+      body: JSON.stringify({
+        course,
+        semester: String(semester),
+        regulation,
+        force_refresh: forceRefresh,
+      }),
+    });
+  },
+
   async getSyllabus(collegeId: string, course?: string, semester?: string): Promise<SyllabusEntry[]> {
     const params = new URLSearchParams();
     if (course) params.append('course', course);
