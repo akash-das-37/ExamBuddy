@@ -54,9 +54,11 @@
   grid-template-columns: minmax(0, 1fr) 340px;
   gap: 24px;
   align-items: center;
+  width: 100%;
+  min-width: 0;
 }
 
-@media (max-width: 1080px) {
+@media (max-width: 1180px) {
   .pyq-top-row {
     grid-template-columns: 1fr;
   }
@@ -91,58 +93,294 @@
   font-weight: 400;
 }
 
-/* Header Dropdowns & Search Filter Bar */
-.pyq-filter-bar {
+/* Subjects Section Header Row */
+.pyq-section-header-row {
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
   flex-wrap: wrap;
-  padding-top: 4px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
-.pyq-select-pill {
-  background: #ffffff;
-  border: 1px solid #ded5c6;
+.pyq-subj-badge-count {
+  font-size: 11.5px;
+  font-weight: 700;
+  background-color: #eaf3ec;
+  color: #284232;
+  padding: 3px 9px;
   border-radius: 9999px;
-  padding: 8px 28px 8px 14px;
-  font-size: 12.5px;
-  font-weight: 600;
-  color: #2b3329;
-  cursor: pointer;
-  outline: none;
-  appearance: none;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23556050' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-  background-size: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  transition: all 0.2s ease;
+  border: 1px solid rgba(40, 66, 50, 0.15);
 }
 
-.pyq-select-pill:hover {
-  border-color: #284232;
-  background-color: #fbf9f4;
-}
-
-.pyq-search-btn {
+.pyq-add-subject-pill-btn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: #284232;
-  border: 1px solid #284232;
+  background-color: #284232;
   color: #ffffff;
-  font-size: 13px;
-  font-weight: 600;
-  padding: 8px 18px;
+  border: none;
   border-radius: 9999px;
+  padding: 7px 16px;
+  font-size: 12.5px;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(40, 66, 50, 0.25);
+  transition: all 0.18s ease;
+  box-shadow: 0 2px 6px rgba(40, 66, 50, 0.2);
+}
+.pyq-add-subject-pill-btn:hover {
+  background-color: #1e3326;
+  transform: translateY(-1px);
 }
 
-.pyq-search-btn:hover {
-  background: #1c3224;
+.pyq-upload-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #ffffff;
+  color: #284232;
+  border: 1px solid rgba(40, 66, 50, 0.25);
+  border-radius: 9999px;
+  padding: 7px 15px;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+.pyq-upload-pill-btn:hover {
+  background-color: #f7f4ee;
+  border-color: #284232;
+}
+
+.pyq-subj-del-btn {
+  background: transparent;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.18s ease;
+}
+.pyq-subj-del-btn:hover {
+  color: #ef4444;
+  background-color: #fee2e2;
+}
+
+/* Empty Subjects Card */
+.pyq-empty-subjects-card {
+  background: #ffffff;
+  border: 1.5px dashed #ded5c6;
+  border-radius: 18px;
+  padding: 36px 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.pyq-empty-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background-color: #eaf3ec;
+  color: #284232;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pyq-empty-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #181d16;
+  margin: 0;
+}
+.pyq-empty-desc {
+  font-size: 13.5px;
+  color: #687865;
+  max-width: 440px;
+  margin: 0;
+  line-height: 1.5;
+}
+.pyq-add-subj-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #284232;
+  color: #ffffff;
+  border: none;
+  border-radius: 9999px;
+  padding: 9px 20px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(40, 66, 50, 0.2);
+  transition: all 0.18s ease;
+}
+.pyq-add-subj-action-btn:hover {
+  background-color: #1e3326;
   transform: translateY(-1px);
+}
+.pyq-upload-subj-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #ffffff;
+  color: #181d16;
+  border: 1px solid #d4cbbd;
+  border-radius: 9999px;
+  padding: 9px 20px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+.pyq-upload-subj-action-btn:hover {
+  background-color: #fbf9f4;
+  border-color: #284232;
+}
+
+/* Modal for Adding Subject */
+.pyq-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+}
+.pyq-modal-box {
+  background: #ffffff;
+  border-radius: 20px;
+  width: 460px;
+  max-width: 100%;
+  padding: 26px 28px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  position: relative;
+  box-sizing: border-box;
+}
+.pyq-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.pyq-modal-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 21px;
+  font-weight: 700;
+  color: #181d16;
+  margin: 0;
+}
+.pyq-modal-close-btn {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pyq-modal-close-btn:hover {
+  color: #0f172a;
+  background-color: #f1f5f9;
+}
+.pyq-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.pyq-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.pyq-input-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #334155;
+}
+.pyq-text-input {
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 14px;
+  outline: none;
+  background-color: #f8fafc;
+  color: #0f172a;
+}
+.pyq-text-input:focus {
+  border-color: #284232;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(40, 66, 50, 0.1);
+}
+.pyq-icon-choices {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.pyq-icon-choice-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #475569;
+  transition: all 0.15s ease;
+}
+.pyq-icon-choice-btn.selected {
+  border-color: #284232;
+  background-color: #eaf3ec;
+  color: #284232;
+  box-shadow: 0 2px 6px rgba(40, 66, 50, 0.15);
+}
+.pyq-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 6px;
+}
+.pyq-modal-cancel-btn {
+  padding: 8px 18px;
+  border-radius: 9999px;
+  border: 1px solid #cbd5e1;
+  background: transparent;
+  color: #475569;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+}
+.pyq-modal-submit-btn {
+  padding: 8px 22px;
+  border-radius: 9999px;
+  border: none;
+  background: #284232;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(40, 66, 50, 0.2);
+}
+.pyq-modal-submit-btn:hover {
+  background-color: #1e3326;
 }
 
 /* Inspirational Quote Card in Header Row */
@@ -195,9 +433,12 @@
   grid-template-columns: minmax(0, 1fr) 340px;
   gap: 24px;
   align-items: start;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
-@media (max-width: 1080px) {
+@media (max-width: 1180px) {
   .pyq-main-grid {
     grid-template-columns: 1fr;
   }
@@ -207,6 +448,9 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* ================= SECTION 1: SUBJECTS GRID ================= */
@@ -220,14 +464,11 @@
 
 .pyq-subjects-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
   gap: 14px;
-}
-
-@media (max-width: 780px) {
-  .pyq-subjects-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 @media (max-width: 520px) {
@@ -240,15 +481,18 @@
   background: #ffffff;
   border: 1px solid #e7e0d3;
   border-radius: 18px;
-  padding: 16px 18px;
+  padding: 14px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 10px;
   cursor: pointer;
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
   text-align: left;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .pyq-subject-card:hover {
@@ -266,13 +510,15 @@
 .pyq-subj-left {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   overflow: hidden;
+  min-width: 0;
+  flex: 1;
 }
 
 .pyq-subj-icon-box {
-  width: 44px;
-  height: 44px;
+  width: 42px;
+  height: 42px;
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -286,26 +532,36 @@
   flex-direction: column;
   gap: 2px;
   overflow: hidden;
+  min-width: 0;
+  flex: 1;
 }
 
 .pyq-subj-name {
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 700;
   color: #181d16;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+  min-width: 0;
+  display: block;
 }
 
 .pyq-subj-years {
   font-size: 11px;
   color: #717d6d;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .pyq-subj-qcount {
   font-size: 11px;
   font-weight: 600;
   color: #3b4638;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .pyq-subj-arrow {
@@ -513,6 +769,16 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  width: 100%;
+  max-width: 340px;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1180px) {
+  .pyq-sidebar-cards {
+    max-width: 100%;
+  }
 }
 
 .pyq-card-title {
@@ -533,6 +799,9 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .pyq-card-headrow {
@@ -626,6 +895,9 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .pyq-stats-wrap {
@@ -713,6 +985,9 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .pyq-actions-grid {
