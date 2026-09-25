@@ -866,3 +866,42 @@
   pointer-events: none;
   opacity: 0.85;
 }
+
+/* Semester Syllabus Dynamic Badges */
+.sb-title-with-badge {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.sb-header-sem-tag {
+  display: inline-flex;
+  align-items: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #1e3d26;
+  background: #eaf4eb;
+  border: 1px solid #c8e0cc;
+  padding: 4px 14px;
+  border-radius: 9999px;
+  letter-spacing: -0.01em;
+  box-shadow: 0 1px 3px rgba(40, 66, 50, 0.05);
+}
+
+.sb-sem-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: #f4efe4;
+  border: 1px solid #dcd4c5;
+  color: #284232;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 7px 15px;
+  border-radius: 9999px;
+  box-shadow: 0 1px 3px rgba(40, 66, 50, 0.06);
+  white-space: nowrap;
+}
+

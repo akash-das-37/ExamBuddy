@@ -2,25 +2,12 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { api } from '../api/client';
 import type { OriginalDocument, Student, SyllabusEntry } from '../types';
 import { getDocumentsForStudent } from '../data/documentsData';
+import { INITIAL_CURRICULUM_DATA } from '../data/curriculumData';
+import { getPresetForSubject, DSA_CHAPTERS, type ChapterItem, type TopicItem } from '../data/subjectPresets';
 import { UploadSyllabusModal } from '../components/UploadSyllabusModal';
 import { DocumentViewerModal } from '../components/DocumentViewerModal';
 import { aiCollegeScraper, deriveCollegeNameFromUrl } from '../services/aiCollegeScraper';
 import '../styles/SyllabusPage.css';
-
-interface TopicItem {
-  id: string;
-  title: string;
-  category?: 'theory' | 'practical' | 'module';
-  status: 'completed' | 'in-progress' | 'not-started';
-}
-
-interface ChapterItem {
-  id: string;
-  number: number;
-  title: string;
-  category?: 'theory' | 'practical' | 'module';
-  topics: TopicItem[];
-}
 
 interface SubjectItem {
   id: string;
@@ -32,298 +19,301 @@ interface SubjectItem {
   chapters: ChapterItem[];
 }
 
-// Default structured curriculum catalog matching the editorial study desk design
-const DEFAULT_SUBJECTS: SubjectItem[] = [
-  {
-    id: 'dsa',
-    name: 'Data Structures',
-    chapterCount: 12,
-    icon: 'database',
-    accentColor: '#10b981',
-    accentBg: '#d1fae5',
-    chapters: [
-      {
-        id: 'ch-1',
-        number: 1,
-        title: 'Introduction to Data Structures',
-        category: 'theory',
-        topics: [
-          { id: 't-1-1', title: 'What are Data Structures?', category: 'theory', status: 'completed' },
-          { id: 't-1-2', title: 'Need and Applications', category: 'theory', status: 'completed' },
-          { id: 't-1-3', title: 'Types of Data Structures', category: 'theory', status: 'completed' },
-          { id: 't-1-4', title: 'Time and Space Complexity', category: 'theory', status: 'in-progress' },
-          { id: 't-1-5', title: 'Asymptotic Notations (Big O, Ω, Θ)', category: 'theory', status: 'not-started' },
-          { id: 't-1-6', title: 'Recursion Basics', category: 'theory', status: 'completed' },
-          { id: 't-1-7', title: 'Examples and Case Studies', category: 'theory', status: 'not-started' },
-        ],
-      },
-      {
-        id: 'ch-2',
-        number: 2,
-        title: 'Arrays',
-        category: 'theory',
-        topics: [
-          { id: 't-2-1', title: '1D & 2D Array Representation', category: 'theory', status: 'completed' },
-          { id: 't-2-2', title: 'Row-Major & Column-Major Addressing', category: 'theory', status: 'completed' },
-          { id: 't-2-3', title: 'Array Insertion & Deletion Algorithms', category: 'theory', status: 'completed' },
-          { id: 't-2-4', title: 'Dynamic Array & Vector Internals', category: 'theory', status: 'in-progress' },
-        ],
-      },
-      {
-        id: 'ch-3',
-        number: 3,
-        title: 'Linked Lists',
-        category: 'theory',
-        topics: [
-          { id: 't-3-1', title: 'Singly Linked List Implementation', category: 'theory', status: 'completed' },
-          { id: 't-3-2', title: 'Doubly Linked List Traversal', category: 'theory', status: 'completed' },
-          { id: 't-3-3', title: 'Circular Linked Lists', category: 'theory', status: 'completed' },
-          { id: 't-3-4', title: "Floyd's Cycle Finding Algorithm", category: 'theory', status: 'in-progress' },
-        ],
-      },
-      {
-        id: 'ch-4',
-        number: 4,
-        title: 'Stacks and Queues',
-        category: 'practical',
-        topics: [
-          { id: 't-4-1', title: 'Stack Operations (Push, Pop, Peek)', category: 'practical', status: 'completed' },
-          { id: 't-4-2', title: 'Infix to Postfix Conversion', category: 'practical', status: 'completed' },
-          { id: 't-4-3', title: 'Circular Queue and Deque Implementation', category: 'practical', status: 'in-progress' },
-        ],
-      },
-      {
-        id: 'ch-5',
-        number: 5,
-        title: 'Trees',
-        category: 'theory',
-        topics: [
-          { id: 't-5-1', title: 'Binary Tree Traversals (In, Pre, Post)', category: 'theory', status: 'completed' },
-          { id: 't-5-2', title: 'Level Order (BFS) Traversal', category: 'theory', status: 'completed' },
-          { id: 't-5-3', title: 'Height and Diameter of Binary Tree', category: 'theory', status: 'in-progress' },
-        ],
-      },
-      {
-        id: 'ch-6',
-        number: 6,
-        title: 'Binary Search Trees',
-        category: 'theory',
-        topics: [
-          { id: 't-6-1', title: 'BST Search, Insertion and Deletion', category: 'theory', status: 'completed' },
-          { id: 't-6-2', title: 'AVL Trees & Balancing Rotations', category: 'theory', status: 'not-started' },
-        ],
-      },
-      {
-        id: 'ch-7',
-        number: 7,
-        title: 'Heaps and Priority Queues',
-        category: 'practical',
-        topics: [
-          { id: 't-7-1', title: 'Min-Heap and Max-Heap Properties', category: 'practical', status: 'completed' },
-          { id: 't-7-2', title: 'Heapify and Heap Sort Algorithm', category: 'practical', status: 'not-started' },
-        ],
-      },
-      {
-        id: 'ch-8',
-        number: 8,
-        title: 'Graphs',
-        category: 'theory',
-        topics: [
-          { id: 't-8-1', title: 'Adjacency Matrix vs Adjacency List', category: 'theory', status: 'completed' },
-          { id: 't-8-2', title: 'Breadth-First Search (BFS)', category: 'theory', status: 'completed' },
-          { id: 't-8-3', title: 'Depth-First Search (DFS)', category: 'theory', status: 'in-progress' },
-        ],
-      },
-      {
-        id: 'ch-9',
-        number: 9,
-        title: 'Graph Algorithms',
-        category: 'practical',
-        topics: [
-          { id: 't-9-1', title: "Dijkstra's Shortest Path Algorithm", category: 'practical', status: 'not-started' },
-          { id: 't-9-2', title: "Prim's & Kruskal's Minimum Spanning Tree", category: 'practical', status: 'not-started' },
-        ],
-      },
-      {
-        id: 'ch-10',
-        number: 10,
-        title: 'Hashing',
-        category: 'module',
-        topics: [
-          { id: 't-10-1', title: 'Hash Functions & Direct Addressing', category: 'module', status: 'not-started' },
-        ],
-      },
+// Helper to format semester ordinal suffix: 1 -> 1st, 2 -> 2nd, 3 -> 3rd, 4 -> 4th
+function formatSemesterLabel(sem: string | number): string {
+  const s = parseInt(String(sem), 10);
+  if (s === 1) return '1st';
+  if (s === 2) return '2nd';
+  if (s === 3) return '3rd';
+  if (s >= 4 && s <= 8) return `${s}th`;
+  return `${sem}th`;
+}
+
+// Visual icons and color themes for different curriculum subject domains
+function getSubjectStyling(name: string): { icon: string; accentColor: string; accentBg: string } {
+  const s = name.toLowerCase();
+  if (s.includes('data structure') || s.includes('algorithm')) {
+    return { icon: 'database', accentColor: '#10b981', accentBg: '#d1fae5' };
+  }
+  if (s.includes('artificial intelligence') || s.includes('ai') || s.includes('machine learning') || s.includes('deep learning')) {
+    return { icon: 'psychology', accentColor: '#8b5cf6', accentBg: '#ede9fe' };
+  }
+  if (s.includes('digital logic') || s.includes('computer organization') || s.includes('architecture') || s.includes('hardware')) {
+    return { icon: 'memory', accentColor: '#06b6d4', accentBg: '#cffafe' };
+  }
+  if (s.includes('math') || s.includes('discrete') || s.includes('probability') || s.includes('statistics')) {
+    return { icon: 'calculate', accentColor: '#f59e0b', accentBg: '#fef3c7' };
+  }
+  if (s.includes('chemistry') || s.includes('physics') || s.includes('science')) {
+    return { icon: 'science', accentColor: '#ec4899', accentBg: '#fce7f3' };
+  }
+  if (s.includes('constitution') || s.includes('ethics') || s.includes('law')) {
+    return { icon: 'gavel', accentColor: '#6366f1', accentBg: '#e0e7ff' };
+  }
+  if (s.includes('design thinking') || s.includes('innovation') || s.includes('workshop')) {
+    return { icon: 'lightbulb', accentColor: '#f97316', accentBg: '#ffedd5' };
+  }
+  if (s.includes('operating system') || s.includes('os')) {
+    return { icon: 'settings', accentColor: '#2563eb', accentBg: '#dbeafe' };
+  }
+  if (s.includes('network') || s.includes('web') || s.includes('internet')) {
+    return { icon: 'language', accentColor: '#9333ea', accentBg: '#f3e8ff' };
+  }
+  if (s.includes('database') || s.includes('dbms')) {
+    return { icon: 'storage', accentColor: '#14b8a6', accentBg: '#ccfbf1' };
+  }
+  if (s.includes('oop') || s.includes('programming') || s.includes('java') || s.includes('python')) {
+    return { icon: 'code', accentColor: '#3b82f6', accentBg: '#dbeafe' };
+  }
+  if (s.includes('lab') || s.includes('practical')) {
+    return { icon: 'biotech', accentColor: '#059669', accentBg: '#d1fae5' };
+  }
+  return { icon: 'auto_stories', accentColor: '#284232', accentBg: '#eaf4eb' };
+}
+
+function cleanBoilerplate(text: string): string {
+  return text
+    .replace(/R\d+\s*\([^)]*\)\s*Department:[^•\n\r]*/gi, '')
+    .replace(/Curriculum Structure & Syllabus[^•\n\r]*/gi, '')
+    .replace(/\(Effective from \d{4}-\d{2}[^)]*\)/gi, '')
+    .replace(/\bCO\s+PO\b/gi, '')
+    .replace(/Category:\s*(Theory|Practical)[^•\n\r]*/gi, '')
+    .replace(/Credits:\s*[\d\.]+/gi, '')
+    .replace(/Contact Hours:[^•\n\r]*/gi, '')
+    .replace(/Officially approved curriculum[^•\n\r]*/gi, '')
+    .replace(/^\[[A-Za-z0-9_-]+\]\s*/, '')
+    .replace(/\s*\(\d+\s*L\)/i, '')
+    .replace(/\s*\[\d+\s*L\]/i, '')
+    .replace(/[:\s]+$/, '')
+    .trim();
+}
+
+// Convert SyllabusEntry records for a subject into structured ChapterItems and TopicItems
+function buildChaptersFromSubjectEntries(subjectName: string, entries: SyllabusEntry[]): ChapterItem[] {
+  // First check if we have a pristine curated preset for this subject
+  const preset = getPresetForSubject(subjectName);
+  if (preset) {
+    return preset;
+  }
+
+  const moduleEntries = entries.filter(
+    (e) => !e.topic_title.toLowerCase().includes('course blueprint')
+  );
+  const targetEntries = moduleEntries.length > 0 ? moduleEntries : entries;
+
+  // Deduplicate entries by normalized title to prevent repeating modules
+  const seenTitles = new Set<string>();
+  const dedupedEntries = targetEntries.filter((e) => {
+    const norm = e.topic_title.toLowerCase().replace(/[^a-z0-9]/g, '');
+    if (seenTitles.has(norm)) return false;
+    seenTitles.add(norm);
+    return true;
+  });
+
+  return dedupedEntries.map((e, idx) => {
+    let rawTitle = e.topic_title
+      .replace(/^\[[A-Za-z0-9_-]+\]\s*/, '')
+      .replace(/\s*\(\d+\s*L\)/i, '')
+      .replace(/\s*\[\d+\s*L\]/i, '')
+      .replace(/[:\s]+$/, '')
+      .trim();
+
+    // If title is bare like "Module 1" or "Module I", enrich it from the first line of the description
+    if (/^Module\s+([0-9IVX]+|One|Two|Three|Four|Five|Six)\b/i.test(rawTitle) && rawTitle.length < 15) {
+      const cleanedD = cleanBoilerplate(e.topic_description || '');
+      const match = cleanedD.match(/^([A-Za-z0-9\s,\/&-]{4,45})[:\.\-•]/);
+      if (match && match[1] && !match[1].toLowerCase().includes('category') && !match[1].toLowerCase().includes('module')) {
+        rawTitle = `${rawTitle}: ${match[1].trim()}`;
+      }
+    }
+
+    const isLab = subjectName.toLowerCase().includes('lab') || e.topic_title.toLowerCase().includes('lab');
+    const cleanedDesc = cleanBoilerplate(e.topic_description || '');
+
+    let subtopics: TopicItem[] = [];
+    if (cleanedDesc) {
+      let splitLines = cleanedDesc
+        .split(/[•;\n]+/)
+        .map((s) => s.trim())
+        .filter((s) => s.length > 4 && !s.toLowerCase().startsWith('category:') && !s.toLowerCase().startsWith('credits:'));
+
+      if (splitLines.length <= 1) {
+        splitLines = cleanedDesc
+          .split(/\.\s+(?=[A-Z0-9])/)
+          .map((s) => s.replace(/\.$/, '').trim())
+          .filter((s) => s.length > 4);
+      }
+
+      if (splitLines.length <= 1) {
+        const commaSplit = cleanedDesc.split(/,\s+/).map((s) => s.trim()).filter((s) => s.length > 4);
+        if (commaSplit.length >= 3) {
+          splitLines = commaSplit;
+        }
+      }
+
+      if (splitLines.length >= 2) {
+        subtopics = splitLines.map((line, sIdx) => ({
+          id: `t-${e.id || idx}-${sIdx + 1}`,
+          title: line.replace(/^\d+[\.\)]\s*/, '').replace(/\s*\[\d+\s*L\]/i, '').replace(/[:\s]+$/, '').trim(),
+          category: isLab ? 'practical' : 'theory',
+          status: 'not-started',
+        }));
+      }
+    }
+
+    if (subtopics.length === 0) {
+      subtopics = [
+        {
+          id: `t-${e.id || idx}-1`,
+          title: cleanedDesc || `${rawTitle} - Fundamental Concepts & Architecture`,
+          category: isLab ? 'practical' : 'theory',
+          status: 'not-started',
+        },
+        {
+          id: `t-${e.id || idx}-2`,
+          title: `${rawTitle} - Applied Implementation & Analysis`,
+          category: isLab ? 'practical' : 'theory',
+          status: 'not-started',
+        },
+      ];
+    }
+
+    return {
+      id: `ch-${e.id || idx}`,
+      number: idx + 1,
+      title: rawTitle || `Module ${idx + 1}`,
+      category: isLab ? 'practical' : 'theory',
+      topics: subtopics,
+    };
+  });
+}
+
+// Build subject list strictly filtered to the given semester
+function buildSemesterSubjects(
+  targetSem: string,
+  targetBranch: string,
+  allEntries: SyllabusEntry[]
+): SubjectItem[] {
+  const semStr = String(targetSem);
+  const branchLower = targetBranch ? targetBranch.toLowerCase() : '';
+
+  // Filter all entries that strictly belong to this semester (and match course/branch if present)
+  const matching = allEntries.filter(
+    (e) =>
+      String(e.semester) === semStr &&
+      (!branchLower || !e.course || e.course.toLowerCase() === branchLower)
+  );
+
+  const uniqueSubjectNames = Array.from(
+    new Set(matching.map((e) => e.subject).filter(Boolean))
+  );
+
+  if (uniqueSubjectNames.length > 0) {
+    return uniqueSubjectNames.map((name, idx) => {
+      const entriesForSubj = matching.filter((e) => e.subject === name);
+      const styling = getSubjectStyling(name);
+      const chapters = buildChaptersFromSubjectEntries(name, entriesForSubj);
+      return {
+        id: `sub-${name.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${idx}`,
+        name,
+        chapterCount: chapters.length,
+        icon: styling.icon,
+        accentColor: styling.accentColor,
+        accentBg: styling.accentBg,
+        chapters,
+      };
+    });
+  }
+
+  // Fallback defaults per semester if database is empty for this semester
+  const fallbackBySem: Record<string, string[]> = {
+    '1': [
+      'Mathematics–I (Calculus & Linear Algebra)',
+      'Engineering Physics',
+      'Basic Electrical Engineering',
+      'Programming for Problem Solving (C)',
+      'Engineering Graphics & Design',
     ],
-  },
-  {
-    id: 'discrete-math',
-    name: 'Discrete Math',
-    chapterCount: 10,
-    icon: 'science',
-    accentColor: '#a855f7',
-    accentBg: '#f3e8ff',
-    chapters: [
-      {
-        id: 'dm-1',
-        number: 1,
-        title: 'Propositional & Predicate Logic',
-        category: 'theory',
-        topics: [
-          { id: 'dmt-1', title: 'Truth Tables and Tautologies', category: 'theory', status: 'completed' },
-          { id: 'dmt-2', title: 'Quantifiers and Logical Equivalence', category: 'theory', status: 'completed' },
-          { id: 'dmt-3', title: 'Rules of Inference', category: 'theory', status: 'in-progress' },
-        ],
-      },
-      {
-        id: 'dm-2',
-        number: 2,
-        title: 'Sets, Relations & Functions',
-        category: 'theory',
-        topics: [
-          { id: 'dmt-4', title: 'Set Operations and Venn Diagrams', category: 'theory', status: 'completed' },
-          { id: 'dmt-5', title: 'Equivalence Relations & Partial Orders', category: 'theory', status: 'not-started' },
-        ],
-      },
-      {
-        id: 'dm-3',
-        number: 3,
-        title: 'Combinatorics & Counting',
-        category: 'theory',
-        topics: [
-          { id: 'dmt-6', title: 'Pigeonhole Principle', category: 'theory', status: 'completed' },
-          { id: 'dmt-7', title: 'Permutations and Combinations', category: 'theory', status: 'not-started' },
-        ],
-      },
+    '2': [
+      'Data structure and Algorithms',
+      'Introduction to Artificial Intelligence',
+      'Digital Logic and Computer Organization',
+      'Engineering Mathematics–II',
+      'Engineering Chemistry',
+      'Constitution of India & Professional Ethics',
+      'Design Thinking & Innovation',
     ],
-  },
-  {
-    id: 'oop',
-    name: 'OOP',
-    chapterCount: 8,
-    icon: 'code',
-    accentColor: '#3b82f6',
-    accentBg: '#dbeafe',
-    chapters: [
-      {
-        id: 'oop-1',
-        number: 1,
-        title: 'Object-Oriented Paradigms',
-        category: 'theory',
-        topics: [
-          { id: 'oopt-1', title: 'Classes, Objects, and Instantiation', category: 'theory', status: 'completed' },
-          { id: 'oopt-2', title: 'Encapsulation and Data Hiding', category: 'theory', status: 'completed' },
-        ],
-      },
-      {
-        id: 'oop-2',
-        number: 2,
-        title: 'Inheritance & Polymorphism',
-        category: 'practical',
-        topics: [
-          { id: 'oopt-3', title: 'Virtual Functions & Dynamic Binding', category: 'practical', status: 'completed' },
-          { id: 'oopt-4', title: 'Abstract Classes and Interfaces', category: 'practical', status: 'in-progress' },
-        ],
-      },
+    '3': [
+      'Computer Architecture',
+      'Design and Analysis of Algorithms',
+      'Operating Systems',
+      'Advanced Artificial Intelligence',
+      'Internet of Things',
+      'Discrete Mathematics',
     ],
-  },
-  {
-    id: 'digital-elec',
-    name: 'Digital Electronics',
-    chapterCount: 10,
-    icon: 'memory',
-    accentColor: '#06b6d4',
-    accentBg: '#cffafe',
-    chapters: [
-      {
-        id: 'de-1',
-        number: 1,
-        title: 'Number Systems & Boolean Algebra',
-        category: 'theory',
-        topics: [
-          { id: 'det-1', title: 'Binary, Hexadecimal, and 2s Complement', category: 'theory', status: 'completed' },
-          { id: 'det-2', title: 'Karnaugh Maps (K-Maps) Minimization', category: 'theory', status: 'completed' },
-        ],
-      },
-      {
-        id: 'de-2',
-        number: 2,
-        title: 'Combinational Logic Circuits',
-        category: 'practical',
-        topics: [
-          { id: 'det-3', title: 'Full Adders and Subtractors', category: 'practical', status: 'in-progress' },
-          { id: 'det-4', title: 'Multiplexers and Demultiplexers', category: 'practical', status: 'not-started' },
-        ],
-      },
+    '4': [
+      'Database Management Systems',
+      'Computer Networks',
+      'Machine Learning',
+      'Formal Language and Automata Theory',
+      'Probability and Statistics',
     ],
-  },
-  {
-    id: 'operating-sys',
-    name: 'Operating Systems',
-    chapterCount: 9,
-    icon: 'settings',
-    accentColor: '#2563eb',
-    accentBg: '#dbeafe',
-    chapters: [
-      {
-        id: 'os-1',
-        number: 1,
-        title: 'OS Structure & System Calls',
-        category: 'theory',
-        topics: [
-          { id: 'ost-1', title: 'Kernel Architecture and System Calls', category: 'theory', status: 'completed' },
-          { id: 'ost-2', title: 'Process Control Block (PCB)', category: 'theory', status: 'completed' },
-        ],
-      },
-      {
-        id: 'os-2',
-        number: 2,
-        title: 'CPU Scheduling Algorithms',
-        category: 'practical',
-        topics: [
-          { id: 'ost-3', title: 'Round Robin, FCFS, and SJF', category: 'practical', status: 'completed' },
-          { id: 'ost-4', title: 'Multi-Level Feedback Queues', category: 'practical', status: 'in-progress' },
-        ],
-      },
+    '5': [
+      'Software Engineering',
+      'Compiler Design',
+      'Microprocessors & Microcontrollers',
+      'Information Theory & Coding',
+      'Cloud Computing',
     ],
-  },
-  {
-    id: 'comp-networks',
-    name: 'Computer Networks',
-    chapterCount: 7,
-    icon: 'language',
-    accentColor: '#9333ea',
-    accentBg: '#f3e8ff',
-    chapters: [
-      {
-        id: 'cn-1',
-        number: 1,
-        title: 'OSI & TCP/IP Reference Models',
-        category: 'theory',
-        topics: [
-          { id: 'cnt-1', title: 'Layer Responsibilities and Protocol Stack', category: 'theory', status: 'completed' },
-          { id: 'cnt-2', title: 'Packet Switching vs Circuit Switching', category: 'theory', status: 'in-progress' },
-        ],
-      },
-      {
-        id: 'cn-2',
-        number: 2,
-        title: 'Data Link Layer & Routing',
-        category: 'practical',
-        topics: [
-          { id: 'cnt-3', title: 'Framing, Error Detection, and CRC', category: 'practical', status: 'not-started' },
-          { id: 'cnt-4', title: 'Subnetting and IPv4 Addressing', category: 'practical', status: 'not-started' },
-        ],
-      },
+    '6': [
+      'Web and Internet Technology',
+      'Deep Learning',
+      'Image Processing',
+      'Cloud Computing',
+      'Big Data and Data Analytics',
+      'Natural Language Processing',
     ],
-  },
-];
+    '7': [
+      'Distributed Systems',
+      'Internet of Things (IoT)',
+      'Cyber Security & Cryptography',
+      'High Performance Computing',
+    ],
+    '8': [
+      'Quantum Computing',
+      'Neural Networks & Deep Learning',
+      'Capstone System Design',
+    ],
+  };
+
+  const subjectNames = fallbackBySem[semStr] || fallbackBySem['2'];
+  return subjectNames.map((name, idx) => {
+    const styling = getSubjectStyling(name);
+    const chapters = buildChaptersFromSubjectEntries(name, []);
+    return {
+      id: `sub-fb-${idx}`,
+      name,
+      chapterCount: chapters.length,
+      icon: styling.icon,
+      accentColor: styling.accentColor,
+      accentBg: styling.accentBg,
+      chapters,
+    };
+  });
+}
 
 interface SyllabusPageProps {
   student: Student;
 }
 
 export const SyllabusPage: React.FC<SyllabusPageProps> = ({ student }) => {
-  const [syllabusList, setSyllabusList] = useState<SyllabusEntry[]>([]);
+  const initialBranch = student.branch || student.course || 'CSE';
+  const initialSem = String(student.semester || '2');
+
+  const [branch, setBranch] = useState(initialBranch);
+  const [semester, setSemester] = useState(initialSem);
+
+  const [_syllabusList, setSyllabusList] = useState<SyllabusEntry[]>([]);
   const [documents, setDocuments] = useState<OriginalDocument[]>(() =>
     getDocumentsForStudent(student)
   );
@@ -332,15 +322,24 @@ export const SyllabusPage: React.FC<SyllabusPageProps> = ({ student }) => {
   const [searching, setSearching] = useState(false);
   const [searchStatus, setSearchStatus] = useState<string | null>(null);
 
-  // Active Subject & Chapter selection
-  const [subjectsList, setSubjectsList] = useState<SubjectItem[]>(DEFAULT_SUBJECTS);
-  const [selectedSubjectId, setSelectedSubjectId] = useState<string>('dsa');
-  const [selectedChapterId, setSelectedChapterId] = useState<string>('ch-1');
+  // Active Subject & Chapter selection strictly for this semester
+  const [subjectsList, setSubjectsList] = useState<SubjectItem[]>(() =>
+    buildSemesterSubjects(initialSem, initialBranch, INITIAL_CURRICULUM_DATA)
+  );
+  const [selectedSubjectId, setSelectedSubjectId] = useState<string>(() => {
+    const initialList = buildSemesterSubjects(initialSem, initialBranch, INITIAL_CURRICULUM_DATA);
+    return initialList.length > 0 ? initialList[0].id : '';
+  });
+  const [selectedChapterId, setSelectedChapterId] = useState<string>(() => {
+    const initialList = buildSemesterSubjects(initialSem, initialBranch, INITIAL_CURRICULUM_DATA);
+    return initialList[0]?.chapters[0]?.id || '';
+  });
 
-  // Topic status toggle state map: { [topicId]: 'completed' | 'in-progress' | 'not-started' }
+  // Topic status toggle state map
   const [topicStatusMap, setTopicStatusMap] = useState<Record<string, 'completed' | 'in-progress' | 'not-started'>>(() => {
     const initial: Record<string, 'completed' | 'in-progress' | 'not-started'> = {};
-    DEFAULT_SUBJECTS.forEach((sub) => {
+    const initialList = buildSemesterSubjects(initialSem, initialBranch, INITIAL_CURRICULUM_DATA);
+    initialList.forEach((sub) => {
       sub.chapters.forEach((ch) => {
         ch.topics.forEach((t) => {
           initial[t.id] = t.status;
@@ -350,13 +349,8 @@ export const SyllabusPage: React.FC<SyllabusPageProps> = ({ student }) => {
     return initial;
   });
 
-  // Filter tabs and search
-  const [viewFilter, setViewFilter] = useState<'all' | 'theory' | 'practical' | 'modules'>('all');
+  // Search term
   const [searchTerm, setSearchTerm] = useState('');
-
-  // Dropdown parameters
-  const [branch, setBranch] = useState(student.branch || student.course || 'CSE');
-  const [semester, setSemester] = useState(String(student.semester || '2'));
 
   // Modals state
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
@@ -377,7 +371,12 @@ export const SyllabusPage: React.FC<SyllabusPageProps> = ({ student }) => {
       setActiveCollegeName(derived);
     }
     setDocuments(getDocumentsForStudent(student));
-  }, [student.college_url, student.college_name]);
+
+    const curBranch = student.branch || student.course || 'CSE';
+    const curSem = String(student.semester || '2');
+    setBranch(curBranch);
+    setSemester(curSem);
+  }, [student.college_url, student.college_name, student.branch, student.course, student.semester]);
 
   const loadData = async (targetCourse = branch, targetSem = semester) => {
     setLoading(true);
@@ -401,45 +400,38 @@ export const SyllabusPage: React.FC<SyllabusPageProps> = ({ student }) => {
       } catch {
         // ignore
       }
-      setSyllabusList(combined);
 
-      // If backend returned syllabus entries, merge them into the active subjects
-      if (combined.length > 0) {
-        const backendSubjects = Array.from(new Set(combined.map((c) => c.subject)));
-        setSubjectsList((prev) => {
-          const customSubjects: SubjectItem[] = backendSubjects
-            .filter((name) => !prev.some((p) => p.name.toLowerCase() === name.toLowerCase()))
-            .map((name, idx) => {
-              const matchedEntries = combined.filter((c) => c.subject === name);
-              const chapters: ChapterItem[] = matchedEntries.map((e, cIdx) => ({
-                id: `entry-${e.id || cIdx}`,
-                number: cIdx + 1,
-                title: e.topic_title,
-                category: e.topic_title.toLowerCase().includes('lab') ? 'practical' : 'theory',
-                topics: [
-                  {
-                    id: `topic-${e.id || cIdx}-1`,
-                    title: e.topic_description || e.topic_title,
-                    category: e.topic_title.toLowerCase().includes('lab') ? 'practical' : 'theory',
-                    status: 'not-started',
-                  },
-                ],
-              }));
-              return {
-                id: `sub-custom-${idx}`,
-                name,
-                chapterCount: chapters.length || 6,
-                icon: 'auto_stories',
-                accentColor: '#10b981',
-                accentBg: '#eaf3ec',
-                chapters,
-              };
-            });
-          return [...prev, ...customSubjects];
+      // Deduplicate with INITIAL_CURRICULUM_DATA by signature so entries never duplicate
+      const existingSignatures = new Set(
+        combined.map((e) => `${(e.subject || '').trim().toLowerCase()}:::${(e.topic_title || '').trim().toLowerCase()}`)
+      );
+
+      const missingInitials = INITIAL_CURRICULUM_DATA.filter((e) => {
+        if (String(e.semester) !== String(targetSem)) return false;
+        const sig = `${(e.subject || '').trim().toLowerCase()}:::${(e.topic_title || '').trim().toLowerCase()}`;
+        return !existingSignatures.has(sig);
+      });
+
+      const allEntries = [...combined, ...missingInitials];
+      setSyllabusList(allEntries);
+
+      // Rebuild the subjects list strictly for this semester!
+      const semesterSubjects = buildSemesterSubjects(targetSem, targetCourse, allEntries);
+      if (semesterSubjects.length > 0) {
+        setSubjectsList(semesterSubjects);
+        setSelectedSubjectId((prevId) => {
+          const exists = semesterSubjects.some((s) => s.id === prevId);
+          return exists ? prevId : semesterSubjects[0].id;
+        });
+        setSelectedChapterId((prevChId) => {
+          const curSub = semesterSubjects.find((s) => s.id === selectedSubjectId) || semesterSubjects[0];
+          const exists = curSub.chapters.some((c) => c.id === prevChId);
+          return exists ? prevChId : (curSub.chapters[0]?.id || '');
         });
       }
     } catch {
-      // Fallback to default subjects
+      const fallbackList = buildSemesterSubjects(targetSem, targetCourse, INITIAL_CURRICULUM_DATA);
+      setSubjectsList(fallbackList);
     } finally {
       setLoading(false);
     }
@@ -511,12 +503,22 @@ export const SyllabusPage: React.FC<SyllabusPageProps> = ({ student }) => {
     documents[0];
 
   // Currently active subject
-  const currentSubject = subjectsList.find((s) => s.id === selectedSubjectId) || subjectsList[0];
+  const currentSubject: SubjectItem =
+    subjectsList.find((s) => s.id === selectedSubjectId) ||
+    subjectsList[0] || {
+      id: 'sub-dsa',
+      name: 'Data structure and Algorithms',
+      chapterCount: DSA_CHAPTERS.length,
+      icon: 'database',
+      accentColor: '#10b981',
+      accentBg: '#d1fae5',
+      chapters: DSA_CHAPTERS,
+    };
 
   // Active chapter
-  const currentChapter =
-    currentSubject.chapters.find((c) => c.id === selectedChapterId) ||
-    currentSubject.chapters[0] || {
+  const currentChapter: ChapterItem =
+    currentSubject.chapters?.find((c) => c.id === selectedChapterId) ||
+    currentSubject.chapters?.[0] || {
       id: 'default',
       number: 1,
       title: 'General Overview',
@@ -601,21 +603,21 @@ export const SyllabusPage: React.FC<SyllabusPageProps> = ({ student }) => {
     ? Math.round((chapterCompleted / chapterTopicsWithStatus.length) * 100)
     : 0;
 
-  // Filtered chapters for left sub-column based on filter tabs and search
+  // Filtered chapters for left sub-column based on search
   const filteredChapters = useMemo(() => {
+    const seenTitles = new Set<string>();
     return currentSubject.chapters.filter((ch) => {
-      const matchesSearch =
+      // Deduplicate by clean title so same module never repeats
+      const norm = ch.title.toLowerCase().replace(/[^a-z0-9]/g, '');
+      if (seenTitles.has(norm)) return false;
+      seenTitles.add(norm);
+
+      return (
         ch.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        ch.topics.some((t) => t.title.toLowerCase().includes(searchTerm.toLowerCase()));
-
-      let matchesFilter = true;
-      if (viewFilter === 'theory') matchesFilter = ch.category === 'theory';
-      if (viewFilter === 'practical') matchesFilter = ch.category === 'practical';
-      if (viewFilter === 'modules') matchesFilter = ch.category === 'module';
-
-      return matchesSearch && matchesFilter;
+        ch.topics.some((t) => t.title.toLowerCase().includes(searchTerm.toLowerCase()))
+      );
     });
-  }, [currentSubject, searchTerm, viewFilter]);
+  }, [currentSubject, searchTerm]);
 
   // Donut SVG circumference math (r = 38, C = 2 * PI * 38 ≈ 238.76)
   const radius = 38;
@@ -641,7 +643,10 @@ export const SyllabusPage: React.FC<SyllabusPageProps> = ({ student }) => {
         {/* ================= HEADER SECTION ================= */}
         <div className="sb-header-row">
           <div className="sb-title-group">
-            <h1 className="sb-main-title">Syllabus</h1>
+            <div className="sb-title-with-badge">
+              <h1 className="sb-main-title">Syllabus</h1>
+              <span className="sb-header-sem-tag">{branch} {formatSemesterLabel(semester)} sem syllabus</span>
+            </div>
             <p className="sb-subtitle">Know what to study. Plan better. Stay on track.</p>
           </div>
 
@@ -815,37 +820,12 @@ export const SyllabusPage: React.FC<SyllabusPageProps> = ({ student }) => {
                   </div>
                 </div>
 
-                {/* Branch Selector */}
-                <div className="sb-dropdown-group">
-                  <label className="sb-dropdown-label">Branch</label>
-                  <select
-                    value={branch}
-                    onChange={(e) => setBranch(e.target.value)}
-                    className="sb-select-pill"
-                  >
-                    <option value="CSE">CSE</option>
-                    <option value="IT">IT</option>
-                    <option value="ECE">ECE</option>
-                    <option value="EE">EE</option>
-                    <option value="ME">ME</option>
-                    <option value="Civil">Civil</option>
-                  </select>
-                </div>
-
-                {/* Semester Selector */}
-                <div className="sb-dropdown-group">
-                  <label className="sb-dropdown-label">Semester</label>
-                  <select
-                    value={semester}
-                    onChange={(e) => setSemester(e.target.value)}
-                    className="sb-select-pill"
-                  >
-                    {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => (
-                      <option key={s} value={String(s)}>
-                        Semester {s}
-                      </option>
-                    ))}
-                  </select>
+                {/* Dynamic Semester Badge */}
+                <div className="sb-sem-badge-pill">
+                  <span className="material-symbols-outlined" style={{ fontSize: '16px', color: '#284232' }}>
+                    school
+                  </span>
+                  <span>{branch} {formatSemesterLabel(semester)} sem syllabus</span>
                 </div>
               </div>
             </div>
@@ -856,38 +836,8 @@ export const SyllabusPage: React.FC<SyllabusPageProps> = ({ student }) => {
                 Syncing syllabus from {activeCollegeName || 'college database'}...
               </div>
             )}
-            <div className="sb-filter-bar">
-              <div className="sb-filter-pills">
-                <button
-                  type="button"
-                  onClick={() => setViewFilter('all')}
-                  className={`sb-filter-pill ${viewFilter === 'all' ? 'active' : ''}`}
-                >
-                  All ({syllabusList.length > 0 ? syllabusList.length : (allCurrentSubjectTopics.length || 60)})
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setViewFilter('theory')}
-                  className={`sb-filter-pill ${viewFilter === 'theory' ? 'active' : ''}`}
-                >
-                  Theory (7)
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setViewFilter('practical')}
-                  className={`sb-filter-pill ${viewFilter === 'practical' ? 'active' : ''}`}
-                >
-                  Practical (5)
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setViewFilter('modules')}
-                  className={`sb-filter-pill ${viewFilter === 'modules' ? 'active' : ''}`}
-                >
-                  Modules (47)
-                </button>
-              </div>
-
+            {/* Search Bar */}
+            <div className="sb-filter-bar" style={{ justifyContent: 'flex-end', borderBottom: 'none', paddingBottom: '4px' }}>
               <div className="sb-search-box">
                 <span className="material-symbols-outlined sb-search-icon" style={{ fontSize: '18px' }}>
                   search
@@ -906,17 +856,18 @@ export const SyllabusPage: React.FC<SyllabusPageProps> = ({ student }) => {
             <div className="sb-split-columns">
               {/* Left Sub-Column: Chapters List */}
               <div className="sb-chapters-list">
-                {filteredChapters.map((chapter) => {
+                {filteredChapters.map((chapter, cIdx) => {
                   const isChActive = chapter.id === selectedChapterId;
+                  const cleanTitle = chapter.title.replace(/^\d+[\.\)]\s*/, '').replace(/[:\s]+$/, '');
                   return (
                     <button
-                      key={chapter.id}
+                      key={chapter.id || `ch-${cIdx}`}
                       type="button"
                       onClick={() => setSelectedChapterId(chapter.id)}
                       className={`sb-chapter-item ${isChActive ? 'active' : ''}`}
                     >
                       <span>
-                        {chapter.number}. {chapter.title}
+                        {cIdx + 1}. {cleanTitle}
                       </span>
                       {isChActive && (
                         <span className="material-symbols-outlined sb-chapter-chevron">
@@ -932,7 +883,10 @@ export const SyllabusPage: React.FC<SyllabusPageProps> = ({ student }) => {
               <div className="sb-topics-panel">
                 <div className="sb-topics-header">
                   <h3 className="sb-topics-chapter-title">
-                    {currentChapter.number}. {currentChapter.title}
+                    {filteredChapters.findIndex((c) => c.id === currentChapter.id) !== -1
+                      ? `${filteredChapters.findIndex((c) => c.id === currentChapter.id) + 1}. `
+                      : ''}
+                    {currentChapter.title.replace(/^\d+[\.\)]\s*/, '').replace(/[:\s]+$/, '')}
                   </h3>
                   <span className="sb-topics-progress-badge">
                     Progress: {chapterProgressPercent}%

@@ -138,7 +138,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Deep Learning",
     "topic_title": "[CS602] Module 2: [5L]",
-    "topic_description": "Mathematical Preliminaries: Neighbor of pixels, Connectivity, Relations, Equivalence & Transitive Closure; Distance Measures, Arithmetic/Logic Operations, Discrete Signals and Systems; A Review \u2013 Fourier Transformation, Properties of The Two Dimensional Fourier Transform; Discrete Fourier Transform, Discrete Cosine & Sine Transform.",
+    "topic_description": "Mathematical Preliminaries: Neighbor of pixels, Connectivity, Relations, Equivalence & Transitive Closure; Distance Measures, Arithmetic/Logic Operations, Discrete Signals and Systems; A Review – Fourier Transformation, Properties of The Two Dimensional Fourier Transform; Discrete Fourier Transform, Discrete Cosine & Sine Transform.",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -178,7 +178,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Image Processing",
     "topic_title": "[CS603A] Module 2: [5L]",
-    "topic_description": "Mathematical Preliminaries: Neighbor of pixels, Connectivity, Relations, Equivalence & Transitive Closure; Distance Measures, Arithmetic/Logic Operations, Discrete Signals and Systems; A Review \u2013 Fourier Transformation, Properties of The Two Dimensional Fourier Transform; Discrete Fourier Transform, Discrete Cosine & Sine Transform.",
+    "topic_description": "Mathematical Preliminaries: Neighbor of pixels, Connectivity, Relations, Equivalence & Transitive Closure; Distance Measures, Arithmetic/Logic Operations, Discrete Signals and Systems; A Review – Fourier Transformation, Properties of The Two Dimensional Fourier Transform; Discrete Fourier Transform, Discrete Cosine & Sine Transform.",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -228,7 +228,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Image Processing",
     "topic_title": "[CS603A] Module 1: Definition of Cloud Computing and its Basics [8L]",
-    "topic_description": "Definition of Cloud Computing: Defining a Cloud, Cloud Types \u2013 NIST model, Cloud Cube model, Deployment models (Public, Private, Hybrid and Community Clouds), Service models \u2013 Infrastructure as a Service, Platform as a Service, Software as a Service with examples of services/ service providers, Cloud Reference model, Characteristics of Cloud Computing \u2013 a shift in paradigm Benefits and advantages of Cloud Computing [3] Cloud Architecture: Cloud Infrastructure, Architecture of each components, Virtualization versus Traditional Approach, Virtualization Model for Cloud Computing. [2]",
+    "topic_description": "Definition of Cloud Computing: Defining a Cloud, Cloud Types – NIST model, Cloud Cube model, Deployment models (Public, Private, Hybrid and Community Clouds), Service models – Infrastructure as a Service, Platform as a Service, Software as a Service with examples of services/ service providers, Cloud Reference model, Characteristics of Cloud Computing – a shift in paradigm Benefits and advantages of Cloud Computing [3] Cloud Architecture: Cloud Infrastructure, Architecture of each components, Virtualization versus Traditional Approach, Virtualization Model for Cloud Computing. [2]",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -248,7 +248,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Image Processing",
     "topic_title": "[CS603A] Module 3: Cloud Service Models [6L]",
-    "topic_description": "Use of Google Web Services [2L] Discussion of Google Applications Portfolio \u2013 Indexed search, Dark Web, Aggregation and disintermediation, Productivity applications and service, Adwords, Google Analytics, Google Translate, a brief discussion on Google Toolkit (including introduction of Google APIs in brief), major features of Google App Engine service. Use of Amazon Web Services [2L] Amazon Web Service components and services: Amazon Elastic Cloud, Amazon Simple",
+    "topic_description": "Use of Google Web Services [2L] Discussion of Google Applications Portfolio – Indexed search, Dark Web, Aggregation and disintermediation, Productivity applications and service, Adwords, Google Analytics, Google Translate, a brief discussion on Google Toolkit (including introduction of Google APIs in brief), major features of Google App Engine service. Use of Amazon Web Services [2L] Amazon Web Service components and services: Amazon Elastic Cloud, Amazon Simple",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -258,7 +258,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Image Processing",
     "topic_title": "[CS603A] Module 4: Cloud Infrastructure [10L]",
-    "topic_description": "Types of services required in implementation \u2013 Consulting, Configuration, Customization and Support Cloud Management [3L] An overview of the features of network management systems and a brief introduction of related products from large cloud vendors, Monitoring of an entire cloud computing deployment stack \u2013 an overview with mention of some products, Lifecycle management of cloud services (six stages of lifecycle)",
+    "topic_description": "Types of services required in implementation – Consulting, Configuration, Customization and Support Cloud Management [3L] An overview of the features of network management systems and a brief introduction of related products from large cloud vendors, Monitoring of an entire cloud computing deployment stack – an overview with mention of some products, Lifecycle management of cloud services (six stages of lifecycle)",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -288,7 +288,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Big Data and Data Analytics",
     "topic_title": "[CS603C] Module 1: Introduction to Basic Analytics [10L]",
-    "topic_description": "Introduction: Big data overview, Analyst\u2019s perspective on data repositories, Current analytical architecture, Drivers of big data, Examples of big data analytics. Life Cycle of Data Analytics: Phase 1: Discovery, Phase 2: Data preparation, Phase 3: Model planning, Phase 4: Model building, Phase 5: Communication of results, Phase 6: Making operational. Basic Analytic Methods: Visualization, Dirty data, Data exploration versus presentation, Statistical methods for evaluation \u2013 hypothesis testing, difference of means, rank sum test, type I and type II errors, ANOVA.",
+    "topic_description": "Introduction: Big data overview, Analyst’s perspective on data repositories, Current analytical architecture, Drivers of big data, Examples of big data analytics. Life Cycle of Data Analytics: Phase 1: Discovery, Phase 2: Data preparation, Phase 3: Model planning, Phase 4: Model building, Phase 5: Communication of results, Phase 6: Making operational. Basic Analytic Methods: Visualization, Dirty data, Data exploration versus presentation, Statistical methods for evaluation – hypothesis testing, difference of means, rank sum test, type I and type II errors, ANOVA.",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -298,7 +298,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Big Data and Data Analytics",
     "topic_title": "[CS603C] Module 2: Advanced Analytic Methods I [8L]",
-    "topic_description": "Clustering: Overview, K-means, Determining the number of clusters, Diagnostics. Association Rules: Overview, Apriori algorithm, Evaluation of candidate rules, Application of association rules, Validation and testing, Diagnostics. Regression: Linear regression - model description, Logistic regression \u2013 model description, Other regression models. Classification: Decision trees \u2013 overview, General algorithm, Decision tree algorithms, Evaluating a decision tree, Na\u00efve Bayes \u2013 Bayes theorem, Na\u00efve Bayes classifier, Diagnostics of classifiers.",
+    "topic_description": "Clustering: Overview, K-means, Determining the number of clusters, Diagnostics. Association Rules: Overview, Apriori algorithm, Evaluation of candidate rules, Application of association rules, Validation and testing, Diagnostics. Regression: Linear regression - model description, Logistic regression – model description, Other regression models. Classification: Decision trees – overview, General algorithm, Decision tree algorithms, Evaluating a decision tree, Naïve Bayes – Bayes theorem, Naïve Bayes classifier, Diagnostics of classifiers.",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -308,7 +308,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Big Data and Data Analytics",
     "topic_title": "[CS603C] Module 3: Advanced Analytic Methods II [8L]",
-    "topic_description": "Time Series Analysis: Overview, Box-Jenkins methodology, Autocorrelation function (ACF), Autoregressive model, Moving average model, ARMA and ARIMA model, Building and evaluating an ARIMA model. Text Analysis: Steps in text analysis, Collecting raw text, Representing text, Term Frequency-Inverse Document Frequency (TFIDF), Categorizing documents by types, Determining sentiments. Map Reduce and Hadoop: Analytics for unstructured data \u2013 map reduce, Apache Hadoop, Hadoop Ecosystem \u2013 Pig, Hive, Hbase, Mahout.",
+    "topic_description": "Time Series Analysis: Overview, Box-Jenkins methodology, Autocorrelation function (ACF), Autoregressive model, Moving average model, ARMA and ARIMA model, Building and evaluating an ARIMA model. Text Analysis: Steps in text analysis, Collecting raw text, Representing text, Term Frequency-Inverse Document Frequency (TFIDF), Categorizing documents by types, Determining sentiments. Map Reduce and Hadoop: Analytics for unstructured data – map reduce, Apache Hadoop, Hadoop Ecosystem – Pig, Hive, Hbase, Mahout.",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -318,7 +318,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Big Data and Data Analytics",
     "topic_title": "[CS603C] Module 4: Advanced Analytic Methods III [10L]",
-    "topic_description": "Technology and Tools: SQL essentials - Join, Set, Grouping extensions, Advanced SQL \u2013 Window functions, User-defined functions, Ordered aggregates, MADlib, NoSQL. Integration of Techniques: Communicating and operationalizing an analytic project. Creating final deliverables \u2013 Developing core materials, project goals, Main findings, Approach, Model description and model details, Recommendations, Providing technical specifications and code. Data visualization basics - Key points, evolution of a graph, common representation methods,",
+    "topic_description": "Technology and Tools: SQL essentials - Join, Set, Grouping extensions, Advanced SQL – Window functions, User-defined functions, Ordered aggregates, MADlib, NoSQL. Integration of Techniques: Communicating and operationalizing an analytic project. Creating final deliverables – Developing core materials, project goals, Main findings, Approach, Model description and model details, Recommendations, Providing technical specifications and code. Data visualization basics - Key points, evolution of a graph, common representation methods,",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -798,7 +798,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "E-Commerce and Digital Business Model",
     "topic_title": "[CS604C] Module III: [6L]",
-    "topic_description": "Quantum Algorithms I: R25 (B. Tech CSE) Department: Computer Science & Engineering Curriculum Structure & Syllabus (Effective from 2025-26 admission batch) Deutsch and Deutsch\u2013Jozsa algorithm, Bernstein\u2013Vazirani algorithm, Simon\u2019s problem.",
+    "topic_description": "Quantum Algorithms I: R25 (B. Tech CSE) Department: Computer Science & Engineering Curriculum Structure & Syllabus (Effective from 2025-26 admission batch) Deutsch and Deutsch–Jozsa algorithm, Bernstein–Vazirani algorithm, Simon’s problem.",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -808,7 +808,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "E-Commerce and Digital Business Model",
     "topic_title": "[CS604C] Module IV: [6L]",
-    "topic_description": "Quantum Algorithms II: Grover\u2019s Search algorithm \u2013 Quantum advantage in unstructured search, Shor\u2019s factoring algorithm \u2013 Quantum Fourier Transform (QFT).",
+    "topic_description": "Quantum Algorithms II: Grover’s Search algorithm – Quantum advantage in unstructured search, Shor’s factoring algorithm – Quantum Fourier Transform (QFT).",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -868,7 +868,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Quantum Computing",
     "topic_title": "[CS604D] Module III: [6L]",
-    "topic_description": "Quantum Algorithms I: R25 (B. Tech CSE) Department: Computer Science & Engineering Curriculum Structure & Syllabus (Effective from 2025-26 admission batch) Deutsch and Deutsch\u2013Jozsa algorithm, Bernstein\u2013Vazirani algorithm, Simon\u2019s problem.",
+    "topic_description": "Quantum Algorithms I: R25 (B. Tech CSE) Department: Computer Science & Engineering Curriculum Structure & Syllabus (Effective from 2025-26 admission batch) Deutsch and Deutsch–Jozsa algorithm, Bernstein–Vazirani algorithm, Simon’s problem.",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -878,7 +878,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Quantum Computing",
     "topic_title": "[CS604D] Module IV: [6L]",
-    "topic_description": "Quantum Algorithms II: Grover\u2019s Search algorithm \u2013 Quantum advantage in unstructured search, Shor\u2019s factoring algorithm \u2013 Quantum Fourier Transform (QFT).",
+    "topic_description": "Quantum Algorithms II: Grover’s Search algorithm – Quantum advantage in unstructured search, Shor’s factoring algorithm – Quantum Fourier Transform (QFT).",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -908,7 +908,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Quantum Computing",
     "topic_title": "[CS604D] Module 1: Introduction to Cybercrime (5 Hours)",
-    "topic_description": "\uf0b7 Cybercrime, Forgery, Hacking, Software Piracy \uf0b7 Computer Network Intrusion, Criminal planning, Passive vs. Active Attacks \uf0b7 Cyber Stalking",
+    "topic_description": " Cybercrime, Forgery, Hacking, Software Piracy  Computer Network Intrusion, Criminal planning, Passive vs. Active Attacks  Cyber Stalking",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -918,7 +918,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Quantum Computing",
     "topic_title": "[CS604D] Module 2: Cybercrime in Mobile and Wireless Devices (8 Hours)",
-    "topic_description": "\uf0b7 Security challenges in mobile environments \uf0b7 Cryptographic security for mobile devices \uf0b7 Attacks on mobile/cell phones: Theft, Viruses, Hacking \uf0b7",
+    "topic_description": " Security challenges in mobile environments  Cryptographic security for mobile devices  Attacks on mobile/cell phones: Theft, Viruses, Hacking ",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -928,7 +928,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Quantum Computing",
     "topic_title": "[CS604D] Module 3: Tools and Methods Used in Cybercrime (7 Hours)",
-    "topic_description": "\uf0b7 Proxy Servers, Password and Random Checking \uf0b7 Trojan Horses, Backdoors, DoS and DDoS Attacks \uf0b7 SQL Injection, Buffer Overflow, Script Kiddies, Packaged Defense Tools R25 (B. Tech CSE)",
+    "topic_description": " Proxy Servers, Password and Random Checking  Trojan Horses, Backdoors, DoS and DDoS Attacks  SQL Injection, Buffer Overflow, Script Kiddies, Packaged Defense Tools R25 (B. Tech CSE)",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -938,7 +938,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Quantum Computing",
     "topic_title": "[CS604D] Module 4: Cybercrime and Cybersecurity (6 Hours)",
-    "topic_description": "\uf0b7 Phishing, Identity Theft, Online Identity Management \uf0b7 Legal aspects: Indian laws, IT Act, Public Key Infrastructure \uf0b7 Designing Cybersecurity Policies \uf0b7",
+    "topic_description": " Phishing, Identity Theft, Online Identity Management  Legal aspects: Indian laws, IT Act, Public Key Infrastructure  Designing Cybersecurity Policies ",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -948,7 +948,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Quantum Computing",
     "topic_title": "[CS604D] Module 5: Cyber Ethics (5 Hours)",
-    "topic_description": "\uf0b7 Importance of Cyber Law and Cyber Ethics \uf0b7 Necessity for Cyber Regulations \uf0b7 Ethics in the Information Society \uf0b7",
+    "topic_description": " Importance of Cyber Law and Cyber Ethics  Necessity for Cyber Regulations  Ethics in the Information Society ",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -968,7 +968,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Cyber Law and Ethics",
     "topic_title": "[CS605] Module 1: Introduction to Cybercrime (5 Hours)",
-    "topic_description": "\uf0b7 Cybercrime, Forgery, Hacking, Software Piracy \uf0b7 Computer Network Intrusion, Criminal planning, Passive vs. Active Attacks \uf0b7 Cyber Stalking",
+    "topic_description": " Cybercrime, Forgery, Hacking, Software Piracy  Computer Network Intrusion, Criminal planning, Passive vs. Active Attacks  Cyber Stalking",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -978,7 +978,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Cyber Law and Ethics",
     "topic_title": "[CS605] Module 2: Cybercrime in Mobile and Wireless Devices (8 Hours)",
-    "topic_description": "\uf0b7 Security challenges in mobile environments \uf0b7 Cryptographic security for mobile devices \uf0b7 Attacks on mobile/cell phones: Theft, Viruses, Hacking \uf0b7",
+    "topic_description": " Security challenges in mobile environments  Cryptographic security for mobile devices  Attacks on mobile/cell phones: Theft, Viruses, Hacking ",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -988,7 +988,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Cyber Law and Ethics",
     "topic_title": "[CS605] Module 3: Tools and Methods Used in Cybercrime (7 Hours)",
-    "topic_description": "\uf0b7 Proxy Servers, Password and Random Checking \uf0b7 Trojan Horses, Backdoors, DoS and DDoS Attacks \uf0b7 SQL Injection, Buffer Overflow, Script Kiddies, Packaged Defense Tools R25 (B. Tech CSE)",
+    "topic_description": " Proxy Servers, Password and Random Checking  Trojan Horses, Backdoors, DoS and DDoS Attacks  SQL Injection, Buffer Overflow, Script Kiddies, Packaged Defense Tools R25 (B. Tech CSE)",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -998,7 +998,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Cyber Law and Ethics",
     "topic_title": "[CS605] Module 4: Cybercrime and Cybersecurity (6 Hours)",
-    "topic_description": "\uf0b7 Phishing, Identity Theft, Online Identity Management \uf0b7 Legal aspects: Indian laws, IT Act, Public Key Infrastructure \uf0b7 Designing Cybersecurity Policies \uf0b7",
+    "topic_description": " Phishing, Identity Theft, Online Identity Management  Legal aspects: Indian laws, IT Act, Public Key Infrastructure  Designing Cybersecurity Policies ",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -1008,7 +1008,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Cyber Law and Ethics",
     "topic_title": "[CS605] Module 5: Cyber Ethics (5 Hours)",
-    "topic_description": "\uf0b7 Importance of Cyber Law and Cyber Ethics \uf0b7 Necessity for Cyber Regulations \uf0b7 Ethics in the Information Society \uf0b7",
+    "topic_description": " Importance of Cyber Law and Cyber Ethics  Necessity for Cyber Regulations  Ethics in the Information Society ",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -1198,7 +1198,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Deep Learning",
     "topic_title": "[CS602] Module 2: [5L]",
-    "topic_description": "Mathematical Preliminaries:Neighbor of pixels, Connectivity, Relations, Equivalence & Transitive Closure; Distance Measures, Arithmetic/Logic Operations, Discrete Signals and Systems; A Review \u2013 Fourier Transformation, Properties of The Two Dimensional Fourier Transform; Discrete Fourier Transform, Discrete Cosine & Sine Transform.",
+    "topic_description": "Mathematical Preliminaries:Neighbor of pixels, Connectivity, Relations, Equivalence & Transitive Closure; Distance Measures, Arithmetic/Logic Operations, Discrete Signals and Systems; A Review – Fourier Transformation, Properties of The Two Dimensional Fourier Transform; Discrete Fourier Transform, Discrete Cosine & Sine Transform.",
     "source_document_id": "d4a3c623880047f78f62f92151aa3222"
   },
   {
@@ -1268,7 +1268,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Image Processing",
     "topic_title": "[CS603A] Module 2: [5L]",
-    "topic_description": "Mathematical Preliminaries:Neighbor of pixels, Connectivity, Relations, Equivalence & Transitive Closure; Distance Measures, Arithmetic/Logic Operations, Discrete Signals and Systems; A Review \u2013 Fourier Transformation, Properties of The Two Dimensional Fourier Transform; Discrete Fourier Transform, Discrete Cosine & Sine Transform.",
+    "topic_description": "Mathematical Preliminaries:Neighbor of pixels, Connectivity, Relations, Equivalence & Transitive Closure; Distance Measures, Arithmetic/Logic Operations, Discrete Signals and Systems; A Review – Fourier Transformation, Properties of The Two Dimensional Fourier Transform; Discrete Fourier Transform, Discrete Cosine & Sine Transform.",
     "source_document_id": "d4a3c623880047f78f62f92151aa3222"
   },
   {
@@ -1318,7 +1318,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Image Processing",
     "topic_title": "[CS603A] Module 1: Definition of Cloud Computing and its Basics [8L]",
-    "topic_description": "Definition of Cloud Computing: Defining a Cloud, Cloud Types \u2013 NIST model, Cloud Cube model, Deployment models (Public, Private, Hybrid and Community Clouds), Service models \u2013 Infrastructure as a Service, Platform as a Service, Software as a Service with examples of services/ service providers, Cloud Reference model, Characteristics of Cloud Computing \u2013 a shift in paradigm Benefits and advantages of Cloud Computing [3] Cloud Architecture: Cloud Infrastructure, Architecture of each components, Virtualization versus Traditional Approach, Virtualization Model for Cloud Computing. [2]",
+    "topic_description": "Definition of Cloud Computing: Defining a Cloud, Cloud Types – NIST model, Cloud Cube model, Deployment models (Public, Private, Hybrid and Community Clouds), Service models – Infrastructure as a Service, Platform as a Service, Software as a Service with examples of services/ service providers, Cloud Reference model, Characteristics of Cloud Computing – a shift in paradigm Benefits and advantages of Cloud Computing [3] Cloud Architecture: Cloud Infrastructure, Architecture of each components, Virtualization versus Traditional Approach, Virtualization Model for Cloud Computing. [2]",
     "source_document_id": "d4a3c623880047f78f62f92151aa3222"
   },
   {
@@ -1358,7 +1358,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Big Data and Data Analytics",
     "topic_title": "[CS603C] Module 1: Introduction to Basic Analytics [10L]",
-    "topic_description": "Introduction: Big data overview, Analyst\u2019s perspective on data repositories, Current analytical architecture, Drivers of big data, Examples of big data analytics. Life Cycle of Data Analytics: Phase 1: Discovery, Phase 2: Data preparation, Phase 3: Model planning, Phase 4: Model building, Phase 5: Communication of results, Phase 6: Making operational. Basic Analytic Methods: Visualization, Dirty data, Data exploration versus presentation, Statistical methods for evaluation \u2013 hypothesis testing, difference of means, rank sum test, type I and type II errors, ANOVA.",
+    "topic_description": "Introduction: Big data overview, Analyst’s perspective on data repositories, Current analytical architecture, Drivers of big data, Examples of big data analytics. Life Cycle of Data Analytics: Phase 1: Discovery, Phase 2: Data preparation, Phase 3: Model planning, Phase 4: Model building, Phase 5: Communication of results, Phase 6: Making operational. Basic Analytic Methods: Visualization, Dirty data, Data exploration versus presentation, Statistical methods for evaluation – hypothesis testing, difference of means, rank sum test, type I and type II errors, ANOVA.",
     "source_document_id": "d4a3c623880047f78f62f92151aa3222"
   },
   {
@@ -1368,7 +1368,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Big Data and Data Analytics",
     "topic_title": "[CS603C] Module 2: Advanced Analytic Methods I [8L]",
-    "topic_description": "Clustering: Overview, K-means, Determining the number of clusters, Diagnostics. Association Rules: Overview, Apriori algorithm, Evaluation of candidate rules, Application of association rules, Validation and testing, Diagnostics. Regression: Linear regression - model description, Logistic regression \u2013 model description, Other regression models. Classification: Decision trees \u2013 overview, General algorithm, Decision tree algorithms, Evaluating a decision tree, Na\u00efve Bayes \u2013 Bayes theorem, Na\u00efve Bayes classifier, Diagnostics of classifiers.",
+    "topic_description": "Clustering: Overview, K-means, Determining the number of clusters, Diagnostics. Association Rules: Overview, Apriori algorithm, Evaluation of candidate rules, Application of association rules, Validation and testing, Diagnostics. Regression: Linear regression - model description, Logistic regression – model description, Other regression models. Classification: Decision trees – overview, General algorithm, Decision tree algorithms, Evaluating a decision tree, Naïve Bayes – Bayes theorem, Naïve Bayes classifier, Diagnostics of classifiers.",
     "source_document_id": "d4a3c623880047f78f62f92151aa3222"
   },
   {
@@ -1378,7 +1378,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Big Data and Data Analytics",
     "topic_title": "[CS603C] Module 3: Advanced Analytic Methods II [8L]",
-    "topic_description": "Time Series Analysis: Overview, Box-Jenkins methodology, Autocorrelation function (ACF), Autoregressive model, Moving average model, ARMA and ARIMA model, Building and evaluating an ARIMA model. Text Analysis: Steps in text analysis, Collecting raw text, Representing text, Term Frequency-Inverse Document Frequency (TFIDF), Categorizing documents by types, Determining sentiments. Map Reduce and Hadoop: Analytics for unstructured data \u2013 map reduce, Apache Hadoop, Hadoop Ecosystem \u2013 Pig, Hive, Hbase, Mahout.",
+    "topic_description": "Time Series Analysis: Overview, Box-Jenkins methodology, Autocorrelation function (ACF), Autoregressive model, Moving average model, ARMA and ARIMA model, Building and evaluating an ARIMA model. Text Analysis: Steps in text analysis, Collecting raw text, Representing text, Term Frequency-Inverse Document Frequency (TFIDF), Categorizing documents by types, Determining sentiments. Map Reduce and Hadoop: Analytics for unstructured data – map reduce, Apache Hadoop, Hadoop Ecosystem – Pig, Hive, Hbase, Mahout.",
     "source_document_id": "d4a3c623880047f78f62f92151aa3222"
   },
   {
@@ -1388,7 +1388,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Big Data and Data Analytics",
     "topic_title": "[CS603C] Module 4: Advanced Analytic Methods III [10L]",
-    "topic_description": "Technology and Tools: SQL essentials - Join, Set, Grouping extensions, Advanced SQL \u2013 Window functions, User-defined functions, Ordered aggregates, MADlib, NoSQL. Integration of Techniques: Communicating and operationalizing an analytic project. Creating final deliverables \u2013 Developing core materials, project goals, Main findings, Approach, Model description and model details, Recommendations, Providing technical specifications and code. Data visualization basics - Key points, evolution of a graph, common representation methods,",
+    "topic_description": "Technology and Tools: SQL essentials - Join, Set, Grouping extensions, Advanced SQL – Window functions, User-defined functions, Ordered aggregates, MADlib, NoSQL. Integration of Techniques: Communicating and operationalizing an analytic project. Creating final deliverables – Developing core materials, project goals, Main findings, Approach, Model description and model details, Recommendations, Providing technical specifications and code. Data visualization basics - Key points, evolution of a graph, common representation methods,",
     "source_document_id": "d4a3c623880047f78f62f92151aa3222"
   },
   {
@@ -1448,7 +1448,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Natural Language Processing",
     "topic_title": "[CS603D] Module 4: Advanced Analytic Methods III [10L]",
-    "topic_description": "Technology and Tools: SQL essentials - Join, Set, Grouping extensions, Advanced SQL \u2013 Window functions, User-defined functions, Ordered aggregates, MADlib, NoSQL. Integration of Techniques: Communicating and operationalizing an analytic project. Creating final deliverables \u2013 Developing core materials, project goals, Main findings, Approach, Model description and model details, Recommendations, Providing technical specifications and code. Data visualization basics - Key points, evolution of a graph, common representation methods,",
+    "topic_description": "Technology and Tools: SQL essentials - Join, Set, Grouping extensions, Advanced SQL – Window functions, User-defined functions, Ordered aggregates, MADlib, NoSQL. Integration of Techniques: Communicating and operationalizing an analytic project. Creating final deliverables – Developing core materials, project goals, Main findings, Approach, Model description and model details, Recommendations, Providing technical specifications and code. Data visualization basics - Key points, evolution of a graph, common representation methods,",
     "source_document_id": "d4a3c623880047f78f62f92151aa3222"
   },
   {
@@ -1928,7 +1928,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "E-Commerce and Digital Business Model",
     "topic_title": "[CS604C] Module III: [6L]",
-    "topic_description": "Quantum Algorithms I: Deutsch and Deutsch\u2013Jozsa algorithm, Bernstein\u2013Vazirani algorithm, Simon\u2019s problem.",
+    "topic_description": "Quantum Algorithms I: Deutsch and Deutsch–Jozsa algorithm, Bernstein–Vazirani algorithm, Simon’s problem.",
     "source_document_id": "d4a3c623880047f78f62f92151aa3222"
   },
   {
@@ -1938,7 +1938,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "E-Commerce and Digital Business Model",
     "topic_title": "[CS604C] Module IV: [6L]",
-    "topic_description": "Quantum Algorithms II: Grover\u2019s Search algorithm \u2013 Quantum advantage in unstructured search, Shor\u2019s factoring algorithm \u2013 Quantum Fourier Transform (QFT).",
+    "topic_description": "Quantum Algorithms II: Grover’s Search algorithm – Quantum advantage in unstructured search, Shor’s factoring algorithm – Quantum Fourier Transform (QFT).",
     "source_document_id": "d4a3c623880047f78f62f92151aa3222"
   },
   {
@@ -1998,7 +1998,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Quantum Computing",
     "topic_title": "[CS604D] Module III: [6L]",
-    "topic_description": "Quantum Algorithms I: Deutsch and Deutsch\u2013Jozsa algorithm, Bernstein\u2013Vazirani algorithm, Simon\u2019s problem.",
+    "topic_description": "Quantum Algorithms I: Deutsch and Deutsch–Jozsa algorithm, Bernstein–Vazirani algorithm, Simon’s problem.",
     "source_document_id": "d4a3c623880047f78f62f92151aa3222"
   },
   {
@@ -2008,7 +2008,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Quantum Computing",
     "topic_title": "[CS604D] Module IV: [6L]",
-    "topic_description": "Quantum Algorithms II: Grover\u2019s Search algorithm \u2013 Quantum advantage in unstructured search, Shor\u2019s factoring algorithm \u2013 Quantum Fourier Transform (QFT).",
+    "topic_description": "Quantum Algorithms II: Grover’s Search algorithm – Quantum advantage in unstructured search, Shor’s factoring algorithm – Quantum Fourier Transform (QFT).",
     "source_document_id": "d4a3c623880047f78f62f92151aa3222"
   },
   {
@@ -2038,7 +2038,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Quantum Computing",
     "topic_title": "[CS604D] Module 1: Introduction to Cybercrime (5 Hours)",
-    "topic_description": "\uf0b7 Cybercrime, Forgery, Hacking, Software Piracy \uf0b7 Computer Network Intrusion, Criminal planning, Passive vs. Active Attacks \uf0b7 Cyber Stalking",
+    "topic_description": " Cybercrime, Forgery, Hacking, Software Piracy  Computer Network Intrusion, Criminal planning, Passive vs. Active Attacks  Cyber Stalking",
     "source_document_id": "d4a3c623880047f78f62f92151aa3222"
   },
   {
@@ -2048,7 +2048,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Quantum Computing",
     "topic_title": "[CS604D] Module 2: Cybercrime in Mobile and Wireless Devices (8 Hours)",
-    "topic_description": "\uf0b7 Security challenges in mobile environments \uf0b7 Cryptographic security for mobile devices \uf0b7 Attacks on mobile/cell phones: Theft, Viruses, Hacking \uf0b7",
+    "topic_description": " Security challenges in mobile environments  Cryptographic security for mobile devices  Attacks on mobile/cell phones: Theft, Viruses, Hacking ",
     "source_document_id": "d4a3c623880047f78f62f92151aa3222"
   },
   {
@@ -2058,7 +2058,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Quantum Computing",
     "topic_title": "[CS604D] Module 3: Tools and Methods Used in Cybercrime (7 Hours)",
-    "topic_description": "\uf0b7 Proxy Servers, Password and Random Checking \uf0b7 Trojan Horses, Backdoors, DoS and DDoS Attacks \uf0b7 SQL Injection, Buffer Overflow, Script Kiddies, Packaged Defense Tools",
+    "topic_description": " Proxy Servers, Password and Random Checking  Trojan Horses, Backdoors, DoS and DDoS Attacks  SQL Injection, Buffer Overflow, Script Kiddies, Packaged Defense Tools",
     "source_document_id": "d4a3c623880047f78f62f92151aa3222"
   },
   {
@@ -2068,7 +2068,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Quantum Computing",
     "topic_title": "[CS604D] Module 4: Cybercrime and Cybersecurity (6 Hours)",
-    "topic_description": "\uf0b7 Phishing, Identity Theft, Online Identity Management \uf0b7 Legal aspects: Indian laws, IT Act, Public Key Infrastructure \uf0b7 Designing Cybersecurity Policies \uf0b7",
+    "topic_description": " Phishing, Identity Theft, Online Identity Management  Legal aspects: Indian laws, IT Act, Public Key Infrastructure  Designing Cybersecurity Policies ",
     "source_document_id": "d4a3c623880047f78f62f92151aa3222"
   },
   {
@@ -2078,7 +2078,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Quantum Computing",
     "topic_title": "[CS604D] Module 5: Cyber Ethics (5 Hours)",
-    "topic_description": "\uf0b7 Importance of Cyber Law and Cyber Ethics \uf0b7 Necessity for Cyber Regulations \uf0b7 Ethics in the Information Society \uf0b7",
+    "topic_description": " Importance of Cyber Law and Cyber Ethics  Necessity for Cyber Regulations  Ethics in the Information Society ",
     "source_document_id": "d4a3c623880047f78f62f92151aa3222"
   },
   {
@@ -2098,7 +2098,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Cyber Law and Ethics",
     "topic_title": "[CS605] Module 1: Introduction to Cybercrime (5 Hours)",
-    "topic_description": "\uf0b7 Cybercrime, Forgery, Hacking, Software Piracy \uf0b7 Computer Network Intrusion, Criminal planning, Passive vs. Active Attacks \uf0b7 Cyber Stalking",
+    "topic_description": " Cybercrime, Forgery, Hacking, Software Piracy  Computer Network Intrusion, Criminal planning, Passive vs. Active Attacks  Cyber Stalking",
     "source_document_id": "d4a3c623880047f78f62f92151aa3222"
   },
   {
@@ -2108,7 +2108,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Cyber Law and Ethics",
     "topic_title": "[CS605] Module 2: Cybercrime in Mobile and Wireless Devices (8 Hours)",
-    "topic_description": "\uf0b7 Security challenges in mobile environments \uf0b7 Cryptographic security for mobile devices \uf0b7 Attacks on mobile/cell phones: Theft, Viruses, Hacking \uf0b7",
+    "topic_description": " Security challenges in mobile environments  Cryptographic security for mobile devices  Attacks on mobile/cell phones: Theft, Viruses, Hacking ",
     "source_document_id": "d4a3c623880047f78f62f92151aa3222"
   },
   {
@@ -2118,7 +2118,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Cyber Law and Ethics",
     "topic_title": "[CS605] Module 3: Tools and Methods Used in Cybercrime (7 Hours)",
-    "topic_description": "\uf0b7 Proxy Servers, Password and Random Checking \uf0b7 Trojan Horses, Backdoors, DoS and DDoS Attacks \uf0b7 SQL Injection, Buffer Overflow, Script Kiddies, Packaged Defense Tools",
+    "topic_description": " Proxy Servers, Password and Random Checking  Trojan Horses, Backdoors, DoS and DDoS Attacks  SQL Injection, Buffer Overflow, Script Kiddies, Packaged Defense Tools",
     "source_document_id": "d4a3c623880047f78f62f92151aa3222"
   },
   {
@@ -2128,7 +2128,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Cyber Law and Ethics",
     "topic_title": "[CS605] Module 4: Cybercrime and Cybersecurity (6 Hours)",
-    "topic_description": "\uf0b7 Phishing, Identity Theft, Online Identity Management \uf0b7 Legal aspects: Indian laws, IT Act, Public Key Infrastructure \uf0b7 Designing Cybersecurity Policies \uf0b7",
+    "topic_description": " Phishing, Identity Theft, Online Identity Management  Legal aspects: Indian laws, IT Act, Public Key Infrastructure  Designing Cybersecurity Policies ",
     "source_document_id": "d4a3c623880047f78f62f92151aa3222"
   },
   {
@@ -2138,7 +2138,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "6",
     "subject": "Cyber Law and Ethics",
     "topic_title": "[CS605] Module 5: Cyber Ethics (5 Hours)",
-    "topic_description": "\uf0b7 Importance of Cyber Law and Cyber Ethics \uf0b7 Necessity for Cyber Regulations \uf0b7 Ethics in the Information Society \uf0b7",
+    "topic_description": " Importance of Cyber Law and Cyber Ethics  Necessity for Cyber Regulations  Ethics in the Information Society ",
     "source_document_id": "d4a3c623880047f78f62f92151aa3222"
   },
   {
@@ -2287,8 +2287,8 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "course": "Computer Science",
     "semester": "5",
     "subject": "Core Computing",
-    "topic_title": "L \u2013 Lecture; T- Tutorial; P- Practical [1L=1Cr, 1T=1Cr, 1P =0.5 Cr]",
-    "topic_description": "Detailed study elements covering L \u2013 Lecture; T- Tutorial; P- Practical [1L=1Cr, 1T=1Cr, 1P =0.5 Cr]",
+    "topic_title": "L – Lecture; T- Tutorial; P- Practical [1L=1Cr, 1T=1Cr, 1P =0.5 Cr]",
+    "topic_description": "Detailed study elements covering L – Lecture; T- Tutorial; P- Practical [1L=1Cr, 1T=1Cr, 1P =0.5 Cr]",
     "source_document_id": "003770eff75542efbcaeb84356a93dce"
   },
   {
@@ -2617,8 +2617,8 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "course": "Computer Science",
     "semester": "5",
     "subject": "Core Computing",
-    "topic_title": "Mathematics \u2013I",
-    "topic_description": "Detailed study elements covering Mathematics \u2013I",
+    "topic_title": "Mathematics –I",
+    "topic_description": "Detailed study elements covering Mathematics –I",
     "source_document_id": "2cd58ade86c048b1b2b63d38df32a9f9"
   },
   {
@@ -2857,8 +2857,8 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "course": "Computer Science",
     "semester": "5",
     "subject": "Core Computing",
-    "topic_title": "(NAAC \u2018A+\u2019 Accredited An Autonomous Institute) (Affiliated to Maulana",
-    "topic_description": "Detailed study elements covering (NAAC \u2018A+\u2019 Accredited An Autonomous Institute) (Affiliated to Maulana",
+    "topic_title": "(NAAC ‘A+’ Accredited An Autonomous Institute) (Affiliated to Maulana",
+    "topic_description": "Detailed study elements covering (NAAC ‘A+’ Accredited An Autonomous Institute) (Affiliated to Maulana",
     "source_document_id": "e9d5d667dc71403e98d57022976383af"
   },
   {
@@ -2937,8 +2937,8 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "course": "Computer Science",
     "semester": "5",
     "subject": "Core Computing",
-    "topic_title": "(NAAC \u2018A+\u2019 Accredited An Autonomous Institute)",
-    "topic_description": "Detailed study elements covering (NAAC \u2018A+\u2019 Accredited An Autonomous Institute)",
+    "topic_title": "(NAAC ‘A+’ Accredited An Autonomous Institute)",
+    "topic_description": "Detailed study elements covering (NAAC ‘A+’ Accredited An Autonomous Institute)",
     "source_document_id": "99b6cda7a45049f88ec8a9562e16c419"
   },
   {
@@ -2947,8 +2947,8 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "course": "Computer Science",
     "semester": "5",
     "subject": "Core Computing",
-    "topic_title": "Curriculum and Syllabus | GNIT \u2014 Guru Nanak Institute of Technology",
-    "topic_description": "Detailed study elements covering Curriculum and Syllabus | GNIT \u2014 Guru Nanak Institute of Technology",
+    "topic_title": "Curriculum and Syllabus | GNIT — Guru Nanak Institute of Technology",
+    "topic_description": "Detailed study elements covering Curriculum and Syllabus | GNIT — Guru Nanak Institute of Technology",
     "source_document_id": "d52438ef46ef4a2f881fb11a76e67d8d"
   },
   {
@@ -2977,8 +2977,8 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "course": "Computer Science",
     "semester": "5",
     "subject": "Core Computing",
-    "topic_title": "AICTE Scholarship/Fellowship Schemes \u2014 Apply Now",
-    "topic_description": "Detailed study elements covering AICTE Scholarship/Fellowship Schemes \u2014 Apply Now",
+    "topic_title": "AICTE Scholarship/Fellowship Schemes — Apply Now",
+    "topic_description": "Detailed study elements covering AICTE Scholarship/Fellowship Schemes — Apply Now",
     "source_document_id": "d52438ef46ef4a2f881fb11a76e67d8d"
   },
   {
@@ -3048,7 +3048,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "3",
     "subject": "Computer Architecture",
     "topic_title": "[CS301] Module 2: [7L]:",
-    "topic_description": "Introduction to basic computer architecture [1L], Stored Program Concepts: Von Neumann & Harvard Architecture [1L], RISC VS CISC [1L], Amdahl law [1L], Performance measurement parameters \u2013 MIPS, MFLOPS, SPEC ratings, CPI etc. [2L] Micro programmed and hardwired control unit [1L].",
+    "topic_description": "Introduction to basic computer architecture [1L], Stored Program Concepts: Von Neumann & Harvard Architecture [1L], RISC VS CISC [1L], Amdahl law [1L], Performance measurement parameters – MIPS, MFLOPS, SPEC ratings, CPI etc. [2L] Micro programmed and hardwired control unit [1L].",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -3082,26 +3082,6 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
-    "id": "f6a6d8f5d4c04efe84bbe9f3aff6c393",
-    "college_id": "default-college-id",
-    "course": "CSE",
-    "semester": "3",
-    "subject": "Computer Architecture",
-    "topic_title": "[CS301] Module 1: [6L]",
-    "topic_description": "Algorithm Development & Complexity Analysis: [4L] Stages of algorithm development for solving a problem: Describing the problem, identifying a suitable technique, Design of an algorithm, Time and Space Complexity, Different Asymptotic notations \u2013 their mathematical significance. Solving Recurrences: Substitution Method, Recurrence Tree Method, Master Theorem (Statement Only).",
-    "source_document_id": "1464afb322464e9881f723190553d223"
-  },
-  {
-    "id": "c284b50b74fa4adaa6b82b74fea940a4",
-    "college_id": "default-college-id",
-    "course": "CSE",
-    "semester": "3",
-    "subject": "Computer Architecture",
-    "topic_title": "[CS301] Module 2: [12L]",
-    "topic_description": "Algorithm Design Techniques Brute force techniques \u2013 Traveling Salesman Problem, Divide and Conquer - Matrix multiplication: Strassen algorithm, Greedy techniques - Fractional Knapsack problem, Job Sequencing with Deadline, Graph Coloring, Finding Minimum Cost",
-    "source_document_id": "1464afb322464e9881f723190553d223"
-  },
-  {
     "id": "1f2dce23a1f4457daf424c2b25848ab7",
     "college_id": "default-college-id",
     "course": "CSE",
@@ -3118,7 +3098,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "3",
     "subject": "Design and Analysis of Algorithms",
     "topic_title": "[CS302] Module 1: [6L]",
-    "topic_description": "Algorithm Development & Complexity Analysis: [4L] Stages of algorithm development for solving a problem: Describing the problem, identifying a suitable technique, Design of an algorithm, Time and Space Complexity, Different Asymptotic notations \u2013 their mathematical significance. Solving Recurrences: Substitution Method, Recurrence Tree Method, Master Theorem (Statement Only).",
+    "topic_description": "Algorithm Development & Complexity Analysis: [4L] Stages of algorithm development for solving a problem: Describing the problem, identifying a suitable technique, Design of an algorithm, Time and Space Complexity, Different Asymptotic notations – their mathematical significance. Solving Recurrences: Substitution Method, Recurrence Tree Method, Master Theorem (Statement Only).",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -3128,7 +3108,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "3",
     "subject": "Design and Analysis of Algorithms",
     "topic_title": "[CS302] Module 2: [12L]",
-    "topic_description": "Algorithm Design Techniques Brute force techniques \u2013 Traveling Salesman Problem, Divide and Conquer - Matrix multiplication: Strassen algorithm, Greedy techniques - Fractional Knapsack problem, Job Sequencing with Deadline, Graph Coloring, Finding Minimum Cost R25 (B. Tech CSE) Department: Computer Science & Engineering Curriculum Structure & Syllabus (Effective from 2025-26 admission batch)",
+    "topic_description": "Algorithm Design Techniques Brute force techniques – Traveling Salesman Problem, Divide and Conquer - Matrix multiplication: Strassen algorithm, Greedy techniques - Fractional Knapsack problem, Job Sequencing with Deadline, Graph Coloring, Finding Minimum Cost R25 (B. Tech CSE) Department: Computer Science & Engineering Curriculum Structure & Syllabus (Effective from 2025-26 admission batch)",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -3138,7 +3118,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "3",
     "subject": "Design and Analysis of Algorithms",
     "topic_title": "[CS302] Module 3: [3L]",
-    "topic_description": "String matching problem: Different techniques \u2013 Naive algorithm, Knuth, Morris, Pratt (KMP) algorithm with their complexities.",
+    "topic_description": "String matching problem: Different techniques – Naive algorithm, Knuth, Morris, Pratt (KMP) algorithm with their complexities.",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -3148,7 +3128,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "3",
     "subject": "Design and Analysis of Algorithms",
     "topic_title": "[CS302] Module 4: [5L]",
-    "topic_description": "Graph Algorithms Single Source Shortest Path - Dijkstra Algorithm, Bellman-ford Algorithm, All pair shortest path \u2013 Floyd - Warshall Algorithm. Network Flows, Maximum Flows \u2013 Ford-Fulkerson Algorithm, Push Re-label Algorithm.",
+    "topic_description": "Graph Algorithms Single Source Shortest Path - Dijkstra Algorithm, Bellman-ford Algorithm, All pair shortest path – Floyd - Warshall Algorithm. Network Flows, Maximum Flows – Ford-Fulkerson Algorithm, Push Re-label Algorithm.",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -3158,67 +3138,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "3",
     "subject": "Design and Analysis of Algorithms",
     "topic_title": "[CS302] Module 5: [10L]",
-    "topic_description": "Complexity Classes: The Class P, The Class NP, Reducibility and NP-completeness \u2013 SAT (without proof), 3-SAT, Vertex Cover, Independent Set, Maximum Clique. Clique Decision problem and reduction of NP completeness. Overview of Approximation and Randomized Algorithms, Recent Trends",
-    "source_document_id": "1464afb322464e9881f723190553d223"
-  },
-  {
-    "id": "31fc70b0451a4e6aa8d2b45327a6e46e",
-    "college_id": "default-college-id",
-    "course": "CSE",
-    "semester": "3",
-    "subject": "Design and Analysis of Algorithms",
-    "topic_title": "[CS302] Module I: [4L]",
-    "topic_description": "Concepts of Operating System, Evolution of Operating System. Types of Operating System, Structural overview, Operating system services. R25 (B. Tech CSE) Department: Computer Science & Engineering Curriculum Structure & Syllabus (Effective from 2025-26 admission batch)",
-    "source_document_id": "1464afb322464e9881f723190553d223"
-  },
-  {
-    "id": "a312d57542194a5b91f2e051268abe12",
-    "college_id": "default-college-id",
-    "course": "CSE",
-    "semester": "3",
-    "subject": "Design and Analysis of Algorithms",
-    "topic_title": "[CS302] Module II: [8L]",
-    "topic_description": "Processes: Concept of processes, transition of process states, Process Control Block, process scheduling, co-operating processes, independent process, suspended process, Interaction between processes and OS. Threads: overview, benefits of threads, user and kernel level threads. CPU scheduling: Scheduling criteria, preemptive & non-preemptive scheduling, scheduling algorithms (FCFS, SJF, SRTF, RR, priority, multilevel queue, multilevel feedback queue scheduling), Real Time scheduling: RM and EDF.",
-    "source_document_id": "1464afb322464e9881f723190553d223"
-  },
-  {
-    "id": "ee5dc763852848349dab9a0d3ed9025d",
-    "college_id": "default-college-id",
-    "course": "CSE",
-    "semester": "3",
-    "subject": "Design and Analysis of Algorithms",
-    "topic_title": "[CS302] Module III: [8L]",
-    "topic_description": "Inter-process Communication: background, critical section problem, synchronization hardware, Peterson\u2019s Solution, The Producer Consumer Problem, Semaphores. Classical Problems of synchronization: Reader\u2019s & Writer Problem, Dinning Philosopher Problem, Monitors.",
-    "source_document_id": "1464afb322464e9881f723190553d223"
-  },
-  {
-    "id": "a5ff62e757864ed4a555cc523b364741",
-    "college_id": "default-college-id",
-    "course": "CSE",
-    "semester": "3",
-    "subject": "Design and Analysis of Algorithms",
-    "topic_title": "[CS302] Module IV: [4L]",
-    "topic_description": "Deadlocks: Definition, Necessary and sufficient condition for deadlock, methods for handling deadlocks: deadlock prevention, deadlock avoidance: Banker\u2019s algorithm, deadlock detection, recovery from deadlock.",
-    "source_document_id": "1464afb322464e9881f723190553d223"
-  },
-  {
-    "id": "21491611800a43dfbd2f266d6e7582b3",
-    "college_id": "default-college-id",
-    "course": "CSE",
-    "semester": "3",
-    "subject": "Design and Analysis of Algorithms",
-    "topic_title": "[CS302] Module V: [6L]",
-    "topic_description": "Background, logical vs. physical address space, swapping, contiguous memory allocation, paging, Segmentation, TLB. Virtual Memory: background, demand paging, page replacement algorithms (FCFS, LRU, Optimal), thrashing, Working set model.",
-    "source_document_id": "1464afb322464e9881f723190553d223"
-  },
-  {
-    "id": "3db349b17f914a03a0700b254e2d14ef",
-    "college_id": "default-college-id",
-    "course": "CSE",
-    "semester": "3",
-    "subject": "Design and Analysis of Algorithms",
-    "topic_title": "[CS302] Module VI: [6L]",
-    "topic_description": "I/O Hardware: I/O devices, polling, interrupts, DMA, caching, buffering, blocking-non blocking I/O. Disk Management: Disk structure, disk scheduling (FCFS, SSTF, SCAN, C-SCAN, LOOK, C-LOOK etc), disk reliability, disk formatting, boot block, bad blocks. File: File concept, access methods, directory structure, file system structure, UNIX file structure, allocation methods (contiguous, linked, indexed), free-space management (bit vector).",
+    "topic_description": "Complexity Classes: The Class P, The Class NP, Reducibility and NP-completeness – SAT (without proof), 3-SAT, Vertex Cover, Independent Set, Maximum Clique. Clique Decision problem and reduction of NP completeness. Overview of Approximation and Randomized Algorithms, Recent Trends",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -3258,7 +3178,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "3",
     "subject": "Operating Systems",
     "topic_title": "[CS303] Module III: [8L]",
-    "topic_description": "Inter-process Communication: background, critical section problem, synchronization hardware, Peterson\u2019s Solution, The Producer Consumer Problem, Semaphores. Classical Problems of synchronization: Reader\u2019s & Writer Problem, Dinning Philosopher Problem, Monitors.",
+    "topic_description": "Inter-process Communication: background, critical section problem, synchronization hardware, Peterson’s Solution, The Producer Consumer Problem, Semaphores. Classical Problems of synchronization: Reader’s & Writer Problem, Dinning Philosopher Problem, Monitors.",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -3268,7 +3188,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "3",
     "subject": "Operating Systems",
     "topic_title": "[CS303] Module IV: [4L]",
-    "topic_description": "Deadlocks: Definition, Necessary and sufficient condition for deadlock, methods for handling deadlocks: deadlock prevention, deadlock avoidance: Banker\u2019s algorithm, deadlock detection, recovery from deadlock.",
+    "topic_description": "Deadlocks: Definition, Necessary and sufficient condition for deadlock, methods for handling deadlocks: deadlock prevention, deadlock avoidance: Banker’s algorithm, deadlock detection, recovery from deadlock.",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -3289,26 +3209,6 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "subject": "Operating Systems",
     "topic_title": "[CS303] Module VI: [6L]",
     "topic_description": "I/O Hardware: I/O devices, polling, interrupts, DMA, caching, buffering, blocking-non blocking I/O. Disk Management: Disk structure, disk scheduling (FCFS, SSTF, SCAN, C-SCAN, LOOK, C-LOOK etc), disk reliability, disk formatting, boot block, bad blocks. File: File concept, access methods, directory structure, file system structure, UNIX file structure, allocation methods (contiguous, linked, indexed), free-space management (bit vector).",
-    "source_document_id": "1464afb322464e9881f723190553d223"
-  },
-  {
-    "id": "7fcfccd7029047a2b093b2bbd28b47b1",
-    "college_id": "default-college-id",
-    "course": "CSE",
-    "semester": "3",
-    "subject": "Operating Systems",
-    "topic_title": "[CS303] Module 1: Basics of AI [6L]",
-    "topic_description": "Introduction [2] Overview of Artificial intelligence- Problems of AI, AI technique, Tic - Tac - Toe problem. Intelligent Agents [2] Agents & environment, nature of environment, structure of agents, goal-based agents, utility based agents, learning agents. Learning [2] Forms of learning, inductive learning, learning decision trees, explanation based learning,",
-    "source_document_id": "1464afb322464e9881f723190553d223"
-  },
-  {
-    "id": "62b34d508c2746768de2125908ce7c4a",
-    "college_id": "default-college-id",
-    "course": "CSE",
-    "semester": "3",
-    "subject": "Operating Systems",
-    "topic_title": "[CS303] Module 2: Different types of searching algorithms [14L]",
-    "topic_description": "Problem Solving [3] Problems, Problem Space & search: Defining the problem as state space search, production",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -3362,36 +3262,6 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
-    "id": "db5de0d8f8ad498ba20c91672084aee4",
-    "college_id": "default-college-id",
-    "course": "CSE",
-    "semester": "3",
-    "subject": "Advanced Artificial Intelligence",
-    "topic_title": "[CS304] Module I: [7L]",
-    "topic_description": "Fundamentals of IoT: The Internet of Things, Time for Convergence, Towards the IoT Universe, Internet of Things Vision, IoT Strategic Research and Innovation Directions, IoT Applications, Future Internet Technologies, Infrastructure, Networks and Communication, Design challenges, Development challenges, Security challenges, Other challenges.",
-    "source_document_id": "1464afb322464e9881f723190553d223"
-  },
-  {
-    "id": "b85f4d95ffb54cb3833ec997445b5b08",
-    "college_id": "default-college-id",
-    "course": "CSE",
-    "semester": "3",
-    "subject": "Advanced Artificial Intelligence",
-    "topic_title": "[CS304] Module II: [6L]",
-    "topic_description": "Wireless Sensor Network, Network & Communication aspects, Wireless medium access issues, MAC protocol, routing protocols, Sensor deployment & Node discovery, Data aggregation & dissemination.",
-    "source_document_id": "1464afb322464e9881f723190553d223"
-  },
-  {
-    "id": "d2dfbc714ad04333a37876e0033a33b3",
-    "college_id": "default-college-id",
-    "course": "CSE",
-    "semester": "3",
-    "subject": "Advanced Artificial Intelligence",
-    "topic_title": "[CS304] Module III: [7L]",
-    "topic_description": "IoT and M2M A Basic Perspective\u2013 Introduction, Some Definitions, M2M Value Chains, IoT Value Chains, An emerging industrial structure for IoT, The international driven global value chain and global information monopolies. M2M to IoT-An Architectural Overview\u2013 Building an architecture, Main design principles and needed capabilities, An IoT architecture outline, standards considerations.",
-    "source_document_id": "1464afb322464e9881f723190553d223"
-  },
-  {
     "id": "8cd5cab0debe4999a8ba14616bc4ceed",
     "college_id": "default-college-id",
     "course": "CSE",
@@ -3428,7 +3298,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "3",
     "subject": "Internet of Things",
     "topic_title": "[EC(CS)301] Module III: [7L]",
-    "topic_description": "IoT and M2M A Basic Perspective\u2013 Introduction, Some Definitions, M2M Value Chains, IoT Value Chains, An emerging industrial structure for IoT, The international driven global value chain and global information monopolies. M2M to IoT-An Architectural Overview\u2013 Building an architecture, Main design principles and needed capabilities, An IoT architecture outline, standards considerations. R25 (B. Tech CSE) Department: Computer Science & Engineering",
+    "topic_description": "IoT and M2M A Basic Perspective– Introduction, Some Definitions, M2M Value Chains, IoT Value Chains, An emerging industrial structure for IoT, The international driven global value chain and global information monopolies. M2M to IoT-An Architectural Overview– Building an architecture, Main design principles and needed capabilities, An IoT architecture outline, standards considerations. R25 (B. Tech CSE) Department: Computer Science & Engineering",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -3459,56 +3329,6 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "subject": "Internet of Things",
     "topic_title": "[EC(CS)301] Module VI: [4L]",
     "topic_description": "Internet of Things Privacy, Security and Governance Introduction, Overview of Governance, Privacy and Security Issues, Trust in IoT-Data Platforms for Smart Cities, First Steps Towards a Secure Platform, Smartie Approach. Data Aggregation for the IoT in smart cities, Security.",
-    "source_document_id": "1464afb322464e9881f723190553d223"
-  },
-  {
-    "id": "38419900b5b44b108caae0e6fa95a26c",
-    "college_id": "default-college-id",
-    "course": "CSE",
-    "semester": "3",
-    "subject": "Internet of Things",
-    "topic_title": "[EC(CS)301] Module I: Set Theory [11L]",
-    "topic_description": "Posets & Lattices: [6L] Relation: Types of Relations, Properties of Binary Relation, Equivalence Relation, Partial Ordering Relation and Posets, Lattices. Combinatorics: [2L] Principle of Inclusion Exclusion, Pigeon Hole Principle. Generating Functions and Recurrence Relations: [3L] Generating functions, Recurrence relations: Formulation of different counting problems in",
-    "source_document_id": "1464afb322464e9881f723190553d223"
-  },
-  {
-    "id": "d3dacf95b98446d9abeb577226bbcf87",
-    "college_id": "default-college-id",
-    "course": "CSE",
-    "semester": "3",
-    "subject": "Internet of Things",
-    "topic_title": "[EC(CS)301] Module II: Propositional Logic[5L]",
-    "topic_description": "Basics of Boolean Logic, Idea of Propositional Logic, well-formed formula, Logical Connectives, Truth tables, Tautology, Contradiction, Algebra of proposition, Logical Equivalence, Normal Forms: Disjunctive Normal Forms (DNF) and Conjunctive Normal Forms (CNF).",
-    "source_document_id": "1464afb322464e9881f723190553d223"
-  },
-  {
-    "id": "a326a83ddd964f018696aa81fefda53a",
-    "college_id": "default-college-id",
-    "course": "CSE",
-    "semester": "3",
-    "subject": "Internet of Things",
-    "topic_title": "[EC(CS)301] Module III: Number Theory [4L]",
-    "topic_description": "Well-Ordering Principle, Divisibility theory and properties of Divisibility, Fundamental theorem of Arithmetic, Prime and Composite Numbers, Greatest Common Divisor and Euclidean Algorithm, Congruence, Residue Classes.",
-    "source_document_id": "1464afb322464e9881f723190553d223"
-  },
-  {
-    "id": "76474d00319745bc96f60e0b8dead67b",
-    "college_id": "default-college-id",
-    "course": "CSE",
-    "semester": "3",
-    "subject": "Internet of Things",
-    "topic_title": "[EC(CS)301] Module IV: Algebraic Structures [8L]",
-    "topic_description": "Concepts of Groups, Subgroups and Order, Cyclic Groups, Cosets, Lagrange\u2019s theorem,Normal Subgroups, Permutation Groups and Symmetric Groups, Definition of Ring and Field.",
-    "source_document_id": "1464afb322464e9881f723190553d223"
-  },
-  {
-    "id": "a828a3ea9d174121b143f89e1af0ab59",
-    "college_id": "default-college-id",
-    "course": "CSE",
-    "semester": "3",
-    "subject": "Internet of Things",
-    "topic_title": "[EC(CS)301] Module V: Graph Theory [8L]",
-    "topic_description": "Graph theory, Theorems (statement only), Digraphs, Weighted Graph, Walk, Path, Circuit, Connected and Disconnected Graph, Bipartite Graph, Complement of a Graph, Regular Graph, Complete Graph, Adjacency and Incidence matrices of a graph (digraph), Dijkstra\u2019s algorithm. Tree, Binary Tree, Theorems on Tree (statement only), Spanning Tree, Minimal Spanning Tree, Kruskal\u2019s Algorithm, Prim\u2019s Algorithm.",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -3558,7 +3378,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "3",
     "subject": "Discrete Mathematics",
     "topic_title": "[M(CS)301] Module IV: Algebraic Structures [8L]",
-    "topic_description": "Concepts of Groups, Subgroups and Order, Cyclic Groups, Cosets, Lagrange\u2019s theorem,Normal Subgroups, Permutation Groups and Symmetric Groups, Definition of Ring and Field.",
+    "topic_description": "Concepts of Groups, Subgroups and Order, Cyclic Groups, Cosets, Lagrange’s theorem,Normal Subgroups, Permutation Groups and Symmetric Groups, Definition of Ring and Field.",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -3568,7 +3388,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "3",
     "subject": "Discrete Mathematics",
     "topic_title": "[M(CS)301] Module V: Graph Theory [8L]",
-    "topic_description": "Graph theory, Theorems (statement only), Digraphs, Weighted Graph, Walk, Path, Circuit, Connected and Disconnected Graph, Bipartite Graph, Complement of a Graph, Regular Graph, Complete Graph, Adjacency and Incidence matrices of a graph (digraph), Dijkstra\u2019s algorithm. Tree, Binary Tree, Theorems on Tree (statement only), Spanning Tree, Minimal Spanning Tree, Kruskal\u2019s Algorithm, Prim\u2019s Algorithm.",
+    "topic_description": "Graph theory, Theorems (statement only), Digraphs, Weighted Graph, Walk, Path, Circuit, Connected and Disconnected Graph, Bipartite Graph, Complement of a Graph, Regular Graph, Complete Graph, Adjacency and Incidence matrices of a graph (digraph), Dijkstra’s algorithm. Tree, Binary Tree, Theorems on Tree (statement only), Spanning Tree, Minimal Spanning Tree, Kruskal’s Algorithm, Prim’s Algorithm.",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -3728,7 +3548,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "3",
     "subject": "Python Programming Lab",
     "topic_title": "[CS395] Module I: Introduction to IoT and Arduino Programming [6]",
-    "topic_description": "Objective: Understand the basics of IoT and learn how to program microcontrollers (Arduino). \uf0b7 Overview of IoT: Architecture, applications, and components \uf0b7 Introduction to Arduino IDE and boards (UNO/Nano) \uf0b7",
+    "topic_description": "Objective: Understand the basics of IoT and learn how to program microcontrollers (Arduino).  Overview of IoT: Architecture, applications, and components  Introduction to Arduino IDE and boards (UNO/Nano) ",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -3738,7 +3558,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "3",
     "subject": "Python Programming Lab",
     "topic_title": "[CS395] Module II: Sensor Interfacing and Data Acquisition [6]",
-    "topic_description": "Objective: Learn how to interface different sensors and collect data. \uf0b7 Interfacing analog and digital sensors \uf0b7 Using potentiometers, IR sensors, and motion detectors \uf0b7 Data acquisition techniques",
+    "topic_description": "Objective: Learn how to interface different sensors and collect data.  Interfacing analog and digital sensors  Using potentiometers, IR sensors, and motion detectors  Data acquisition techniques",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -3748,7 +3568,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "3",
     "subject": "Python Programming Lab",
     "topic_title": "[CS395] Module III: Actuators and Output Control [6]",
-    "topic_description": "Objective: Control actuators based on sensor input. \uf0b7 Types of actuators: motors, relays, buzzers \uf0b7 Interfacing DC motors and servos",
+    "topic_description": "Objective: Control actuators based on sensor input.  Types of actuators: motors, relays, buzzers  Interfacing DC motors and servos",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -3768,7 +3588,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "3",
     "subject": "Internet of Things lab",
     "topic_title": "[EC(CS)391] Module I: Introduction to IoT and Arduino Programming [6]",
-    "topic_description": "Objective: Understand the basics of IoT and learn how to program microcontrollers (Arduino). \uf0b7 Overview of IoT: Architecture, applications, and components \uf0b7 Introduction to Arduino IDE and boards (UNO/Nano) \uf0b7",
+    "topic_description": "Objective: Understand the basics of IoT and learn how to program microcontrollers (Arduino).  Overview of IoT: Architecture, applications, and components  Introduction to Arduino IDE and boards (UNO/Nano) ",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -3778,7 +3598,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "3",
     "subject": "Internet of Things lab",
     "topic_title": "[EC(CS)391] Module II: Sensor Interfacing and Data Acquisition [6]",
-    "topic_description": "Objective: Learn how to interface different sensors and collect data. \uf0b7 Interfacing analog and digital sensors \uf0b7 Using potentiometers, IR sensors, and motion detectors \uf0b7 Data acquisition techniques",
+    "topic_description": "Objective: Learn how to interface different sensors and collect data.  Interfacing analog and digital sensors  Using potentiometers, IR sensors, and motion detectors  Data acquisition techniques",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -3788,7 +3608,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "3",
     "subject": "Internet of Things lab",
     "topic_title": "[EC(CS)391] Module III: Actuators and Output Control [6]",
-    "topic_description": "Objective: Control actuators based on sensor input. \uf0b7 Types of actuators: motors, relays, buzzers \uf0b7 Interfacing DC motors and servos R25 (B. Tech CSE) Department: Computer Science & Engineering",
+    "topic_description": "Objective: Control actuators based on sensor input.  Types of actuators: motors, relays, buzzers  Interfacing DC motors and servos R25 (B. Tech CSE) Department: Computer Science & Engineering",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -3798,7 +3618,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "3",
     "subject": "Internet of Things lab",
     "topic_title": "[EC(CS)391] Module IV: Communication Modules and IoT Protocols [6]",
-    "topic_description": "Objective: Enable devices to communicate wirelessly. \uf0b7 Overview of IoT protocols: MQTT, HTTP, CoAP \uf0b7 ESP8266 / NodeMCU basics \uf0b7 Sending data to cloud platforms (ThingSpeak, Blynk)",
+    "topic_description": "Objective: Enable devices to communicate wirelessly.  Overview of IoT protocols: MQTT, HTTP, CoAP  ESP8266 / NodeMCU basics  Sending data to cloud platforms (ThingSpeak, Blynk)",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -3808,7 +3628,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "3",
     "subject": "Internet of Things lab",
     "topic_title": "[EC(CS)391] Module V: IoT Applications and Integration [6]",
-    "topic_description": "Objective: Develop mini-projects integrating multiple IoT components. \uf0b7 Smart home use cases \uf0b7 Health monitoring systems \uf0b7 Smart agriculture/irrigation system",
+    "topic_description": "Objective: Develop mini-projects integrating multiple IoT components.  Smart home use cases  Health monitoring systems  Smart agriculture/irrigation system",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -3818,7 +3638,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "3",
     "subject": "Internet of Things lab",
     "topic_title": "[EC(CS)391] Module VI: Final Project and Report Preparation [6]",
-    "topic_description": "Objective: Implement a full IoT-based system and document it. Experiments: R25 (B. Tech CSE) Department: Computer Science & Engineering Curriculum Structure & Syllabus (Effective from 2025-26 admission batch) \uf0b7",
+    "topic_description": "Objective: Implement a full IoT-based system and document it. Experiments: R25 (B. Tech CSE) Department: Computer Science & Engineering Curriculum Structure & Syllabus (Effective from 2025-26 admission batch) ",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -3838,7 +3658,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "2",
     "subject": "Data structure and Algorithms",
     "topic_title": "[CS201] Module 1: Introduction 4L",
-    "topic_description": "Concepts of data and information; Concept of Abstract Data Type, Data Structure and Data Type. Classification of Data Structures- Primitive and Non-Primitive Data Structure, Linear and Non-Linear Data Structure. Need of Data Structures. Concept of algorithms and programs, Different methods of representing algorithm; Algorithm analysis, time and space analysis of algorithms \u2013 Asymptotic notations like Big Oh (O), Small Oh(o), Big Omega(\u03a9), Small Omega(\u03c9) and Theta(\u019f) notation (definition and significance).",
+    "topic_description": "Concepts of data and information; Concept of Abstract Data Type, Data Structure and Data Type. Classification of Data Structures- Primitive and Non-Primitive Data Structure, Linear and Non-Linear Data Structure. Need of Data Structures. Concept of algorithms and programs, Different methods of representing algorithm; Algorithm analysis, time and space analysis of algorithms – Asymptotic notations like Big Oh (O), Small Oh(o), Big Omega(Ω), Small Omega(ω) and Theta(Ɵ) notation (definition and significance).",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -3868,7 +3688,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "2",
     "subject": "Data structure and Algorithms",
     "topic_title": "[CS201] Module 4: Nonlinear Data structures 9L",
-    "topic_description": "Trees and Binary Tree: Basic terminologies; Definition of tree and binary tree. Difference between tree and binary tree, Representation of binary tree (using array and linked list) Binary tree traversal (pre-, in-, post- order); Threaded binary tree- definition, insertion and deletion algorithm; Binary search tree- Definition, insertion, deletion, searching algorithm; Height balanced binary tree: AVL tree- definition, insertion and deletion with examples only. m \u2013Way Search Tree: B Tree \u2013 Definition, insertion and deletion with examples only; B+",
+    "topic_description": "Trees and Binary Tree: Basic terminologies; Definition of tree and binary tree. Difference between tree and binary tree, Representation of binary tree (using array and linked list) Binary tree traversal (pre-, in-, post- order); Threaded binary tree- definition, insertion and deletion algorithm; Binary search tree- Definition, insertion, deletion, searching algorithm; Height balanced binary tree: AVL tree- definition, insertion and deletion with examples only. m –Way Search Tree: B Tree – Definition, insertion and deletion with examples only; B+",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -3878,7 +3698,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "2",
     "subject": "Data structure and Algorithms",
     "topic_title": "[CS201] Module 5: Sorting and Searching  8L",
-    "topic_description": "Sorting Algorithms: Definition and need of sorting, different types of sorting algorithm (internal, external, stable, in-place, comparison based); Factors affecting sorting Methods, Bubble sort, Insertion sort, Selection sort, Quick sort, Merge sort, Radix sort \u2013 algorithm with analysis (time complexity) Searching: Factors affecting searching Methods; Sequential search \u2013algorithm with analysis (time complexity); improvement using sentinel. Binary search and Interpolation Search algorithm with analysis (time complexity)",
+    "topic_description": "Sorting Algorithms: Definition and need of sorting, different types of sorting algorithm (internal, external, stable, in-place, comparison based); Factors affecting sorting Methods, Bubble sort, Insertion sort, Selection sort, Quick sort, Merge sort, Radix sort – algorithm with analysis (time complexity) Searching: Factors affecting searching Methods; Sequential search –algorithm with analysis (time complexity); improvement using sentinel. Binary search and Interpolation Search algorithm with analysis (time complexity)",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -3898,7 +3718,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "2",
     "subject": "Introduction to Artificial Intelligence",
     "topic_title": "[CS202] Module 1: Introduction to Artificial Intelligence (3L)",
-    "topic_description": "Why AI \u2022 Definition of AI \u2022 Goals of AI \u2022 History and evolution of AI \u2022 Types of AI: Narrow, General, Super \u2022 Human vs Artificial Intelligence \u2022 Applications of AI in various domains \u2022 AI for social good",
+    "topic_description": "Why AI • Definition of AI • Goals of AI • History and evolution of AI • Types of AI: Narrow, General, Super • Human vs Artificial Intelligence • Applications of AI in various domains • AI for social good",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -3908,7 +3728,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "2",
     "subject": "Introduction to Artificial Intelligence",
     "topic_title": "[CS202] Module 2: Intelligent Agents and Logic-Based Thinking (8L)",
-    "topic_description": "Intelligent systems \u2022 Agents and environments \u2022 Decision making using rules and logic \u2022 Symbolic AI concepts \u2022 Propositional Logic: Knowledge Representation and Inference using Propositional Logic \u2022 Predicate Logic: Knowledge Representation, Inference and Answer Extraction using First Order Predicate Logic",
+    "topic_description": "Intelligent systems • Agents and environments • Decision making using rules and logic • Symbolic AI concepts • Propositional Logic: Knowledge Representation and Inference using Propositional Logic • Predicate Logic: Knowledge Representation, Inference and Answer Extraction using First Order Predicate Logic",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -3918,7 +3738,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "2",
     "subject": "Introduction to Artificial Intelligence",
     "topic_title": "[CS202] Module 3: Overview of AI Branches and Perception (8L)",
-    "topic_description": "Machine learning \u2022 Deep learning \u2022 Natural language processing \u2022 Computer vision \u2022 Expert systems \u2022 Fuzzy logic \u2022 Evolutionary algorithms \u2022 Reinforcement learning \u2022 Planning and scheduling \u2022 Human-AI collaboration",
+    "topic_description": "Machine learning • Deep learning • Natural language processing • Computer vision • Expert systems • Fuzzy logic • Evolutionary algorithms • Reinforcement learning • Planning and scheduling • Human-AI collaboration",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -3928,7 +3748,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "2",
     "subject": "Introduction to Artificial Intelligence",
     "topic_title": "[CS202] Module 4: Basics of Machine Learning (6L)",
-    "topic_description": "What is machine learning \u2022 AI vs ML \u2022 Types of learning: supervised, unsupervised \u2022 Concept of dataset, features, and labels \u2022 ML model and prediction flow \u2022 Common ML applications Introduction to decision trees (concept only) \u2022 ML pipeline overview.",
+    "topic_description": "What is machine learning • AI vs ML • Types of learning: supervised, unsupervised • Concept of dataset, features, and labels • ML model and prediction flow • Common ML applications Introduction to decision trees (concept only) • ML pipeline overview.",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -3938,7 +3758,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "2",
     "subject": "Introduction to Artificial Intelligence",
     "topic_title": "[CS202] Module 5: Applications and Ethics of AI (5L)",
-    "topic_description": "AI in robotics and automation \u2022 AI-enabled smart applications \u2022 Industry 4.0 and intelligent systems \u2022 AI in different sectors: healthcare, agriculture, transport, education, etc. \u2022 Human- AI teamwork \u2022 Basics of AI ethics: bias, fairness, privacy \u2022 Career opportunities and future scopes in AI. R25 (B. Tech CSE) Department: Computer Science & Engineering Curriculum Structure & Syllabus",
+    "topic_description": "AI in robotics and automation • AI-enabled smart applications • Industry 4.0 and intelligent systems • AI in different sectors: healthcare, agriculture, transport, education, etc. • Human- AI teamwork • Basics of AI ethics: bias, fairness, privacy • Career opportunities and future scopes in AI. R25 (B. Tech CSE) Department: Computer Science & Engineering Curriculum Structure & Syllabus",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -3958,7 +3778,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "2",
     "subject": "Digital Logic and Computer Organization",
     "topic_title": "[CS203] Module 1: Number Systems, Boolean Algebra, and Logic Simplification (6 L)",
-    "topic_description": "\uf0b7 Binary, BCD, ASCII, EBCDIC, Gray Code & conversions [1L] \uf0b7 Boolean Algebra \u2013 Laws, Theorems [1L] \uf0b7 Boolean Functions, Minterm & Maxterm, SOP & POS Forms [2L] \uf0b7 Karnaugh Map (up to 4-variable), Algebraic Simplification [2L]",
+    "topic_description": " Binary, BCD, ASCII, EBCDIC, Gray Code & conversions [1L]  Boolean Algebra – Laws, Theorems [1L]  Boolean Functions, Minterm & Maxterm, SOP & POS Forms [2L]  Karnaugh Map (up to 4-variable), Algebraic Simplification [2L]",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -3968,7 +3788,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "2",
     "subject": "Digital Logic and Computer Organization",
     "topic_title": "[CS203] Module 2: Combinational Circuits (6 L)",
-    "topic_description": "\uf0b7 Half & Full Adder/Subtractor, Serial & Parallel Adders, CLA Adder [2L] \uf0b7 Parity Generator, Encoder, Decoder, Multiplexer, Demultiplexer [2L] \uf0b7 Comparator, Code Converters [2L]",
+    "topic_description": " Half & Full Adder/Subtractor, Serial & Parallel Adders, CLA Adder [2L]  Parity Generator, Encoder, Decoder, Multiplexer, Demultiplexer [2L]  Comparator, Code Converters [2L]",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -3978,7 +3798,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "2",
     "subject": "Digital Logic and Computer Organization",
     "topic_title": "[CS203] Module 3: Sequential Circuits & Registers (6 L)",
-    "topic_description": "\uf0b7 Flip-Flops: SR, JK, Master-Slave JK, D, T; Characteristic & Excitation Tables [2L] \uf0b7 Counters: Synchronous/Asynchronous, Ring & Johnson, Mod-N Counters [2L] \uf0b7 Registers: SISO, SIPO, PIPO, PISO [1L] \uf0b7 Applications of Counters and Registers [1L]",
+    "topic_description": " Flip-Flops: SR, JK, Master-Slave JK, D, T; Characteristic & Excitation Tables [2L]  Counters: Synchronous/Asynchronous, Ring & Johnson, Mod-N Counters [2L]  Registers: SISO, SIPO, PIPO, PISO [1L]  Applications of Counters and Registers [1L]",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -3988,7 +3808,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "2",
     "subject": "Digital Logic and Computer Organization",
     "topic_title": "[CS203] Module 4: Data Representation & Arithmetic Operations (5 L)",
-    "topic_description": "\uf0b7 Integer Arithmetic (Add, Subtract), Booth\u2019s Multiplication Algorithm [2L] \uf0b7 Restoring & Non-Restoring Division [1L] \uf0b7 Instruction Formats and Addressing Modes [2L]",
+    "topic_description": " Integer Arithmetic (Add, Subtract), Booth’s Multiplication Algorithm [2L]  Restoring & Non-Restoring Division [1L]  Instruction Formats and Addressing Modes [2L]",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -3998,7 +3818,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "2",
     "subject": "Digital Logic and Computer Organization",
     "topic_title": "[CS203] Module 5: CPU and Control Unit Organization (6 L)",
-    "topic_description": "\uf0b7 Register Transfer Language (RTL), Bus Architecture, Micro-operations [1L] \uf0b7 ALU Design, Status Flags, General Register & Stack Organization [2L] \uf0b7 Control Unit: Hardwired vs. Microprogrammed Control, Sequencing [2L] \uf0b7 Basic Instruction Cycle and Execution Pipeline [1L]",
+    "topic_description": " Register Transfer Language (RTL), Bus Architecture, Micro-operations [1L]  ALU Design, Status Flags, General Register & Stack Organization [2L]  Control Unit: Hardwired vs. Microprogrammed Control, Sequencing [2L]  Basic Instruction Cycle and Execution Pipeline [1L]",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -4008,7 +3828,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "2",
     "subject": "Digital Logic and Computer Organization",
     "topic_title": "[CS203] Module 6: Memory & I/O Organization (7 L)",
-    "topic_description": "\uf0b7 RAM, ROM Types, Memory Hierarchy: Cache, Main, Secondary [1L] \uf0b7 Cache Mapping: Direct, Associative, Set-Associative; Write Policies [3L] \uf0b7 Virtual Memory: Paging, Segmentation, FIFO & LRU [1L] \uf0b7 I/O Transfer Modes: Programmed I/O, Interrupt-Driven I/O, DMA [1L] \uf0b7 Interrupts: Maskable/Non-Maskable, Daisy Chaining; I/O Processor [1L] R25 (B. Tech CSE) Department: Computer Science & Engineering",
+    "topic_description": " RAM, ROM Types, Memory Hierarchy: Cache, Main, Secondary [1L]  Cache Mapping: Direct, Associative, Set-Associative; Write Policies [3L]  Virtual Memory: Paging, Segmentation, FIFO & LRU [1L]  I/O Transfer Modes: Programmed I/O, Interrupt-Driven I/O, DMA [1L]  Interrupts: Maskable/Non-Maskable, Daisy Chaining; I/O Processor [1L] R25 (B. Tech CSE) Department: Computer Science & Engineering",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -4026,8 +3846,8 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "college_id": "default-college-id",
     "course": "CSE",
     "semester": "2",
-    "subject": "Engineering Mathematics\u2013II",
-    "topic_title": "[M201] Engineering Mathematics\u2013II - Course Blueprint",
+    "subject": "Engineering Mathematics–II",
+    "topic_title": "[M201] Engineering Mathematics–II - Course Blueprint",
     "topic_description": "Category: Theory | Credits: 3 | Contact Hours: 3L-0T-0P. Officially approved curriculum by the Academic Board.",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
@@ -4048,7 +3868,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "2",
     "subject": "Constitution of India & Professional Ethics",
     "topic_title": "[HU202] Module 1: [2L]",
-    "topic_description": "Preamble: Salient Features, Fundamental Rights, Fundamental Duties, Directive Principles of State Policy, Parliament -Powers and Functions \u2013Executive- President -Governor - Council of Ministers.",
+    "topic_description": "Preamble: Salient Features, Fundamental Rights, Fundamental Duties, Directive Principles of State Policy, Parliament -Powers and Functions –Executive- President -Governor - Council of Ministers.",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -4068,7 +3888,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "2",
     "subject": "Constitution of India & Professional Ethics",
     "topic_title": "[HU202] Module 3: [4L]",
-    "topic_description": "Engineering Ethics, Ethical theories: a brief overview; utilitarianism, deontology, virtue ethics. Professional Codes, Codes of professional ethics-Moral dilemmas, and moral autonomy- Internal ethics of business: whistle blowing, conflicts of interest, Job discrimination, and Exploitation of Employees; Social and ethical responsibilities of technologists: Responsibilities towards Customers, shareholders, employees \u2013 Social Audit. Case Studies: Bhopal Gas Tragedy, Chernobyl (linking ethics to real-world failures).",
+    "topic_description": "Engineering Ethics, Ethical theories: a brief overview; utilitarianism, deontology, virtue ethics. Professional Codes, Codes of professional ethics-Moral dilemmas, and moral autonomy- Internal ethics of business: whistle blowing, conflicts of interest, Job discrimination, and Exploitation of Employees; Social and ethical responsibilities of technologists: Responsibilities towards Customers, shareholders, employees – Social Audit. Case Studies: Bhopal Gas Tragedy, Chernobyl (linking ethics to real-world failures).",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -4079,86 +3899,6 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "subject": "Constitution of India & Professional Ethics",
     "topic_title": "[HU202] Module 4: [3L]",
     "topic_description": "Business ethics, ethical decision-making frameworks - Impact of ethics on business policies and strategies- Characteristics of ethical leaders; fostering integrity in teams; Addressing occupational crime, discrimination, and gender-based issues in workplaces-Intellectual R25 (B. Tech CSE) Department: Computer Science & Engineering Curriculum Structure & Syllabus (Effective from 2025-26 admission batch)",
-    "source_document_id": "1464afb322464e9881f723190553d223"
-  },
-  {
-    "id": "1da3361e80d34e39960cc40ebec0a7c5",
-    "college_id": "default-college-id",
-    "course": "CSE",
-    "semester": "2",
-    "subject": "Constitution of India & Professional Ethics",
-    "topic_title": "[HU202] Module 1: :",
-    "topic_description": "Basics of Design Thinking: Definition of Design Thinking, Need for Design Thinking, history of Design Thinking, Concepts & Brainstorming, 2X2 matrix, 6-3-5 method, NABC method; 3",
-    "source_document_id": "1464afb322464e9881f723190553d223"
-  },
-  {
-    "id": "59045c71e3e34e3f80a1209694a6d197",
-    "college_id": "default-college-id",
-    "course": "CSE",
-    "semester": "2",
-    "subject": "Constitution of India & Professional Ethics",
-    "topic_title": "[HU202] Module 2: :",
-    "topic_description": "PROCESSOFDESIGN: Understanding Design thinking Sharedmodelinteam-baseddesign\u2013 TheoryandpracticeinDesignthinking\u2013Explorepresentationsigners across globe\u2013 MVPor Prototyping. Stages of Design Thinking Process (explain with examples) \u2013 Empathize (Methods of Empathize Phase: Ask 5 Why / 5W+H questions, Stakeholder map, Empathy Map, Peer observation, Trend",
-    "source_document_id": "1464afb322464e9881f723190553d223"
-  },
-  {
-    "id": "63d6caec17c34cca839f1a9c88541611",
-    "college_id": "default-college-id",
-    "course": "CSE",
-    "semester": "2",
-    "subject": "Constitution of India & Professional Ethics",
-    "topic_title": "[HU202] Module 3: :",
-    "topic_description": "Tools for Design Thinking Real-Timedesigninteractioncapturesandanalysis\u2013 Enablingefficientcollaborationindigitalspace\u2013Empathyfordesign\u2013 CollaborationindistributedDesign 3",
-    "source_document_id": "1464afb322464e9881f723190553d223"
-  },
-  {
-    "id": "8483154fd2ab447288179b99b1494d23",
-    "college_id": "default-college-id",
-    "course": "CSE",
-    "semester": "2",
-    "subject": "Constitution of India & Professional Ethics",
-    "topic_title": "[HU202] Module 4: :",
-    "topic_description": "Design Thinking in IT Design Thinking to Business Process modelling \u2013 Agile in Virtual collaboration environment \u2013 Scenario based Prototyping 2",
-    "source_document_id": "1464afb322464e9881f723190553d223"
-  },
-  {
-    "id": "b6ca508676f84b6094e01521b2b93feb",
-    "college_id": "default-college-id",
-    "course": "CSE",
-    "semester": "2",
-    "subject": "Constitution of India & Professional Ethics",
-    "topic_title": "[HU202] Module 5: :",
-    "topic_description": "Design Thinking for strategic innovations Growth \u2013 Story telling representation \u2013 Strategic Foresight - Change \u2013 Sense Making - MaintenanceRelevance\u2013Valueredefinition- ExtremeCompetition\u2013experiencedesign-Standardization\u2013",
-    "source_document_id": "1464afb322464e9881f723190553d223"
-  },
-  {
-    "id": "b8a907cea06c46b89082150d2959df14",
-    "college_id": "default-college-id",
-    "course": "CSE",
-    "semester": "2",
-    "subject": "Constitution of India & Professional Ethics",
-    "topic_title": "[HU202] Module 6: :",
-    "topic_description": "Problem Solving & Critical thinking Introduction to TRIZ, SCAMPER, UI and UX. 2",
-    "source_document_id": "1464afb322464e9881f723190553d223"
-  },
-  {
-    "id": "b0771eef1f6b46a697224da81de85eaa",
-    "college_id": "default-college-id",
-    "course": "CSE",
-    "semester": "2",
-    "subject": "Constitution of India & Professional Ethics",
-    "topic_title": "[HU202] Module 7: :",
-    "topic_description": "Sustainable development goals (SDG) Integrating and mapping 17 Sustainable development goals (SDG) during designing a product; goods or service. Introduction to 21st Century Skill Set 1",
-    "source_document_id": "1464afb322464e9881f723190553d223"
-  },
-  {
-    "id": "fe5d93fddafe44a597471f58d4dbf44c",
-    "college_id": "default-college-id",
-    "course": "CSE",
-    "semester": "2",
-    "subject": "Constitution of India & Professional Ethics",
-    "topic_title": "[HU202] Module 8: :",
-    "topic_description": "Case Study & Project Report Submission 10",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -4442,56 +4182,6 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
-    "id": "784682bf53a1469b971c1c4e9a656131",
-    "college_id": "default-college-id",
-    "course": "CSE",
-    "semester": "4",
-    "subject": "Database Management Systems",
-    "topic_title": "[CS401] Module 1: Introduction and Physical Layer [7L]:",
-    "topic_description": "Introduction [3L]: Computer Network, data communication, topology, OSI & TCP/IP Reference Models, layers and characteristics, Wireless Network, comparison to wired and wireless network. Physical Layer: [4L] Overview of data (analog & digital), signal (analog & digital), transmission (analog & digital) & transmission media (guided & unguided); Circuit switching: time division & space division switch, TDM bus; Telephone Network.",
-    "source_document_id": "1464afb322464e9881f723190553d223"
-  },
-  {
-    "id": "9d764633edd444b4a82c5433cb8288c4",
-    "college_id": "default-college-id",
-    "course": "CSE",
-    "semester": "4",
-    "subject": "Database Management Systems",
-    "topic_title": "[CS401] Module 2: Data Link Layer [10L]",
-    "topic_description": "Framing, Error Detection and Correction, Flow Control(stop and wait, Sliding window protocol, implementation of sliding window protocol using Go- Back-N and Selective R25 (B. Tech CSE) Department: Computer Science & Engineering Curriculum Structure & Syllabus (Effective from 2025-26 admission batch) Repeat), HDLC, PPP. Medium Access Control Sub-layer, Multiple Access Protocols:",
-    "source_document_id": "1464afb322464e9881f723190553d223"
-  },
-  {
-    "id": "019a8989cd07473ba3bc61638d3127c1",
-    "college_id": "default-college-id",
-    "course": "CSE",
-    "semester": "4",
-    "subject": "Database Management Systems",
-    "topic_title": "[CS401] Module 3: Network Layer [10L]",
-    "topic_description": "IP Addressing (IPv4 and IPv6, classful and classless addressing), Subletting, Super netting, Packet Switching (Virtual-Circuit and Datagram Networks), ARP, IP, ICMP, IPV6, BOOTP and DHCP\u2013Delivery protocols Other Protocols such as mobile IP in wireless Network. [5L] Routing: Shortest Path Algorithms, Flooding, Distance Vector Routing, Link State Routing, Hierarchical Routing, Broadcast Routing, Multicast Routing, Any cast Routing: RIP, OSPF, BGP; Routing for Mobile Hosts. [5L]",
-    "source_document_id": "1464afb322464e9881f723190553d223"
-  },
-  {
-    "id": "2a8760d7f87a4d2b9ffab2ee3389f65b",
-    "college_id": "default-college-id",
-    "course": "CSE",
-    "semester": "4",
-    "subject": "Database Management Systems",
-    "topic_title": "[CS401] Module 4: Transport layer: [5L]",
-    "topic_description": "Process to Process delivery; UDP; TCP, SCTP, TCP RENO, TCP/IP in Wireless environment, Congestion control in TCP: Congestion Control: Open Loop, Closed Loop packets; Quality of service: techniques to improve QoS: Leaky bucket algorithm, Token bucket algorithm.",
-    "source_document_id": "1464afb322464e9881f723190553d223"
-  },
-  {
-    "id": "5244e0faf10a4f0bb956062ce765e8dd",
-    "college_id": "default-college-id",
-    "course": "CSE",
-    "semester": "4",
-    "subject": "Database Management Systems",
-    "topic_title": "[CS401] Module 5: Application Layer [4L]",
-    "topic_description": "Introduction to DNS, SMTP, SNMP, FTP, HTTP & WWW: Cryptography (Public, Private Key based), Digital Signature, Firewalls",
-    "source_document_id": "1464afb322464e9881f723190553d223"
-  },
-  {
     "id": "e4e5a9e127154cb0832988a46639a35c",
     "college_id": "default-college-id",
     "course": "CSE",
@@ -4528,7 +4218,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "4",
     "subject": "Computer Networks",
     "topic_title": "[CS402] Module 3: Network Layer [10L]",
-    "topic_description": "IP Addressing (IPv4 and IPv6, classful and classless addressing), Subletting, Super netting, Packet Switching (Virtual-Circuit and Datagram Networks), ARP, IP, ICMP, IPV6, BOOTP and DHCP\u2013Delivery protocols Other Protocols such as mobile IP in wireless Network. [5L] Routing: Shortest Path Algorithms, Flooding, Distance Vector Routing, Link State Routing, Hierarchical Routing, Broadcast Routing, Multicast Routing, Any cast Routing: RIP, OSPF, BGP; Routing for Mobile Hosts. [5L]",
+    "topic_description": "IP Addressing (IPv4 and IPv6, classful and classless addressing), Subletting, Super netting, Packet Switching (Virtual-Circuit and Datagram Networks), ARP, IP, ICMP, IPV6, BOOTP and DHCP–Delivery protocols Other Protocols such as mobile IP in wireless Network. [5L] Routing: Shortest Path Algorithms, Flooding, Distance Vector Routing, Link State Routing, Hierarchical Routing, Broadcast Routing, Multicast Routing, Any cast Routing: RIP, OSPF, BGP; Routing for Mobile Hosts. [5L]",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -4618,17 +4308,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "4",
     "subject": "Machine Learning",
     "topic_title": "[CS403] Module 6: [4L]",
-    "topic_description": "Recent trends in ML, Federated and privacy-preserving learning, AutoML and hyper parameter tuning, Interpretability and ethical AI Textbook: 1. Kevin P. Murphy, Machine Learning: A Probabilistic Perspective, MIT Press, 2012 2. Trevor Hastie, Robert Tibshirani, Jerome Friedman, The Elements of Statistical Learning, Springer 3. Aur\u00e9lien G\u00e9ron, Hands-On Machine Learning with Scikit-Learn, Keras & TensorFlow (2",
-    "source_document_id": "1464afb322464e9881f723190553d223"
-  },
-  {
-    "id": "51e3dc317e6845e7a12b2ee4203fb16b",
-    "college_id": "default-college-id",
-    "course": "CSE",
-    "semester": "4",
-    "subject": "Machine Learning",
-    "topic_title": "[CS403] Module 1: [9L]",
-    "topic_description": "Fundamentals: Basic definition of sequential circuit, block diagram, mathematical representation, concept of transition table and transition diagram. [1L] Introduction to Finite State Model (FSM), Design of sequence detector, Finite State Machine, Finite Automata, Deterministic Finite Automation (DFA) and Non-deterministic Finite Automation (NFA), Transition diagrams, Transition tables and Language recognizers. [3L] NFA with empty transitions, Equivalence between NFA with and without empty transitions. NFA to DFA conversion. [2L]",
+    "topic_description": "Recent trends in ML, Federated and privacy-preserving learning, AutoML and hyper parameter tuning, Interpretability and ethical AI Textbook: 1. Kevin P. Murphy, Machine Learning: A Probabilistic Perspective, MIT Press, 2012 2. Trevor Hastie, Robert Tibshirani, Jerome Friedman, The Elements of Statistical Learning, Springer 3. Aurélien Géron, Hands-On Machine Learning with Scikit-Learn, Keras & TensorFlow (2",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -4658,7 +4338,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "4",
     "subject": "Formal Language and Automata Theory",
     "topic_title": "[CS404] Module 2: [7L]",
-    "topic_description": "Finite Automata with output \u2212 Moore & Mealy machine. Representation of Moore & Mealy Machine, Processing of the String through Moore & Mealy Machine, Equivalence of Moore & Mealy Machine \u2013Inter-conversion.[2L] Equivalent states and Distinguishable States, Equivalence and k-equivalence, Minimization of Mealy Machine [1L] Minimization of incompletely specified machine \u2212 Merger Graph, Merger Table, Compatibility Graph [2L]",
+    "topic_description": "Finite Automata with output − Moore & Mealy machine. Representation of Moore & Mealy Machine, Processing of the String through Moore & Mealy Machine, Equivalence of Moore & Mealy Machine –Inter-conversion.[2L] Equivalent states and Distinguishable States, Equivalence and k-equivalence, Minimization of Mealy Machine [1L] Minimization of incompletely specified machine − Merger Graph, Merger Table, Compatibility Graph [2L]",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -4668,7 +4348,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "4",
     "subject": "Formal Language and Automata Theory",
     "topic_title": "[CS404] Module 3: [5L]",
-    "topic_description": "Regular Languages, Regular Sets, Regular Expressions, Algebraic Rules for Regular Expressions, Arden\u2019s Theorem statement and proof [1L] Constructing Finite Automata (FA) for given regular expressions, Regular string accepted by FA [2L] Constructing Regular Expression for a given Finite Automata [1L] Pumping Lemma of Regular Sets. Closure properties of regular sets [1L]",
+    "topic_description": "Regular Languages, Regular Sets, Regular Expressions, Algebraic Rules for Regular Expressions, Arden’s Theorem statement and proof [1L] Constructing Finite Automata (FA) for given regular expressions, Regular string accepted by FA [2L] Constructing Regular Expression for a given Finite Automata [1L] Pumping Lemma of Regular Sets. Closure properties of regular sets [1L]",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -4678,7 +4358,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "4",
     "subject": "Formal Language and Automata Theory",
     "topic_title": "[CS404] Module 4: [9L]",
-    "topic_description": "Grammar Formalism - Context Free Grammars, Derivation trees, sentential forms. Rightmost and leftmost derivation of strings, Parse Tree, Ambiguity in context free grammars. [1L] Minimization of Context Free Grammars. [1L], Removal of null and unit production [1L] Chomsky normal form and Greibach normal form.[ 1L] Pumping Lemma for Context Free Languages. [1L] Closure property of CFL, Ogden\u2019s lemma & its applications [1L], Regular grammars \u2013 right linear and left linear grammars [1L]",
+    "topic_description": "Grammar Formalism - Context Free Grammars, Derivation trees, sentential forms. Rightmost and leftmost derivation of strings, Parse Tree, Ambiguity in context free grammars. [1L] Minimization of Context Free Grammars. [1L], Removal of null and unit production [1L] Chomsky normal form and Greibach normal form.[ 1L] Pumping Lemma for Context Free Languages. [1L] Closure property of CFL, Ogden’s lemma & its applications [1L], Regular grammars – right linear and left linear grammars [1L]",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -4688,7 +4368,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "4",
     "subject": "Formal Language and Automata Theory",
     "topic_title": "[CS404] Module 5: [5L]",
-    "topic_description": "Turing Machine: Turing Machine, definition, model [1L] Design of TM, Computable functions [1L], Church\u2019s hypothesis, counter machine [1L] Types of Turing machines [1L] Universal Turing Machine, Halting problem [1L] Textbook: 1. \u201cIntroduction to Automata Theory Language and Computation\u201d, Hopcroft. E. and Ullman J.D., Pearson Education.",
+    "topic_description": "Turing Machine: Turing Machine, definition, model [1L] Design of TM, Computable functions [1L], Church’s hypothesis, counter machine [1L] Types of Turing machines [1L] Universal Turing Machine, Halting problem [1L] Textbook: 1. “Introduction to Automata Theory Language and Computation”, Hopcroft. E. and Ullman J.D., Pearson Education.",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -4738,67 +4418,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "4",
     "subject": "Probability and Statistics",
     "topic_title": "[M(CS)401] Module IV: Testing of Hypothesis [7L]",
-    "topic_description": "Simple and Composite hypothesis, Critical region, Level of significance, Type I and Type II errors, one sample and two sample tests for means and proportions, \ud835\udf122 - test for goodness of fit.",
-    "source_document_id": "1464afb322464e9881f723190553d223"
-  },
-  {
-    "id": "f5056cb28f9f4e0cb8888ddaa20d919f",
-    "college_id": "default-college-id",
-    "course": "CSE",
-    "semester": "4",
-    "subject": "Probability and Statistics",
-    "topic_title": "[M(CS)401] Module 1: (6L):",
-    "topic_description": "Management Concepts: Definition, roles, functions and importance of Management, Evolution of Management thought-contribution made by Taylor, Fayol, Gilbreth, Elton Mayo, McGregor, Maslow",
-    "source_document_id": "1464afb322464e9881f723190553d223"
-  },
-  {
-    "id": "3f2f0b05a917438d91e4ee84002e0398",
-    "college_id": "default-college-id",
-    "course": "CSE",
-    "semester": "4",
-    "subject": "Probability and Statistics",
-    "topic_title": "[M(CS)401] Module 2: Planning and Control (6L):",
-    "topic_description": "Planning: Nature and importance of planning, -types of planning, Levels of planning - The Planning Process. \u2013MBO, SWOT analysis, McKinsey\u2019s7S Approach. Organising for decision making: Nature of organizing, span of control, Organisational structure \u2013line and staff authority. Basic control process -control as a feedback system \u2013 Feed Forward Control \u2013Requirements for effective control \u2013 control R25 (B. Tech CSE)",
-    "source_document_id": "1464afb322464e9881f723190553d223"
-  },
-  {
-    "id": "9e9d7b864cb9487d9e61fc0b135f5acc",
-    "college_id": "default-college-id",
-    "course": "CSE",
-    "semester": "4",
-    "subject": "Probability and Statistics",
-    "topic_title": "[M(CS)401] Module 3: Group dynamics(6L):",
-    "topic_description": "Types of groups, characteristics, objectives of Group Dynamics. Leadership: Definition, styles & functions of leadership, qualities for good leadership, Theories of leadership",
-    "source_document_id": "1464afb322464e9881f723190553d223"
-  },
-  {
-    "id": "422943415e4945f2b68cbacc629b41a2",
-    "college_id": "default-college-id",
-    "course": "CSE",
-    "semester": "4",
-    "subject": "Probability and Statistics",
-    "topic_title": "[M(CS)401] Module 4: (6L): Work Study and work measurement: Definition of work study, Method",
-    "topic_description": "Study Steps, Tools and Techniques used in the Method Study and Work Measurement Time Study: Aim & Objectives, Use of stopwatch procedure in making Time Study. Performance rating, allowances and its types. Calculation of Standard Time.  Work sampling",
-    "source_document_id": "1464afb322464e9881f723190553d223"
-  },
-  {
-    "id": "f7a11cc9308b408894ec2d06f927a10b",
-    "college_id": "default-college-id",
-    "course": "CSE",
-    "semester": "4",
-    "subject": "Probability and Statistics",
-    "topic_title": "[M(CS)401] Module 5: Marketing Management (4L):",
-    "topic_description": "Functions of Marketing, Product Planning and development, Promotional Strategy",
-    "source_document_id": "1464afb322464e9881f723190553d223"
-  },
-  {
-    "id": "0dc073cd5b3845168423c068207b7693",
-    "college_id": "default-college-id",
-    "course": "CSE",
-    "semester": "4",
-    "subject": "Probability and Statistics",
-    "topic_title": "[M(CS)401] Module 6: Quality management (8L): Quality definition, Statistical quality control,",
-    "topic_description": "acceptance sampling, Control Charts \u2013Mean chart, range chart,c chart,p chart,np chart, Zero Defects, Quality circles, Kaizen & Six Sigma, ISO -9000 Implementation steps, Total quality management",
+    "topic_description": "Simple and Composite hypothesis, Critical region, Level of significance, Type I and Type II errors, one sample and two sample tests for means and proportions, 𝜒2 - test for goodness of fit.",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -4918,7 +4538,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "4",
     "subject": "Introduction to R Programming",
     "topic_title": "[M(CS)491] Module 1: Communication & Corporate Etiquette (5L)",
-    "topic_description": "Objective: To develop professional communication skills and workplace etiquette. Topics Covered: \uf0b7 Fundamentals of Corporate Communication (Email, Meetings, Reports) \uf0b7 Business Writing: Resume, Cover Letter, and Statement of Purpose (SOP) \uf0b7",
+    "topic_description": "Objective: To develop professional communication skills and workplace etiquette. Topics Covered:  Fundamentals of Corporate Communication (Email, Meetings, Reports)  Business Writing: Resume, Cover Letter, and Statement of Purpose (SOP) ",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -4928,7 +4548,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "4",
     "subject": "Introduction to R Programming",
     "topic_title": "[M(CS)491] Module 2: Verbal & Analytical Ability for Competitive Exams (4L)",
-    "topic_description": "Objective: To strengthen verbal reasoning, numerical ability, and logical thinking for aptitude tests. Topics Covered: \uf0b7 Grammar & Sentence Correction \uf0b7 Vocabulary Building & Contextual Usage",
+    "topic_description": "Objective: To strengthen verbal reasoning, numerical ability, and logical thinking for aptitude tests. Topics Covered:  Grammar & Sentence Correction  Vocabulary Building & Contextual Usage",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -4948,7 +4568,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "4",
     "subject": "Soft Skill & Aptitude",
     "topic_title": "[HU(CS)491] Module 1: Communication & Corporate Etiquette (5L)",
-    "topic_description": "Objective: To develop professional communication skills and workplace etiquette. Topics Covered: \uf0b7 Fundamentals of Corporate Communication (Email, Meetings, Reports) \uf0b7 Business Writing: Resume, Cover Letter, and Statement of Purpose (SOP) \uf0b7",
+    "topic_description": "Objective: To develop professional communication skills and workplace etiquette. Topics Covered:  Fundamentals of Corporate Communication (Email, Meetings, Reports)  Business Writing: Resume, Cover Letter, and Statement of Purpose (SOP) ",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -4958,7 +4578,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "4",
     "subject": "Soft Skill & Aptitude",
     "topic_title": "[HU(CS)491] Module 2: Verbal & Analytical Ability for Competitive Exams (4L)",
-    "topic_description": "Objective: To strengthen verbal reasoning, numerical ability, and logical thinking for aptitude tests. Topics Covered: \uf0b7 Grammar & Sentence Correction \uf0b7 Vocabulary Building & Contextual Usage",
+    "topic_description": "Objective: To strengthen verbal reasoning, numerical ability, and logical thinking for aptitude tests. Topics Covered:  Grammar & Sentence Correction  Vocabulary Building & Contextual Usage",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -4968,7 +4588,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "4",
     "subject": "Soft Skill & Aptitude",
     "topic_title": "[HU(CS)491] Module 3: Teamwork, Leadership & Conflict Resolution (5L)",
-    "topic_description": "Objective: To cultivate leadership, teamwork, and interpersonal effectiveness. Topics Covered: \uf0b7 Teamwork vs. Individual Contribution \uf0b7 Leadership Styles & Decision Making \uf0b7",
+    "topic_description": "Objective: To cultivate leadership, teamwork, and interpersonal effectiveness. Topics Covered:  Teamwork vs. Individual Contribution  Leadership Styles & Decision Making ",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -4978,7 +4598,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "4",
     "subject": "Soft Skill & Aptitude",
     "topic_title": "[HU(CS)491] Module 4: Time & Stress Management for Engineers (3L)",
-    "topic_description": "Objective: To develop productivity habits for balancing work and personal growth. Topics Covered: \uf0b7 Prioritization Techniques (Eisenhower Matrix, Pomodoro Technique) \uf0b7 Handling Work Pressure & Burnout in IT Jobs \uf0b7",
+    "topic_description": "Objective: To develop productivity habits for balancing work and personal growth. Topics Covered:  Prioritization Techniques (Eisenhower Matrix, Pomodoro Technique)  Handling Work Pressure & Burnout in IT Jobs ",
     "source_document_id": "1464afb322464e9881f723190553d223"
   },
   {
@@ -4988,7 +4608,7 @@ export const INITIAL_CURRICULUM_DATA: SyllabusEntry[] = [
     "semester": "4",
     "subject": "Soft Skill & Aptitude",
     "topic_title": "[HU(CS)491] Module 5: Profile Building & Career Readiness (7L)",
-    "topic_description": "Objective: To prepare students for industry placements and professional networking. Topics Covered: \uf0b7 Resume Optimization (ATS-Friendly Formats) \uf0b7 LinkedIn & GitHub Profile Enhancement \uf0b7",
+    "topic_description": "Objective: To prepare students for industry placements and professional networking. Topics Covered:  Resume Optimization (ATS-Friendly Formats)  LinkedIn & GitHub Profile Enhancement ",
     "source_document_id": "1464afb322464e9881f723190553d223"
   }
 ];
