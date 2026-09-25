@@ -10,6 +10,7 @@ import { NoticesPage } from './pages/NoticesPage';
 import { StudyReportPage } from './pages/StudyReportPage';
 import { SyllabusPage } from './pages/SyllabusPage';
 import { PyqPage } from './pages/PyqPage';
+import { EditProfileModal } from './components/EditProfileModal';
 import { aiCollegeScraper, deriveCollegeNameFromUrl } from './services/aiCollegeScraper';
 import type { College, Notice, Student } from './types';
 
@@ -25,6 +26,7 @@ export const App: React.FC = () => {
   const [isScraping, setIsScraping] = useState(false);
   const [initializing, setInitializing] = useState(true);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
   const showToast = (message: string, type: 'success' | 'error' | 'info' = 'info') => {
     setToast({ message, type });
@@ -38,7 +40,7 @@ export const App: React.FC = () => {
         const [col, nots, syllabus, pyqs] = await Promise.all([
           api.getCollege(stud.college_id).catch(() => null),
           api.getNotices(stud.college_id).catch(() => []),
-          api.getSyllabus(stud.college_id).catch(() => []),
+          api.getSyllabus(stud.college_id, String(stud.semester)).catch(() => []),
           api.getPYQs(stud.college_id).catch(() => []),
         ]);
         if (col) setCollege(col);
@@ -205,10 +207,10 @@ export const App: React.FC = () => {
 
   if (initializing) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0b0f19]">
+      <div className="min-h-screen flex items-center justify-center bg-[#f7f4ee]">
         <div className="text-center space-y-3">
-          <div className="w-12 h-12 border-4 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin mx-auto" />
-          <p className="text-sm font-mono text-slate-400">Loading ExamBuddy Copilot...</p>
+          <div className="w-12 h-12 border-4 border-[#284232]/30 border-t-[#284232] rounded-full animate-spin mx-auto" />
+          <p className="text-sm font-serif text-[#284232] font-semibold">Loading ExamBuddy Copilot...</p>
         </div>
       </div>
     );
@@ -239,7 +241,7 @@ export const App: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#0b0f19] text-slate-100">
+    <div className="eb-app-container">
       {/* Toast Notification */}
       {toast && (
         <div
@@ -258,28 +260,41 @@ export const App: React.FC = () => {
         </div>
       )}
 
-      {/* Top Navbar */}
-      <Navbar
+      {/* Edit Profile Modal */}
+      {student && (
+        <EditProfileModal
+          isOpen={isProfileModalOpen}
+          onClose={() => setIsProfileModalOpen(false)}
+          student={student}
+          onSave={handleUpdateStudent}
+        />
+      )}
+
+      {/* Left Editorial Sidebar */}
+      <Sidebar
+        activeTab={activeTab}
         setActiveTab={setActiveTab}
         student={student}
         college={college}
+        noticesCount={notices.length}
         onLogout={handleLogout}
-        onTriggerScrape={handleTriggerScrape}
-        isScraping={isScraping}
-        onUpdateStudent={handleUpdateStudent}
+        onOpenSettings={() => setIsProfileModalOpen(true)}
       />
 
-      {/* Workspace Body: Left Sidebar + Main Content */}
-      <div className="eb-layout-wrapper">
-        <Sidebar
-          activeTab={activeTab}
+      {/* Main Viewport: Top Navbar + Page Body */}
+      <div className="eb-main-viewport">
+        <Navbar
           setActiveTab={setActiveTab}
           student={student}
           college={college}
-          noticesCount={notices.length}
+          onLogout={handleLogout}
+          onTriggerScrape={handleTriggerScrape}
+          isScraping={isScraping}
+          onUpdateStudent={handleUpdateStudent}
+          onOpenProfileModal={() => setIsProfileModalOpen(true)}
         />
 
-        <main className="eb-main-content">
+        <main className="eb-page-body">
           {activeTab === 'dashboard' && (
             <Dashboard
               student={student}
@@ -311,11 +326,6 @@ export const App: React.FC = () => {
           )}
         </main>
       </div>
-
-      {/* Footer */}
-      <footer className="w-full border-t border-slate-800/80 py-4 px-6 text-center text-xs font-mono text-slate-500">
-        ExamBuddy v0.2.0 • AI-Powered University Exam Copilot • Built for College Students
-      </footer>
     </div>
   );
 };

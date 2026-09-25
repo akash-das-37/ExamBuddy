@@ -1509,204 +1509,537 @@ textarea::placeholder {
 }
 
 /* ============================================================
-   EXAMBUDDY WORKSPACE & SIDEBAR DEDICATED LAYOUT
+   EXAMBUDDY EDITORIAL LAYOUT (WARM IVORY & FOREST GREEN)
+   Matches exact warm ivory cream + forest green design
    ============================================================ */
-.eb-layout-wrapper {
+.eb-app-container {
   display: flex;
-  flex-direction: row;
-  align-items: stretch;
+  min-height: 100vh;
   width: 100%;
-  min-height: calc(100vh - 65px);
-  box-sizing: border-box;
+  background-color: #f7f4ee;
+  color: #191c19;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Plus Jakarta Sans', sans-serif;
+  overflow-x: hidden;
+  position: relative;
 }
 
-.eb-sidebar {
+/* ================= LEFT SIDEBAR (FIXED) ================= */
+.eb-editorial-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
   width: 250px;
   min-width: 250px;
   max-width: 250px;
-  flex-shrink: 0;
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(9, 12, 20, 0.95);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  padding: 24px 16px;
+  height: 100vh;
+  background-color: #f7f4ee;
+  border-right: 1px solid rgba(0, 0, 0, 0.07);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  padding: 24px 16px 20px 20px;
   box-sizing: border-box;
+  z-index: 100;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
-.eb-sidebar-top {
+/* Brand Logo */
+.eb-sidebar-brand {
   display: flex;
-  flex-direction: column;
-  gap: 16px;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+  margin-bottom: 28px;
+  padding-left: 4px;
+  transition: opacity 0.18s ease;
+  flex-shrink: 0;
 }
-
-.eb-sidebar-label {
-  font-family: var(--font-mono);
-  font-size: 11px;
+.eb-sidebar-brand:hover {
+  opacity: 0.85;
+}
+.eb-brand-icon-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #284232;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(40, 66, 50, 0.22);
+  flex-shrink: 0;
+}
+.eb-brand-text {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 21px;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #64748b;
-  padding: 0 8px;
+  color: #191c19;
+  letter-spacing: -0.02em;
 }
 
-.eb-sidebar-nav {
+/* Nav list */
+.eb-sidebar-nav-list {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
 }
 
-.eb-nav-btn {
-  width: 100%;
+.eb-editorial-nav-btn {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 11px 14px;
+  width: 100%;
+  padding: 10px 14px;
   border-radius: 12px;
-  border: 1px solid transparent;
+  border: none;
   background: transparent;
-  color: #94a3b8;
-  font-size: 13.5px;
-  font-weight: 600;
+  color: #4b5563;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.18s ease;
   text-align: left;
-  box-sizing: border-box;
   outline: none;
+  box-sizing: border-box;
 }
-
-.eb-nav-btn:hover {
-  background: rgba(255, 255, 255, 0.06);
+.eb-editorial-nav-btn:hover {
+  background-color: rgba(40, 66, 50, 0.06);
+  color: #191c19;
+}
+.eb-editorial-nav-btn.active {
+  background-color: #284232;
   color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.08);
+  font-weight: 600;
+  box-shadow: 0 4px 14px rgba(40, 66, 50, 0.25);
+}
+.eb-editorial-nav-btn.active .eb-nav-icon {
+  color: #ffffff;
 }
 
-.eb-nav-btn-active {
-  background: #284232 !important;
-  color: #ffffff !important;
-  box-shadow: 0 4px 14px rgba(40, 66, 50, 0.28);
-  border-color: rgba(40, 66, 50, 0.4) !important;
-}
-
-.eb-nav-btn-left {
+.eb-nav-btn-inner {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
-.eb-nav-btn-left .material-symbols-outlined {
+.eb-nav-icon {
   font-size: 20px;
+  color: #52525b;
+  transition: color 0.18s ease;
+  flex-shrink: 0;
 }
 
-.eb-badge-pill {
-  padding: 2px 8px;
+.eb-nav-label {
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+/* Amber notification badge */
+.eb-nav-amber-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
   border-radius: 9999px;
-  font-size: 10px;
-  font-family: var(--font-mono);
-  font-weight: 700;
-  background: rgba(245, 158, 11, 0.2);
-  color: #fcd34d;
-  border: 1px solid rgba(245, 158, 11, 0.35);
-}
-
-.eb-badge-active {
-  background: rgba(255, 255, 255, 0.25);
+  background-color: #f59e0b;
   color: #ffffff;
-  border-color: transparent;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+}
+.eb-editorial-nav-btn.active .eb-nav-amber-badge {
+  background-color: rgba(255, 255, 255, 0.28);
+  color: #ffffff;
 }
 
-.eb-sidebar-bottom {
-  margin-top: 24px;
-  padding-top: 16px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+/* Spacer */
+.eb-sidebar-spacer {
+  flex: 1;
+  min-height: 24px;
 }
 
-.eb-student-card {
-  padding: 14px;
-  border-radius: 14px;
-  background: #0e121d;
-  border: 1px solid rgba(255, 255, 255, 0.07);
+/* Bottom Actions: Settings & Logout Container */
+.eb-sidebar-bottom-actions {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
+  margin-bottom: 8px;
+  position: relative;
+  z-index: 30; /* Ensure crisp elevation above leaves and background */
+  flex-shrink: 0;
 }
 
-.eb-student-card-header {
+/* High Visibility Card Buttons for Settings & Logout */
+.eb-sidebar-action-btn {
+  background-color: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  color: #191c19 !important;
+  font-weight: 600 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.eb-sidebar-action-btn .eb-nav-icon {
+  color: #284232 !important;
+  font-size: 20px !important;
+}
+
+.eb-sidebar-action-btn .eb-nav-label {
+  color: #191c19 !important;
+  font-weight: 600 !important;
+}
+
+.eb-sidebar-action-btn:hover {
+  background-color: #f5f2ea !important;
+  border-color: rgba(40, 66, 50, 0.35) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(40, 66, 50, 0.08) !important;
+}
+
+/* Logout button specific styling */
+.eb-sidebar-logout-btn {
+  background-color: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.eb-sidebar-logout-btn .eb-nav-icon {
+  color: #4b5563 !important;
+}
+
+.eb-sidebar-logout-btn:hover {
+  background-color: #fef2f2 !important;
+  border-color: rgba(220, 38, 38, 0.35) !important;
+}
+
+.eb-sidebar-logout-btn:hover .eb-nav-icon,
+.eb-sidebar-logout-btn:hover .eb-nav-label {
+  color: #dc2626 !important;
+}
+
+/* Botanical Leaf Art in Bottom Left */
+.eb-sidebar-leaf-art {
+  position: absolute;
+  bottom: -15px;
+  left: -20px;
+  width: 160px;
+  height: 160px;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.45;
+}
+
+/* ================= MAIN VIEWPORT & UPPER BAR (FIXED) ================= */
+.eb-main-viewport {
+  margin-left: 250px;
+  width: calc(100% - 250px);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f7f4ee;
+  box-sizing: border-box;
+}
+
+/* Top Upper Bar (Fixed Navbar) */
+.eb-editorial-navbar {
+  position: fixed;
+  top: 0;
+  left: 250px;
+  right: 0;
+  height: 68px;
+  padding: 0 36px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
-
-.eb-student-card-label {
-  font-size: 10px;
-  font-family: var(--font-mono);
-  text-transform: uppercase;
-  font-weight: 700;
-  color: #818cf8;
-}
-
-.eb-student-card-name {
-  font-size: 12.5px;
-  font-weight: 700;
-  color: #ffffff;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.eb-student-card-sub {
-  font-size: 11px;
-  color: #94a3b8;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.eb-student-card-college {
-  font-size: 10px;
-  font-family: var(--font-mono);
-  color: #64748b;
-  padding-top: 6px;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.eb-main-content {
-  flex: 1;
-  min-width: 0;
-  padding: 24px 32px;
+  gap: 20px;
+  background-color: rgba(247, 244, 238, 0.96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  z-index: 90;
   box-sizing: border-box;
 }
 
-@media (max-width: 860px) {
-  .eb-layout-wrapper {
+/* Search bar */
+.eb-nav-search-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.09);
+  border-radius: 9999px;
+  padding: 8px 18px;
+  width: 380px;
+  max-width: 100%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+.eb-nav-search-bar:focus-within {
+  border-color: #284232;
+  box-shadow: 0 0 0 3px rgba(40, 66, 50, 0.12);
+}
+.eb-nav-search-icon {
+  font-size: 19px;
+  color: #6b7280;
+  flex-shrink: 0;
+}
+.eb-nav-search-input {
+  border: none;
+  background: transparent !important;
+  color: #191c19 !important;
+  font-size: 13.5px;
+  width: 100%;
+  outline: none;
+  font-family: inherit;
+}
+.eb-nav-search-input::placeholder {
+  color: #9ca3af !important;
+  font-size: 13px;
+}
+
+/* Nav Actions Right */
+.eb-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Portal Synced Pill */
+.eb-nav-status-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border-radius: 9999px;
+  background-color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #191c19;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+.eb-nav-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #16a34a;
+  box-shadow: 0 0 0 2.5px rgba(22, 163, 74, 0.2);
+}
+.eb-nav-status-dot.syncing {
+  background-color: #f59e0b;
+  box-shadow: 0 0 0 2.5px rgba(245, 158, 11, 0.2);
+  animation: pulse 1.5s infinite;
+}
+
+/* Crawl button */
+.eb-nav-crawl-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  border-radius: 9999px;
+  background-color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #191c19;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  transition: all 0.18s ease;
+  outline: none;
+}
+.eb-nav-crawl-btn:hover:not(:disabled) {
+  background-color: #f3f4f6;
+  border-color: rgba(0, 0, 0, 0.14);
+}
+.eb-crawl-icon {
+  font-size: 16px;
+  color: #4b5563;
+}
+.eb-crawl-icon.spinning {
+  animation: spin 1s linear infinite;
+}
+
+/* Bell button with red dot */
+.eb-nav-bell-btn {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #4b5563;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  outline: none;
+}
+.eb-nav-bell-btn:hover {
+  background-color: #f3f4f6;
+  color: #191c19;
+}
+.eb-nav-bell-dot {
+  position: absolute;
+  top: 7px;
+  right: 8px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #ef4444;
+  border: 1.5px solid #ffffff;
+}
+
+/* Profile Pill */
+.eb-nav-profile-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 10px 4px 4px;
+  border-radius: 9999px;
+  background-color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: all 0.18s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  user-select: none;
+}
+.eb-nav-profile-pill:hover {
+  border-color: rgba(0, 0, 0, 0.16);
+  background-color: #fcfcfc;
+}
+.eb-nav-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #fdfaf6;
+  flex-shrink: 0;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+.eb-nav-avatar svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.eb-nav-profile-info {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+.eb-nav-profile-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #191c19;
+  line-height: 1.2;
+}
+.eb-nav-profile-sub {
+  font-size: 11px;
+  font-weight: 500;
+  color: #6b7280;
+  line-height: 1.2;
+}
+.eb-nav-chevron {
+  font-size: 18px;
+  color: #6b7280;
+  margin-left: 2px;
+}
+
+/* Page Body: Compensate for Fixed Top Navbar */
+.eb-page-body {
+  padding-top: 68px; /* Offset for fixed top navbar */
+  flex: 1;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Ensure subpages take 100% width cleanly inside eb-page-body */
+.eb-page-body > div {
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+/* Page Leaf Watermarks: Ensure they never overlap the fixed sidebar or buttons */
+.sb-leaf-watermark,
+.db-leaf-watermark,
+.pyq-leaf-watermark,
+.nt-leaf-watermark,
+.sr-leaf-watermark-bottom {
+  left: 250px !important;
+  opacity: 0.15 !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 960px) {
+  .eb-app-container {
     flex-direction: column;
   }
-  .eb-sidebar {
+  .eb-editorial-sidebar {
+    position: relative;
     width: 100%;
     min-width: 100%;
     max-width: 100%;
-    border-right: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    height: auto;
     padding: 16px;
+    border-right: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   }
-  .eb-sidebar-bottom {
+  .eb-sidebar-spacer {
     display: none;
   }
-  .eb-sidebar-nav {
+  .eb-sidebar-bottom-actions {
+    display: none;
+  }
+  .eb-sidebar-leaf-art {
+    display: none;
+  }
+  .eb-sidebar-nav-list {
     flex-direction: row;
     flex-wrap: wrap;
   }
-  .eb-nav-btn {
+  .eb-editorial-nav-btn {
     width: auto;
     flex: 1;
-    min-width: 130px;
+    min-width: 140px;
   }
-  .eb-main-content {
-    padding: 16px;
+  .eb-editorial-navbar {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    padding: 0 16px;
+    flex-wrap: wrap;
+    height: auto;
+    gap: 12px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .eb-main-viewport {
+    margin-left: 0;
+    width: 100%;
+  }
+  .eb-page-body {
+    padding-top: 0;
+  }
+  .eb-nav-search-bar {
+    width: 100%;
+    order: 2;
+  }
+  .eb-nav-actions {
+    width: 100%;
+    justify-content: space-between;
+    order: 1;
   }
 }

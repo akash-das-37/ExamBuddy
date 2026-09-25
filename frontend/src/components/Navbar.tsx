@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import type { College, Student } from '../types';
-import { EditProfileModal } from './EditProfileModal';
 
 interface NavbarProps {
   setActiveTab: (tab: string) => void;
@@ -10,145 +9,135 @@ interface NavbarProps {
   onTriggerScrape: () => void;
   isScraping: boolean;
   onUpdateStudent?: (updated: Partial<Student>) => Promise<void>;
+  onOpenProfileModal?: () => void;
+  onSearch?: (query: string) => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
   setActiveTab,
   student,
-  college,
-  onLogout,
   onTriggerScrape,
   isScraping,
-  onUpdateStudent,
+  onOpenProfileModal,
+  onSearch,
 }) => {
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const getInitials = (name: string) => {
-    return name
-      .split(' ')
-      .map((part) => part[0])
-      .join('')
-      .toUpperCase()
-      .substring(0, 2);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setSearchQuery(val);
+    if (onSearch) {
+      onSearch(val);
+    }
   };
 
+  const branchShort = student?.branch
+    ? student.branch.includes('(')
+      ? student.branch.split('(')[0].trim()
+      : student.branch.split(' ')[0]
+    : 'CSE';
+
   return (
-    <header className="header-glass sticky top-0 z-50 px-6 py-3.5 flex justify-between items-center w-full">
-      {/* Brand & AI Badge */}
-      <div className="flex items-center gap-6">
-        <div
-          onClick={() => setActiveTab('dashboard')}
-          className="flex items-center gap-3 cursor-pointer group"
-        >
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-600 to-cyan-500 flex items-center justify-center shadow-[0_0_20px_rgba(99,102,241,0.5)] group-hover:scale-105 transition-transform">
-            <span className="material-symbols-outlined text-white text-[22px]">
-              school
-            </span>
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-xl font-extrabold tracking-tight text-white">
-                ExamBuddy
-              </span>
-              <span className="badge badge-indigo">
-                AI Copilot
-              </span>
-            </div>
-          </div>
-        </div>
+    <header className="eb-editorial-navbar">
+      {/* Search Input Bar (Center-Left) */}
+      <div className="eb-nav-search-bar">
+        <span className="material-symbols-outlined eb-nav-search-icon">
+          search
+        </span>
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={handleSearchChange}
+          placeholder="Search subjects, topics, syllabus..."
+          className="eb-nav-search-input"
+        />
       </div>
 
-      {/* Right: Portal Status & Student Profile */}
-      <div className="flex items-center gap-3">
-        {/* Scrape Status Pill */}
-        <div className="hidden lg:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0d101c] border border-white/10 text-xs">
-          <span
-            className={`w-2 h-2 rounded-full ${
-              isScraping
-                ? 'bg-amber-400 animate-ping'
-                : college?.scrape_status === 'completed'
-                ? 'bg-emerald-400'
-                : 'bg-indigo-400'
-            }`}
-          />
-          <span className="font-mono text-slate-300">
-            {isScraping
-              ? 'Crawling portal...'
-              : college?.scrape_status === 'completed'
-              ? 'Portal Synced'
-              : 'Portal Ready'}
+      {/* Right Action Group */}
+      <div className="eb-nav-actions">
+        {/* Portal Synced Pill */}
+        <div className="eb-nav-status-pill">
+          <span className={`eb-nav-status-dot ${isScraping ? 'syncing' : ''}`} />
+          <span className="eb-nav-status-text">
+            {isScraping ? 'Crawling portal...' : 'Portal Synced'}
           </span>
         </div>
 
-        {/* Trigger Portal Scrape Button */}
+        {/* Crawl Portal Button */}
         <button
+          type="button"
           onClick={onTriggerScrape}
           disabled={isScraping}
-          className="btn-outline text-xs py-1.5 px-3.5 hidden sm:inline-flex cursor-pointer"
+          className="eb-nav-crawl-btn"
           title="Scrape and extract latest syllabus, PYQs, and notices"
         >
           <span
-            className={`material-symbols-outlined text-[16px] ${
-              isScraping ? 'animate-spin text-amber-400' : 'text-indigo-400'
+            className={`material-symbols-outlined eb-crawl-icon ${
+              isScraping ? 'spinning' : ''
             }`}
           >
             sync
           </span>
-          <span>{isScraping ? 'Syncing...' : 'Crawl Portal'}</span>
+          <span>Crawl Portal</span>
         </button>
 
-        {/* Student Profile Card (Clickable to Edit) & Logout */}
-        {student && (
-          <div className="flex items-center gap-2 pl-3 border-l border-white/10">
-            <button
-              type="button"
-              onClick={() => setIsEditModalOpen(true)}
-              className="nav-profile-chip group"
-              title="Click to edit profile, branch & semester"
-            >
-              <div className="relative flex-shrink-0">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-xs font-bold text-white shadow-sm ring-1 ring-white/20 group-hover:scale-105 transition-transform">
-                  {getInitials(student.name)}
-                </div>
-                <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-indigo-600 border border-[#0d101c] flex items-center justify-center text-white shadow-sm">
-                  <span className="material-symbols-outlined text-[9px]">edit</span>
-                </div>
-              </div>
-              <div className="flex flex-col text-left min-w-0">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-xs font-semibold text-white leading-tight group-hover:text-indigo-300 transition-colors truncate max-w-[120px]">
-                    {student.name}
-                  </span>
-                  <span className="px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-400 font-mono text-[9px] font-bold border border-emerald-500/30">
-                    Sem {student.semester}
-                  </span>
-                </div>
-                <span className="text-[10px] font-medium text-slate-300 leading-tight truncate max-w-[160px]">
-                  {student.branch}
-                </span>
-              </div>
-            </button>
-            <button
-              onClick={onLogout}
-              className="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-rose-950/20 rounded-lg transition-colors ml-1 cursor-pointer"
-              title="Sign Out"
-            >
-              <span className="material-symbols-outlined text-[18px]">
-                logout
-              </span>
-            </button>
-          </div>
-        )}
-      </div>
+        {/* Notification Bell with Red Badge Dot */}
+        <button
+          type="button"
+          onClick={() => setActiveTab('notices')}
+          className="eb-nav-bell-btn"
+          title="Notices & Announcements"
+        >
+          <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>
+            notifications
+          </span>
+          <span className="eb-nav-bell-dot" />
+        </button>
 
-      {/* Edit Profile Modal */}
-      {student && onUpdateStudent && (
-        <EditProfileModal
-          isOpen={isEditModalOpen}
-          onClose={() => setIsEditModalOpen(false)}
-          student={student}
-          onSave={onUpdateStudent}
-        />
-      )}
+        {/* Student Profile Pill */}
+        <div
+          onClick={() => onOpenProfileModal && onOpenProfileModal()}
+          className="eb-nav-profile-pill"
+          title="Click to view and edit profile"
+        >
+          {/* Illustrated Anime Student Avatar */}
+          <div className="eb-nav-avatar">
+            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="50" cy="50" r="50" fill="#f7ede2" />
+              {/* Dark Shirt with red accents */}
+              <path d="M18 98 C25 80, 38 74, 50 74 C62 74, 75 80, 82 98 Z" fill="#181b18" />
+              <path d="M42 74 L50 86 L58 74 Z" fill="#dc2626" />
+              <path d="M46 74 L50 81 L54 74 Z" fill="#ffffff" />
+              {/* Neck & Face */}
+              <rect x="44" y="60" width="12" height="16" rx="3" fill="#f6c29b" />
+              <ellipse cx="50" cy="50" rx="21" ry="23" fill="#f6c29b" />
+              {/* Eyes */}
+              <ellipse cx="42" cy="49" rx="3" ry="3.5" fill="#191c19" />
+              <ellipse cx="58" cy="49" rx="3" ry="3.5" fill="#191c19" />
+              <circle cx="43.2" cy="47.8" r="1.2" fill="#ffffff" />
+              <circle cx="59.2" cy="47.8" r="1.2" fill="#ffffff" />
+              {/* Subtle smile */}
+              <path d="M46 60 Q50 63 54 60" stroke="#b45309" strokeWidth="1.5" strokeLinecap="round" />
+              {/* Spiky Dark Hair */}
+              <path d="M26 48 C22 33, 32 20, 50 20 C68 20, 78 33, 74 48 C70 34, 60 28, 50 28 C40 28, 30 34, 26 48 Z" fill="#191c19" />
+              <path d="M28 40 L36 46 L32 30 L45 44 L40 24 L52 42 L56 26 L58 43 L68 33 L64 45 L72 38" stroke="#191c19" strokeWidth="5.5" strokeLinecap="round" strokeLinejoin="round" fill="#191c19" />
+            </svg>
+          </div>
+
+          <div className="eb-nav-profile-info">
+            <span className="eb-nav-profile-name">
+              {student?.name || 'Akash Das'}
+            </span>
+            <span className="eb-nav-profile-sub">
+              {branchShort} • Sem {student?.semester || 2}
+            </span>
+          </div>
+
+          <span className="material-symbols-outlined eb-nav-chevron">
+            expand_more
+          </span>
+        </div>
+      </div>
     </header>
   );
 };
