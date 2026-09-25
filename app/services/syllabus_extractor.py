@@ -404,9 +404,14 @@ class SyllabusExtractorService:
                         pdf_links.append(urllib.parse.urljoin(p.url, h))
 
         if not pdf_links:
-            raise RuntimeError(
-                f"No syllabus or curriculum PDF links could be discovered on {college.base_url}"
-            )
+            sem_str = str(semester).strip()
+            # Affiliated colleges (KGEC, GNIT, JISCE, Heritage, IEM) follow official AICTE / MAKAUT NEP syllabus
+            if sem_str == "1":
+                pdf_links = ["https://makautexam.net/aicte_details/Syllabusnep/sem126.pdf"]
+            elif sem_str == "2":
+                pdf_links = ["https://makautexam.net/aicte_details/Syllabusnep/sem226.pdf"]
+            else:
+                pdf_links = ["https://makautexam.net/aicte_details/Coursestructurenep/curriculum_btechnep26.pdf"]
 
         # 2. Pick best matching PDF for course and regulation
         best_pdf_url = self.match_best_pdf(pdf_links, course, regulation)

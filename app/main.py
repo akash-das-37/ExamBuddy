@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.core.config import get_settings
-from app.routers import analysis, auth, colleges, notifications
+from app.routers import analysis, auth, colleges, notifications, syllabus_agent
 
 settings = get_settings()
 
@@ -47,6 +47,7 @@ app.include_router(auth.router)
 app.include_router(colleges.router)
 app.include_router(notifications.router)
 app.include_router(analysis.router)
+app.include_router(syllabus_agent.router)
 
 
 @app.get("/health", tags=["System"])
@@ -55,13 +56,13 @@ async def health_check():
     return {"status": "healthy", "app": settings.APP_NAME}
 
 
-# Mount storage directory if it exists
+# Mount storage directory
 import os
 from fastapi.staticfiles import StaticFiles
 
 storage_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "storage")
-if os.path.exists(storage_dir):
-    app.mount("/storage", StaticFiles(directory=storage_dir), name="storage")
+os.makedirs(storage_dir, exist_ok=True)
+app.mount("/storage", StaticFiles(directory=storage_dir), name="storage")
 
 # Mount built frontend if it exists
 frontend_dist = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend", "dist")

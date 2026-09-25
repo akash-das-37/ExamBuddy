@@ -501,7 +501,8 @@ export const SyllabusPage: React.FC<SyllabusPageProps> = ({ student }) => {
   const handleUploadSuccess = (newEntries: SyllabusEntry[], newDoc: OriginalDocument) => {
     setSyllabusList((prev) => [...newEntries, ...prev]);
     setDocuments((prev) => [newDoc, ...prev]);
-    setSearchStatus(`Successfully uploaded & imported ${newEntries.length} topics from "${newDoc.file_name}"!`);
+    setActionMessage(`Successfully uploaded & imported ${newEntries.length} topics from "${newDoc.file_name}" into database!`);
+    loadData(branch, semester);
   };
 
   const activeSylDoc =

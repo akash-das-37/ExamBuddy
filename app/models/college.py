@@ -27,5 +27,6 @@ class College(Base, UUIDMixin):
     scraped_pages = relationship("ScrapedPage", back_populates="college")
     documents = relationship("Document", back_populates="college")
     syllabus_entries = relationship("SyllabusEntry", back_populates="college")
+    syllabus_documents = relationship("SyllabusDocument", back_populates="college")
     pyq_questions = relationship("PYQQuestion", back_populates="college")
     notices = relationship("Notice", back_populates="college")

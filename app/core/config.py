@@ -26,6 +26,14 @@ class Settings(BaseSettings):
     CRAWLER_RECENCY_SKIP_HOURS: int = 24
     CRAWLER_USER_AGENT: str = "ExamBuddyBot/1.0 (+http://localhost:8000/bot-info)"
 
+    # Syllabus Discovery Agent settings
+    AGENT_MAX_CRAWL_DEPTH: int = 3
+    AGENT_MAX_PAGES: int = 40
+    AGENT_MAX_DOCUMENTS: int = 50
+    AGENT_REQUEST_TIMEOUT: float = 15.0
+    AGENT_MAX_FILE_SIZE_MB: int = 50
+    AGENT_MIN_CONFIDENCE_SCORE: float = 25.0
+
     # LLM Settings (Anthropic Claude API)
     ANTHROPIC_API_KEY: str | None = None
     ANTHROPIC_FAST_MODEL: str = "claude-3-5-haiku-20241022"
