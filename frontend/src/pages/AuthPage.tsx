@@ -448,18 +448,28 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess }) => {
 
               <div>
                 <label className="form-label">College Portal URL</label>
-                <div className="relative">
+                <div className="relative rounded-lg shadow-sm">
                   <input
                     type="url"
                     required
                     value={collegeUrl}
                     onChange={(e) => setCollegeUrl(e.target.value)}
                     placeholder="https://apex-tech.edu"
-                    className="form-input pr-9"
+                    className="form-input pr-9 shadow-inner focus:shadow-md transition-shadow"
                   />
-                  <span className="material-symbols-outlined absolute right-3 top-3 text-slate-500 text-[18px]">
+                  <span className="material-symbols-outlined absolute right-3 top-3 text-slate-500 text-[18px] drop-shadow-sm">
                     link
                   </span>
+                </div>
+                <div className="mt-1 flex items-center gap-1.5 text-xs text-slate-400">
+                  <span>Example:</span>
+                  <button
+                    type="button"
+                    onClick={() => setCollegeUrl('https://apex-tech.edu')}
+                    className="text-primary-400 hover:text-primary-300 underline underline-offset-2 drop-shadow-sm"
+                  >
+                    https://apex-tech.edu
+                  </button>
                 </div>
               </div>
 

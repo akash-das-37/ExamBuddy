@@ -35,6 +35,7 @@ app = FastAPI(
 # CORS — allow all origins in dev, lock down in production
 app.add_middleware(
     CORSMiddleware,
+    allow_origin_regex=r"^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$",
     allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
@@ -67,8 +68,13 @@ if os.path.exists(frontend_dist):
 async def global_exception_handler(request: Request, exc: Exception):
     """Catch-all for unhandled exceptions — returns 500 with a safe message."""
     logging.exception("Unhandled exception on %s %s", request.method, request.url)
+    origin = request.headers.get("origin", "*")
     return JSONResponse(
         status_code=500,
-        content={"detail": "Internal server error"},
+        content={"detail": f"Internal server error: {str(exc)}"},
+        headers={
+            "Access-Control-Allow-Origin": origin,
+            "Access-Control-Allow-Credentials": "true",
+        },
     )
 
