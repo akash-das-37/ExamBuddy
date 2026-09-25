@@ -1,0 +1,800 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&display=swap');
+
+/* ============================================================
+   EXAMBUDDY - EDITORIAL WARM PYQ PAGE DESIGN
+   Matches exact warm ivory cream + forest green aesthetic
+   ============================================================ */
+
+.pyq-page-container {
+  position: relative;
+  width: calc(100% + 64px);
+  margin: -24px -32px;
+  min-height: calc(100vh - 65px);
+  background-color: #f7f4ee;
+  color: #191c19;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  padding: 32px 36px 64px;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+@media (max-width: 860px) {
+  .pyq-page-container {
+    width: calc(100% + 32px);
+    margin: -16px -16px;
+    padding: 20px 16px 48px;
+  }
+}
+
+/* Botanical Corner Leaf Watermark */
+.pyq-leaf-watermark {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 320px;
+  height: 320px;
+  pointer-events: none;
+  opacity: 0.35;
+  z-index: 1;
+}
+
+.pyq-content-wrap {
+  position: relative;
+  z-index: 2;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* ================= TOP HEADER & QUOTE ROW ================= */
+.pyq-top-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 24px;
+  align-items: center;
+}
+
+@media (max-width: 1080px) {
+  .pyq-top-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pyq-header-col {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.pyq-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pyq-main-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 38px;
+  font-weight: 700;
+  color: #181b18;
+  letter-spacing: -0.02em;
+  margin: 0;
+  line-height: 1.1;
+}
+
+.pyq-subtitle {
+  font-size: 15px;
+  color: #555f53;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* Header Dropdowns & Search Filter Bar */
+.pyq-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding-top: 4px;
+}
+
+.pyq-select-pill {
+  background: #ffffff;
+  border: 1px solid #ded5c6;
+  border-radius: 9999px;
+  padding: 8px 28px 8px 14px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #2b3329;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23556050' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+}
+
+.pyq-select-pill:hover {
+  border-color: #284232;
+  background-color: #fbf9f4;
+}
+
+.pyq-search-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #284232;
+  border: 1px solid #284232;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 18px;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(40, 66, 50, 0.25);
+}
+
+.pyq-search-btn:hover {
+  background: #1c3224;
+  transform: translateY(-1px);
+}
+
+/* Inspirational Quote Card in Header Row */
+.pyq-quote-card {
+  position: relative;
+  background: #edf4ed;
+  border: 1px solid #d4e2d6;
+  border-radius: 20px;
+  padding: 18px 22px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 85px;
+  justify-content: center;
+}
+
+.pyq-quote-mark {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 40px;
+  line-height: 0.5;
+  color: #55725d;
+  opacity: 0.6;
+}
+
+.pyq-quote-text {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 14.5px;
+  font-style: italic;
+  font-weight: 500;
+  color: #26382a;
+  line-height: 1.4;
+  margin: 0;
+  max-width: 190px;
+}
+
+.pyq-quote-leaves {
+  position: absolute;
+  right: -5px;
+  bottom: -10px;
+  width: 100px;
+  height: 100px;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+/* ================= MAIN 2-COLUMN WORKSPACE ================= */
+.pyq-main-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 1080px) {
+  .pyq-main-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pyq-left-col {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ================= SECTION 1: SUBJECTS GRID ================= */
+.pyq-section-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #181d16;
+  margin: 0 0 12px 0;
+}
+
+.pyq-subjects-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+@media (max-width: 780px) {
+  .pyq-subjects-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .pyq-subjects-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pyq-subject-card {
+  background: #ffffff;
+  border: 1px solid #e7e0d3;
+  border-radius: 18px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  text-align: left;
+}
+
+.pyq-subject-card:hover {
+  transform: translateY(-2px);
+  border-color: #bccbbd;
+  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.06);
+}
+
+.pyq-subject-card.active {
+  background: #eaf3ec;
+  border: 1.5px solid #284232;
+  box-shadow: 0 4px 14px rgba(40, 66, 50, 0.12);
+}
+
+.pyq-subj-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  overflow: hidden;
+}
+
+.pyq-subj-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.pyq-subj-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.pyq-subj-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #181d16;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.pyq-subj-years {
+  font-size: 11px;
+  color: #717d6d;
+}
+
+.pyq-subj-qcount {
+  font-size: 11px;
+  font-weight: 600;
+  color: #3b4638;
+}
+
+.pyq-subj-arrow {
+  color: #838e7e;
+  font-size: 18px;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.pyq-subject-card:hover .pyq-subj-arrow {
+  transform: translateX(2px);
+  color: #284232;
+}
+
+/* ================= SECTION 2: YEAR-WISE PAPERS ================= */
+.pyq-papers-card {
+  background: #ffffff;
+  border: 1px solid #e7e0d3;
+  border-radius: 22px;
+  padding: 24px 26px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.pyq-papers-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-bottom: 4px;
+}
+
+.pyq-papers-title-box {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.pyq-papers-headline {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #181d16;
+  margin: 0;
+}
+
+.pyq-papers-desc {
+  font-size: 13px;
+  color: #5d6758;
+  margin: 0;
+}
+
+/* Year Selector Pill Tabs */
+.pyq-year-pills {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.pyq-year-pill {
+  background: #faf7f2;
+  border: 1px solid #ded5c6;
+  border-radius: 9999px;
+  padding: 5px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #3e483b;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.pyq-year-pill:hover {
+  background: #f3eee3;
+  color: #181d16;
+}
+
+.pyq-year-pill.active {
+  background: #284232;
+  border-color: #284232;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(40, 66, 50, 0.2);
+}
+
+/* Papers List Rows */
+.pyq-papers-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pyq-paper-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: #faf8f5;
+  border: 1px solid #eee8de;
+  border-radius: 14px;
+  gap: 14px;
+  transition: all 0.18s ease;
+  flex-wrap: wrap;
+}
+
+.pyq-paper-row:hover {
+  background: #ffffff;
+  border-color: #d8d0c2;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.pyq-paper-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 240px;
+}
+
+.pyq-paper-icon {
+  color: #647061;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.pyq-paper-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #191e17;
+}
+
+.pyq-paper-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.pyq-subject-tags {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pyq-sub-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.pyq-sub-badge.math {
+  background: #fde8e8;
+  color: #c81e1e;
+}
+
+.pyq-sub-badge.physics {
+  background: #f3e8ff;
+  color: #7e22ce;
+}
+
+.pyq-sub-badge.chemistry {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.pyq-sub-badge.cs {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.pyq-paper-qcount {
+  font-size: 12px;
+  color: #657162;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.pyq-solve-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #284232;
+  border: 1px solid #284232;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 7px 16px;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(40, 66, 50, 0.2);
+}
+
+.pyq-solve-btn:hover {
+  background: #1c3224;
+  transform: translateY(-1px);
+}
+
+/* ================= RIGHT COLUMN CARDS ================= */
+.pyq-sidebar-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.pyq-card-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #181d16;
+  margin: 0;
+}
+
+/* Card 1: Recently Solved */
+.pyq-recent-card {
+  background: #ffffff;
+  border: 1px solid #e7e0d3;
+  border-radius: 22px;
+  padding: 22px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pyq-card-headrow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pyq-view-all-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: #284232;
+  text-decoration: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  transition: color 0.15s ease;
+}
+
+.pyq-view-all-link:hover {
+  color: #14271c;
+  text-decoration: underline;
+}
+
+.pyq-recent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pyq-recent-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.pyq-recent-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow: hidden;
+}
+
+.pyq-recent-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.pyq-recent-text {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.pyq-recent-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #1d231b;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.pyq-recent-sub {
+  font-size: 11px;
+  color: #727e6e;
+}
+
+.pyq-recent-date {
+  font-size: 11px;
+  color: #8b9687;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Card 2: Your PYQ Stats */
+.pyq-stats-card {
+  background: #ffffff;
+  border: 1px solid #e7e0d3;
+  border-radius: 22px;
+  padding: 22px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pyq-stats-wrap {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.pyq-donut-chart {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  flex-shrink: 0;
+}
+
+.pyq-donut-chart svg {
+  transform: rotate(-90deg);
+  width: 100%;
+  height: 100%;
+}
+
+.pyq-donut-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.pyq-donut-percent {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #191c19;
+  line-height: 1;
+}
+
+.pyq-donut-label {
+  font-size: 9.5px;
+  color: #6a7667;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.pyq-stats-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.pyq-legend-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11.5px;
+  color: #555f52;
+}
+
+.pyq-legend-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pyq-legend-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.pyq-legend-val {
+  font-weight: 700;
+  color: #181d16;
+}
+
+/* Card 3: Quick Actions */
+.pyq-actions-card {
+  background: #ffffff;
+  border: 1px solid #e7e0d3;
+  border-radius: 22px;
+  padding: 22px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.pyq-actions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.pyq-action-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  background: #faf8f5;
+  text-align: left;
+}
+
+.pyq-action-tile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.pyq-action-tile.tile-red {
+  background: #fdf5f5;
+  border-color: #f7e0e0;
+}
+.pyq-action-tile.tile-red .pyq-action-icon {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.pyq-action-tile.tile-blue {
+  background: #f2f7fd;
+  border-color: #dbe8fb;
+}
+.pyq-action-tile.tile-blue .pyq-action-icon {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.pyq-action-tile.tile-green {
+  background: #f0f7f1;
+  border-color: #dcece0;
+}
+.pyq-action-tile.tile-green .pyq-action-icon {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.pyq-action-tile.tile-amber {
+  background: #fef9ed;
+  border-color: #fcebca;
+}
+.pyq-action-tile.tile-amber .pyq-action-icon {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.pyq-action-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.pyq-action-title {
+  font-size: 11.5px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #1d241b;
+}
+
+.pyq-action-sub {
+  font-size: 9.5px;
+  color: #7b8677;
+  line-height: 1.2;
+}
