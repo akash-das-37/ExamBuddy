@@ -37,6 +37,10 @@ class Settings(BaseSettings):
     EMAIL_FROM: str = "ExamBuddy <notices@exambuddy.app>"
     EMAIL_BACKEND: str = "mock"  # "mock" or "resend"
 
+    # Supabase Auth & Cloud Database
+    SUPABASE_URL: str | None = "https://sehquxkqmnrjrutjozzk.supabase.co"
+    SUPABASE_ANON_KEY: str | None = None
+
     model_config = {
         "env_file": ".env",
         "env_file_encoding": "utf-8",

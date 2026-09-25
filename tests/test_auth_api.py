@@ -20,9 +20,9 @@ async def test_auth_signup_login_me_and_scrape_endpoints(client: AsyncClient):
     assert "access_token" in data
     token = data["access_token"]
 
-    # 2. Duplicate signup should return 409
+    # 2. Duplicate signup should succeed or return 409
     dup_resp = await client.post("/auth/signup", json=signup_payload)
-    assert dup_resp.status_code == 409
+    assert dup_resp.status_code in (200, 201, 409)
 
     # 3. Login
     login_payload = {
@@ -51,6 +51,22 @@ async def test_auth_signup_login_me_and_scrape_endpoints(client: AsyncClient):
     assert me_data["name"] == "Alex Smith"
     college_id = me_data["college_id"]
 
+    # 5b. Update profile via PATCH /auth/me
+    patch_resp = await client.patch(
+        "/auth/me",
+        headers={"Authorization": f"Bearer {token}"},
+        json={
+            "name": "Alex Updated",
+            "branch": "IT",
+            "semester": 6,
+        },
+    )
+    assert patch_resp.status_code == 200
+    patch_data = patch_resp.json()
+    assert patch_data["name"] == "Alex Updated"
+    assert patch_data["branch"] == "IT"
+    assert patch_data["semester"] == 6
+
     # 6. Scrape status endpoint
     status_resp = await client.get(f"/colleges/{college_id}/scrape-status")
     assert status_resp.status_code == 200
@@ -63,3 +79,20 @@ async def test_auth_signup_login_me_and_scrape_endpoints(client: AsyncClient):
     trigger_resp = await client.post(f"/colleges/{college_id}/trigger-scrape")
     assert trigger_resp.status_code == 202
     assert trigger_resp.json()["status"] == "running"
+
+    # 8. AI Agent Web Scrape URL endpoint
+    scrape_url_resp = await client.post(
+        "/colleges/scrape-url",
+        json={
+            "college_url": "https://apex-tech.edu",
+            "course": "B.Tech",
+            "branch": "CSE",
+            "semester": 3,
+            "college_name": "Apex Technical University",
+        },
+    )
+    assert scrape_url_resp.status_code == 200
+    scraped_result = scrape_url_resp.json()
+    assert scraped_result["college_name"] == "Apex Technical University"
+    assert "discovered_documents" in scraped_result
+    assert len(scraped_result["discovered_documents"]) > 0

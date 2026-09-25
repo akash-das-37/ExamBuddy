@@ -5,6 +5,11 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
+import bcrypt
+if not hasattr(bcrypt, "__about__"):
+    import types
+    bcrypt.__about__ = types.SimpleNamespace(__version__=getattr(bcrypt, "__version__", "4.0.0"))
+
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -71,7 +76,10 @@ async def get_current_student(
     except (JWTError, ValueError, TypeError):
         raise credentials_exception
 
-    result = await db.execute(select(Student).where(Student.id == student_id))
+    from sqlalchemy.orm import selectinload
+    result = await db.execute(
+        select(Student).options(selectinload(Student.college)).where(Student.id == student_id)
+    )
     student = result.scalar_one_or_none()
 
     if student is None:
