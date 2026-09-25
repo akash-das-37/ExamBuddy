@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import type { College, Student } from '../types';
+import { EditProfileModal } from './EditProfileModal';
 
 interface NavbarProps {
   setActiveTab: (tab: string) => void;
@@ -8,6 +9,7 @@ interface NavbarProps {
   onLogout: () => void;
   onTriggerScrape: () => void;
   isScraping: boolean;
+  onUpdateStudent?: (updated: Partial<Student>) => Promise<void>;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -17,7 +19,9 @@ export const Navbar: React.FC<NavbarProps> = ({
   onLogout,
   onTriggerScrape,
   isScraping,
+  onUpdateStudent,
 }) => {
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const getInitials = (name: string) => {
     return name
       .split(' ')
@@ -92,20 +96,32 @@ export const Navbar: React.FC<NavbarProps> = ({
           <span>{isScraping ? 'Syncing...' : 'Crawl Portal'}</span>
         </button>
 
-        {/* Student Avatar & Logout */}
+        {/* Student Profile Card (Clickable to Edit) & Logout */}
         {student && (
-          <div className="flex items-center gap-3 pl-3 border-l border-white/10">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-xs font-bold text-white shadow-sm">
-              {getInitials(student.name)}
-            </div>
-            <div className="hidden xl:flex flex-col text-left">
-              <span className="text-xs font-semibold text-white leading-tight">
-                {student.name}
-              </span>
-              <span className="text-[10px] font-mono text-slate-400 leading-tight">
-                {student.branch} • Sem {student.semester}
-              </span>
-            </div>
+          <div className="flex items-center gap-2 pl-3 border-l border-white/10">
+            <button
+              type="button"
+              onClick={() => setIsEditModalOpen(true)}
+              className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-xl hover:bg-white/[0.08] border border-transparent hover:border-white/15 transition-all cursor-pointer group text-left"
+              title="Click to edit profile, branch & semester"
+            >
+              <div className="relative">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-xs font-bold text-white shadow-sm group-hover:scale-105 group-hover:ring-2 group-hover:ring-indigo-400/60 transition-all">
+                  {getInitials(student.name)}
+                </div>
+                <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full bg-indigo-600 border border-[#0d101c] flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity shadow-sm">
+                  <span className="material-symbols-outlined text-[9px]">edit</span>
+                </div>
+              </div>
+              <div className="hidden xl:flex flex-col text-left">
+                <span className="text-xs font-semibold text-white leading-tight group-hover:text-indigo-300 transition-colors">
+                  {student.name}
+                </span>
+                <span className="text-[10px] font-mono text-slate-400 leading-tight">
+                  {student.branch} • Sem {student.semester}
+                </span>
+              </div>
+            </button>
             <button
               onClick={onLogout}
               className="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-rose-950/20 rounded-lg transition-colors ml-1 cursor-pointer"
@@ -118,6 +134,16 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         )}
       </div>
+
+      {/* Edit Profile Modal */}
+      {student && onUpdateStudent && (
+        <EditProfileModal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          student={student}
+          onSave={onUpdateStudent}
+        />
+      )}
     </header>
   );
 };

@@ -60,4 +60,15 @@ export const supabaseAuth = {
     const { data } = await supabase.auth.getUser();
     return data.user;
   },
+
+  async updateUserProfile(updates: {
+    name?: string;
+    course?: string;
+    branch?: string;
+    semester?: number;
+  }) {
+    return await supabase.auth.updateUser({
+      data: updates,
+    });
+  },
 };

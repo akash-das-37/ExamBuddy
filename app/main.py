@@ -54,13 +54,19 @@ async def health_check():
     return {"status": "healthy", "app": settings.APP_NAME}
 
 
-# Mount built frontend if it exists
+# Mount storage directory if it exists
 import os
 from fastapi.staticfiles import StaticFiles
 
+storage_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "storage")
+if os.path.exists(storage_dir):
+    app.mount("/storage", StaticFiles(directory=storage_dir), name="storage")
+
+# Mount built frontend if it exists
 frontend_dist = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend", "dist")
 if os.path.exists(frontend_dist):
     app.mount("/", StaticFiles(directory=frontend_dist, html=True), name="frontend")
+
 
 
 @app.exception_handler(Exception)

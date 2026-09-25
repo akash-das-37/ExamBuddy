@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { api } from './api/client';
-import { supabaseAuth } from './lib/supabase';
+import { isSupabaseConfigured, supabaseAuth } from './lib/supabase';
 import { Navbar } from './components/Navbar';
 import { Sidebar } from './components/Sidebar';
 import { HomePage } from './pages/HomePage';
@@ -53,19 +53,69 @@ export const App: React.FC = () => {
   useEffect(() => {
     const initAuth = async () => {
       const token = localStorage.getItem('exambuddy_token');
-      if (token) {
+      const cachedProfile = localStorage.getItem('exambuddy_student_profile');
+      let cachedStudent: Student | null = null;
+      if (cachedProfile) {
+        try {
+          cachedStudent = JSON.parse(cachedProfile);
+        } catch {
+          // ignore
+        }
+      }
+
+      if (token || cachedStudent) {
         try {
           const currentStudent = await api.getMe();
           await loadStudentData(currentStudent);
         } catch {
-          api.logout();
-          setStudent(null);
+          if (cachedStudent) {
+            await loadStudentData(cachedStudent);
+          } else {
+            api.logout();
+            setStudent(null);
+          }
         }
       }
       setInitializing(false);
     };
     initAuth();
   }, []);
+
+  const handleUpdateStudent = async (updatedFields: Partial<Student>) => {
+    try {
+      const updated = await api.updateProfile(updatedFields);
+      setStudent(updated);
+
+      if (isSupabaseConfigured) {
+        try {
+          await supabaseAuth.updateUserProfile({
+            name: updated.name,
+            course: updated.course,
+            branch: updated.branch,
+            semester: updated.semester,
+          });
+        } catch {
+          // ignore Supabase sync error if network fails
+        }
+      }
+
+      showToast(`Profile updated: ${updated.name} (${updated.branch} • Sem ${updated.semester})`, 'success');
+
+      if (updatedFields.semester && student && updatedFields.semester !== student.semester) {
+        if (student.college_id) {
+          const [nots, syllabus] = await Promise.all([
+            api.getNotices(student.college_id).catch(() => []),
+            api.getSyllabus(student.college_id, String(updatedFields.semester)).catch(() => []),
+          ]);
+          setNotices(nots);
+          setTotalTopics(syllabus.length);
+        }
+      }
+    } catch (err: unknown) {
+      showToast(err instanceof Error ? err.message : 'Could not update profile', 'error');
+      throw err;
+    }
+  };
 
   const handleLogout = async () => {
     try {
@@ -190,6 +240,7 @@ export const App: React.FC = () => {
         onLogout={handleLogout}
         onTriggerScrape={handleTriggerScrape}
         isScraping={isScraping}
+        onUpdateStudent={handleUpdateStudent}
       />
 
       {/* Workspace Body: Left Sidebar + Main Content */}

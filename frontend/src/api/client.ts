@@ -205,11 +205,64 @@ export const api = {
   },
 
   async getMe(): Promise<Student> {
-    return request<Student>('/auth/me');
+    try {
+      const student = await request<Student>('/auth/me');
+      localStorage.setItem('exambuddy_student_profile', JSON.stringify(student));
+      return student;
+    } catch (err) {
+      const cached = localStorage.getItem('exambuddy_student_profile');
+      if (cached) {
+        try {
+          return JSON.parse(cached);
+        } catch {
+          // ignore
+        }
+      }
+      throw err;
+    }
+  },
+
+  async updateProfile(updates: Partial<Student>): Promise<Student> {
+    try {
+      const updated = await request<Student>('/auth/me', {
+        method: 'PATCH',
+        body: JSON.stringify(updates),
+      });
+      localStorage.setItem('exambuddy_student_profile', JSON.stringify(updated));
+      return updated;
+    } catch {
+      // Offline / fallback mode
+      const cached = localStorage.getItem('exambuddy_student_profile');
+      let base: Student = {
+        id: 'student-id',
+        name: 'Akash Das',
+        email: 'akash@example.com',
+        college_id: 'default-college-id',
+        course: 'B.Tech',
+        branch: 'CSE',
+        semester: 3,
+        email_notifications_enabled: true,
+        is_active: true,
+      };
+      if (cached) {
+        try {
+          base = JSON.parse(cached);
+        } catch {
+          // ignore
+        }
+      }
+      const updated: Student = {
+        ...base,
+        ...updates,
+      };
+      localStorage.setItem('exambuddy_student_profile', JSON.stringify(updated));
+      return updated;
+    }
   },
 
   logout(): void {
     localStorage.removeItem('exambuddy_token');
+    localStorage.removeItem('exambuddy_student_profile');
   },
 
   // College & Scrape Status

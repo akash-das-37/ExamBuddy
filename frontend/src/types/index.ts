@@ -91,6 +91,7 @@ export interface SyllabusEntry {
   topic_title: string;
   topic_description: string | null;
   source_document_id?: string | null;
+  source_document_url?: string | null;
 }
 
 export interface PYQQuestion {
@@ -102,4 +103,23 @@ export interface PYQQuestion {
   marks: number | null;
   matched_topic_id: string | null;
   match_confidence: number | null;
+  source_document_id?: string | null;
+  source_document_url?: string | null;
 }
+
+export interface OriginalDocument {
+  id: string;
+  title: string;
+  type: 'syllabus' | 'pyq';
+  subject?: string;
+  semester?: string;
+  exam_year?: string;
+  file_url: string;
+  file_name: string;
+  file_size?: string;
+  uploaded_at: string;
+  is_official?: boolean;
+  content_preview?: string;
+  extracted_count?: number;
+}
+

@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../api/client';
-import type { Student, SyllabusEntry } from '../types';
+import type { OriginalDocument, Student, SyllabusEntry } from '../types';
+import { INITIAL_DOCUMENTS } from '../data/documentsData';
+import { UploadSyllabusModal } from '../components/UploadSyllabusModal';
+import { DocumentViewerModal } from '../components/DocumentViewerModal';
 
 interface SyllabusPageProps {
   student: Student;
@@ -8,10 +11,27 @@ interface SyllabusPageProps {
 
 export const SyllabusPage: React.FC<SyllabusPageProps> = ({ student }) => {
   const [syllabusList, setSyllabusList] = useState<SyllabusEntry[]>([]);
+  const [documents, setDocuments] = useState<OriginalDocument[]>(() => {
+    try {
+      const stored = localStorage.getItem('exambuddy_uploaded_docs');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        return [...parsed, ...INITIAL_DOCUMENTS];
+      }
+    } catch {
+      // ignore
+    }
+    return INITIAL_DOCUMENTS;
+  });
+
   const [loading, setLoading] = useState(false);
   const [searching, setSearching] = useState(false);
   const [searchStatus, setSearchStatus] = useState<string | null>(null);
-  const [sourcePdfUrl, setSourcePdfUrl] = useState<string | null>(null);
+
+  // Modals state
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [isViewerModalOpen, setIsViewerModalOpen] = useState(false);
+  const [activeViewerDocId, setActiveViewerDocId] = useState<string | undefined>(undefined);
 
   // Search parameters
   const [branch, setBranch] = useState(student.branch || student.course || 'CSE');
@@ -28,12 +48,33 @@ export const SyllabusPage: React.FC<SyllabusPageProps> = ({ student }) => {
         targetCourse,
         targetSem
       );
-      setSyllabusList(data);
+
+      // Merge with any uploaded syllabus entries from localStorage
+      let combined = [...data];
+      try {
+        const storedSyllabus = localStorage.getItem('exambuddy_uploaded_syllabus');
+        if (storedSyllabus) {
+          const parsed: SyllabusEntry[] = JSON.parse(storedSyllabus);
+          const matching = parsed.filter(
+            (p) => !p.semester || String(p.semester) === String(targetSem)
+          );
+          combined = [...matching, ...combined];
+        }
+      } catch {
+        // ignore
+      }
+      setSyllabusList(combined);
     } catch {
       // Fallback empty
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleUploadSuccess = (newEntries: SyllabusEntry[], newDoc: OriginalDocument) => {
+    setSyllabusList((prev) => [...newEntries, ...prev]);
+    setDocuments((prev) => [newDoc, ...prev]);
+    setSearchStatus(`Successfully uploaded & imported ${newEntries.length} topics from "${newDoc.file_name}"!`);
   };
 
   useEffect(() => {
@@ -43,7 +84,6 @@ export const SyllabusPage: React.FC<SyllabusPageProps> = ({ student }) => {
   const handleDiscoverSyllabus = async () => {
     setSearching(true);
     setSearchStatus('Connecting to college portal & searching curriculum blueprints...');
-    setSourcePdfUrl(null);
     try {
       setSearchStatus('Finding course regulations & downloading curriculum PDF...');
       const res = await api.searchAndImportSyllabus(
@@ -51,7 +91,24 @@ export const SyllabusPage: React.FC<SyllabusPageProps> = ({ student }) => {
         branch,
         semester
       );
-      setSourcePdfUrl(res.source_pdf_url);
+
+      if (res.source_pdf_url) {
+        const discoveredDoc: OriginalDocument = {
+          id: `doc-discovered-${semester}`,
+          title: `Portal Discovered Curriculum: ${branch} Sem ${semester}`,
+          type: 'syllabus',
+          subject: branch,
+          semester,
+          file_name: res.source_pdf_url.split('/').pop() || 'Curriculum_Regulation.pdf',
+          file_url: res.source_pdf_url,
+          file_size: '3.4 MB',
+          uploaded_at: new Date().toISOString(),
+          is_official: true,
+          extracted_count: res.total_entries_created,
+        };
+        setDocuments((prev) => [discoveredDoc, ...prev.filter((d) => d.id !== discoveredDoc.id)]);
+      }
+
       setSearchStatus(
         `Discovered & parsed ${res.total_courses_found} courses (${res.total_entries_created} syllabus blueprints & modules) using PyMuPDF!`
       );
@@ -120,18 +177,52 @@ export const SyllabusPage: React.FC<SyllabusPageProps> = ({ student }) => {
             </p>
           </div>
 
-          {/* Quick PDF Link if available */}
-          {sourcePdfUrl && (
+          {/* Action Buttons: View Original & Upload */}
+          <div className="flex flex-wrap items-center gap-2.5 self-start md:self-center">
+            <button
+              type="button"
+              onClick={() => {
+                const targetDoc =
+                  documents.find((d) => d.type === 'syllabus' && d.semester === semester) ||
+                  documents.find((d) => d.id === 'doc-syl-official-1') ||
+                  documents[0];
+                setActiveViewerDocId(targetDoc?.id || 'doc-syl-official-1');
+                setIsViewerModalOpen(true);
+              }}
+              className="btn-secondary text-xs py-2 px-3.5 flex items-center gap-1.5 text-indigo-300 border-indigo-500/40 hover:text-white cursor-pointer shadow-sm"
+              title="View authentic university regulation syllabus PDF"
+            >
+              <span className="material-symbols-outlined text-[17px]">menu_book</span>
+              <span>View Original Regulations</span>
+            </button>
+
             <a
-              href={sourcePdfUrl}
+              href={
+                semester === '2'
+                  ? '/syllabus/syllabus_CSE_2.pdf'
+                  : semester === '6'
+                  ? '/syllabus/syllabus_CSE_6.pdf'
+                  : '/syllabus/B.Tech_CSE_R23_Curriculum_and_Syllabus.pdf'
+              }
               target="_blank"
               rel="noreferrer"
-              className="btn-secondary text-xs flex items-center gap-1.5 self-start md:self-center text-indigo-300 border-indigo-500/40 hover:text-white"
+              className="btn-outline text-xs py-2 px-3 flex items-center gap-1.5 text-slate-300 hover:text-white cursor-pointer"
+              title="Open full regulation PDF in new browser tab"
             >
-              <span className="material-symbols-outlined text-[16px]">picture_as_pdf</span>
-              Open Regulation PDF
+              <span className="material-symbols-outlined text-[16px]">open_in_new</span>
+              <span>Open PDF</span>
             </a>
-          )}
+
+            <button
+              type="button"
+              onClick={() => setIsUploadModalOpen(true)}
+              className="btn-outline text-xs py-2 px-3.5 flex items-center gap-1.5 cursor-pointer hover:bg-white/10"
+              title="Manually upload syllabus document (.pdf, .docx, .txt)"
+            >
+              <span className="material-symbols-outlined text-[17px]">upload_file</span>
+              <span>Upload Syllabus</span>
+            </button>
+          </div>
         </div>
 
         {/* Discovery & Search Controls Form */}
@@ -361,6 +452,48 @@ export const SyllabusPage: React.FC<SyllabusPageProps> = ({ student }) => {
                         {item.topic_description}
                       </p>
                     )}
+
+                    <div className="pt-2 flex items-center justify-between border-t border-white/5">
+                      <div className="flex items-center gap-3">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const targetDoc =
+                              documents.find((d) => d.type === 'syllabus' && d.semester === String(item.semester)) ||
+                              documents.find((d) => d.id === 'doc-syl-official-1');
+                            setActiveViewerDocId(targetDoc?.id || 'doc-syl-official-1');
+                            setIsViewerModalOpen(true);
+                          }}
+                          className="text-[11px] font-mono text-indigo-400 hover:text-indigo-300 flex items-center gap-1 cursor-pointer hover:underline font-semibold"
+                          title="Preview syllabus in embedded document viewer"
+                        >
+                          <span className="material-symbols-outlined text-[15px]">menu_book</span>
+                          Preview Regulation
+                        </button>
+
+                        <a
+                          href={
+                            item.source_document_url ||
+                            (item.semester === '2'
+                              ? '/syllabus/syllabus_CSE_2.pdf'
+                              : item.semester === '6'
+                              ? '/syllabus/syllabus_CSE_6.pdf'
+                              : '/syllabus/B.Tech_CSE_R23_Curriculum_and_Syllabus.pdf')
+                          }
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-[11px] font-mono text-slate-400 hover:text-white flex items-center gap-1 hover:underline"
+                          title="Open original regulation PDF in new browser tab"
+                        >
+                          <span className="material-symbols-outlined text-[14px]">open_in_new</span>
+                          Open PDF
+                        </a>
+                      </div>
+
+                      <span className="text-[10px] font-mono text-slate-500">
+                        {item.course} • Sem {item.semester}
+                      </span>
+                    </div>
                   </div>
                 );
               })}
@@ -368,6 +501,23 @@ export const SyllabusPage: React.FC<SyllabusPageProps> = ({ student }) => {
           )}
         </div>
       )}
+
+      {/* Manual Upload Syllabus Modal */}
+      <UploadSyllabusModal
+        isOpen={isUploadModalOpen}
+        onClose={() => setIsUploadModalOpen(false)}
+        student={student}
+        onUploadSuccess={handleUploadSuccess}
+      />
+
+      {/* Original Document Viewer Modal */}
+      <DocumentViewerModal
+        isOpen={isViewerModalOpen}
+        onClose={() => setIsViewerModalOpen(false)}
+        documents={documents}
+        initialDocumentId={activeViewerDocId}
+        category="syllabus"
+      />
     </div>
   );
 };

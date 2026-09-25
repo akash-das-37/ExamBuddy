@@ -9,6 +9,7 @@ from app.schemas.auth import (
     SignupRequest,
     StudentResponse,
     TokenResponse,
+    UpdateProfileRequest,
 )
 from app.services import auth_service
 from app.services.crawler import crawl_college
@@ -50,3 +51,29 @@ async def get_me(current_student: Student = Depends(get_current_student)):
     Return the currently authenticated student's profile.
     """
     return current_student
+
+
+@router.patch("/me", response_model=StudentResponse)
+async def update_me(
+    data: UpdateProfileRequest,
+    current_student: Student = Depends(get_current_student),
+    db: AsyncSession = Depends(get_db),
+):
+    """
+    Update the currently authenticated student's profile fields.
+    """
+    if data.name is not None:
+        current_student.name = data.name.strip()
+    if data.course is not None:
+        current_student.course = data.course.strip()
+    if data.branch is not None:
+        current_student.branch = data.branch.strip()
+    if data.semester is not None:
+        current_student.semester = data.semester
+    if data.email_notifications_enabled is not None:
+        current_student.email_notifications_enabled = data.email_notifications_enabled
+
+    await db.commit()
+    await db.refresh(current_student)
+    return current_student
+
