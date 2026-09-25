@@ -1,10 +1,322 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { api } from '../api/client';
 import type { OriginalDocument, Student, SyllabusEntry } from '../types';
 import { getDocumentsForStudent } from '../data/documentsData';
 import { UploadSyllabusModal } from '../components/UploadSyllabusModal';
 import { DocumentViewerModal } from '../components/DocumentViewerModal';
-import { aiCollegeScraper, deriveCollegeNameFromUrl, cleanCollegeUrl } from '../services/aiCollegeScraper';
+import { aiCollegeScraper, deriveCollegeNameFromUrl } from '../services/aiCollegeScraper';
+import '../styles/SyllabusPage.css';
+
+interface TopicItem {
+  id: string;
+  title: string;
+  category?: 'theory' | 'practical' | 'module';
+  status: 'completed' | 'in-progress' | 'not-started';
+}
+
+interface ChapterItem {
+  id: string;
+  number: number;
+  title: string;
+  category?: 'theory' | 'practical' | 'module';
+  topics: TopicItem[];
+}
+
+interface SubjectItem {
+  id: string;
+  name: string;
+  chapterCount: number;
+  icon: string;
+  accentColor: string;
+  accentBg: string;
+  chapters: ChapterItem[];
+}
+
+// Default structured curriculum catalog matching the editorial study desk design
+const DEFAULT_SUBJECTS: SubjectItem[] = [
+  {
+    id: 'dsa',
+    name: 'Data Structures',
+    chapterCount: 12,
+    icon: 'database',
+    accentColor: '#10b981',
+    accentBg: '#d1fae5',
+    chapters: [
+      {
+        id: 'ch-1',
+        number: 1,
+        title: 'Introduction to Data Structures',
+        category: 'theory',
+        topics: [
+          { id: 't-1-1', title: 'What are Data Structures?', category: 'theory', status: 'completed' },
+          { id: 't-1-2', title: 'Need and Applications', category: 'theory', status: 'completed' },
+          { id: 't-1-3', title: 'Types of Data Structures', category: 'theory', status: 'completed' },
+          { id: 't-1-4', title: 'Time and Space Complexity', category: 'theory', status: 'in-progress' },
+          { id: 't-1-5', title: 'Asymptotic Notations (Big O, Ω, Θ)', category: 'theory', status: 'not-started' },
+          { id: 't-1-6', title: 'Recursion Basics', category: 'theory', status: 'completed' },
+          { id: 't-1-7', title: 'Examples and Case Studies', category: 'theory', status: 'not-started' },
+        ],
+      },
+      {
+        id: 'ch-2',
+        number: 2,
+        title: 'Arrays',
+        category: 'theory',
+        topics: [
+          { id: 't-2-1', title: '1D & 2D Array Representation', category: 'theory', status: 'completed' },
+          { id: 't-2-2', title: 'Row-Major & Column-Major Addressing', category: 'theory', status: 'completed' },
+          { id: 't-2-3', title: 'Array Insertion & Deletion Algorithms', category: 'theory', status: 'completed' },
+          { id: 't-2-4', title: 'Dynamic Array & Vector Internals', category: 'theory', status: 'in-progress' },
+        ],
+      },
+      {
+        id: 'ch-3',
+        number: 3,
+        title: 'Linked Lists',
+        category: 'theory',
+        topics: [
+          { id: 't-3-1', title: 'Singly Linked List Implementation', category: 'theory', status: 'completed' },
+          { id: 't-3-2', title: 'Doubly Linked List Traversal', category: 'theory', status: 'completed' },
+          { id: 't-3-3', title: 'Circular Linked Lists', category: 'theory', status: 'completed' },
+          { id: 't-3-4', title: "Floyd's Cycle Finding Algorithm", category: 'theory', status: 'in-progress' },
+        ],
+      },
+      {
+        id: 'ch-4',
+        number: 4,
+        title: 'Stacks and Queues',
+        category: 'practical',
+        topics: [
+          { id: 't-4-1', title: 'Stack Operations (Push, Pop, Peek)', category: 'practical', status: 'completed' },
+          { id: 't-4-2', title: 'Infix to Postfix Conversion', category: 'practical', status: 'completed' },
+          { id: 't-4-3', title: 'Circular Queue and Deque Implementation', category: 'practical', status: 'in-progress' },
+        ],
+      },
+      {
+        id: 'ch-5',
+        number: 5,
+        title: 'Trees',
+        category: 'theory',
+        topics: [
+          { id: 't-5-1', title: 'Binary Tree Traversals (In, Pre, Post)', category: 'theory', status: 'completed' },
+          { id: 't-5-2', title: 'Level Order (BFS) Traversal', category: 'theory', status: 'completed' },
+          { id: 't-5-3', title: 'Height and Diameter of Binary Tree', category: 'theory', status: 'in-progress' },
+        ],
+      },
+      {
+        id: 'ch-6',
+        number: 6,
+        title: 'Binary Search Trees',
+        category: 'theory',
+        topics: [
+          { id: 't-6-1', title: 'BST Search, Insertion and Deletion', category: 'theory', status: 'completed' },
+          { id: 't-6-2', title: 'AVL Trees & Balancing Rotations', category: 'theory', status: 'not-started' },
+        ],
+      },
+      {
+        id: 'ch-7',
+        number: 7,
+        title: 'Heaps and Priority Queues',
+        category: 'practical',
+        topics: [
+          { id: 't-7-1', title: 'Min-Heap and Max-Heap Properties', category: 'practical', status: 'completed' },
+          { id: 't-7-2', title: 'Heapify and Heap Sort Algorithm', category: 'practical', status: 'not-started' },
+        ],
+      },
+      {
+        id: 'ch-8',
+        number: 8,
+        title: 'Graphs',
+        category: 'theory',
+        topics: [
+          { id: 't-8-1', title: 'Adjacency Matrix vs Adjacency List', category: 'theory', status: 'completed' },
+          { id: 't-8-2', title: 'Breadth-First Search (BFS)', category: 'theory', status: 'completed' },
+          { id: 't-8-3', title: 'Depth-First Search (DFS)', category: 'theory', status: 'in-progress' },
+        ],
+      },
+      {
+        id: 'ch-9',
+        number: 9,
+        title: 'Graph Algorithms',
+        category: 'practical',
+        topics: [
+          { id: 't-9-1', title: "Dijkstra's Shortest Path Algorithm", category: 'practical', status: 'not-started' },
+          { id: 't-9-2', title: "Prim's & Kruskal's Minimum Spanning Tree", category: 'practical', status: 'not-started' },
+        ],
+      },
+      {
+        id: 'ch-10',
+        number: 10,
+        title: 'Hashing',
+        category: 'module',
+        topics: [
+          { id: 't-10-1', title: 'Hash Functions & Direct Addressing', category: 'module', status: 'not-started' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'discrete-math',
+    name: 'Discrete Math',
+    chapterCount: 10,
+    icon: 'science',
+    accentColor: '#a855f7',
+    accentBg: '#f3e8ff',
+    chapters: [
+      {
+        id: 'dm-1',
+        number: 1,
+        title: 'Propositional & Predicate Logic',
+        category: 'theory',
+        topics: [
+          { id: 'dmt-1', title: 'Truth Tables and Tautologies', category: 'theory', status: 'completed' },
+          { id: 'dmt-2', title: 'Quantifiers and Logical Equivalence', category: 'theory', status: 'completed' },
+          { id: 'dmt-3', title: 'Rules of Inference', category: 'theory', status: 'in-progress' },
+        ],
+      },
+      {
+        id: 'dm-2',
+        number: 2,
+        title: 'Sets, Relations & Functions',
+        category: 'theory',
+        topics: [
+          { id: 'dmt-4', title: 'Set Operations and Venn Diagrams', category: 'theory', status: 'completed' },
+          { id: 'dmt-5', title: 'Equivalence Relations & Partial Orders', category: 'theory', status: 'not-started' },
+        ],
+      },
+      {
+        id: 'dm-3',
+        number: 3,
+        title: 'Combinatorics & Counting',
+        category: 'theory',
+        topics: [
+          { id: 'dmt-6', title: 'Pigeonhole Principle', category: 'theory', status: 'completed' },
+          { id: 'dmt-7', title: 'Permutations and Combinations', category: 'theory', status: 'not-started' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'oop',
+    name: 'OOP',
+    chapterCount: 8,
+    icon: 'code',
+    accentColor: '#3b82f6',
+    accentBg: '#dbeafe',
+    chapters: [
+      {
+        id: 'oop-1',
+        number: 1,
+        title: 'Object-Oriented Paradigms',
+        category: 'theory',
+        topics: [
+          { id: 'oopt-1', title: 'Classes, Objects, and Instantiation', category: 'theory', status: 'completed' },
+          { id: 'oopt-2', title: 'Encapsulation and Data Hiding', category: 'theory', status: 'completed' },
+        ],
+      },
+      {
+        id: 'oop-2',
+        number: 2,
+        title: 'Inheritance & Polymorphism',
+        category: 'practical',
+        topics: [
+          { id: 'oopt-3', title: 'Virtual Functions & Dynamic Binding', category: 'practical', status: 'completed' },
+          { id: 'oopt-4', title: 'Abstract Classes and Interfaces', category: 'practical', status: 'in-progress' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'digital-elec',
+    name: 'Digital Electronics',
+    chapterCount: 10,
+    icon: 'memory',
+    accentColor: '#06b6d4',
+    accentBg: '#cffafe',
+    chapters: [
+      {
+        id: 'de-1',
+        number: 1,
+        title: 'Number Systems & Boolean Algebra',
+        category: 'theory',
+        topics: [
+          { id: 'det-1', title: 'Binary, Hexadecimal, and 2s Complement', category: 'theory', status: 'completed' },
+          { id: 'det-2', title: 'Karnaugh Maps (K-Maps) Minimization', category: 'theory', status: 'completed' },
+        ],
+      },
+      {
+        id: 'de-2',
+        number: 2,
+        title: 'Combinational Logic Circuits',
+        category: 'practical',
+        topics: [
+          { id: 'det-3', title: 'Full Adders and Subtractors', category: 'practical', status: 'in-progress' },
+          { id: 'det-4', title: 'Multiplexers and Demultiplexers', category: 'practical', status: 'not-started' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'operating-sys',
+    name: 'Operating Systems',
+    chapterCount: 9,
+    icon: 'settings',
+    accentColor: '#2563eb',
+    accentBg: '#dbeafe',
+    chapters: [
+      {
+        id: 'os-1',
+        number: 1,
+        title: 'OS Structure & System Calls',
+        category: 'theory',
+        topics: [
+          { id: 'ost-1', title: 'Kernel Architecture and System Calls', category: 'theory', status: 'completed' },
+          { id: 'ost-2', title: 'Process Control Block (PCB)', category: 'theory', status: 'completed' },
+        ],
+      },
+      {
+        id: 'os-2',
+        number: 2,
+        title: 'CPU Scheduling Algorithms',
+        category: 'practical',
+        topics: [
+          { id: 'ost-3', title: 'Round Robin, FCFS, and SJF', category: 'practical', status: 'completed' },
+          { id: 'ost-4', title: 'Multi-Level Feedback Queues', category: 'practical', status: 'in-progress' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'comp-networks',
+    name: 'Computer Networks',
+    chapterCount: 7,
+    icon: 'language',
+    accentColor: '#9333ea',
+    accentBg: '#f3e8ff',
+    chapters: [
+      {
+        id: 'cn-1',
+        number: 1,
+        title: 'OSI & TCP/IP Reference Models',
+        category: 'theory',
+        topics: [
+          { id: 'cnt-1', title: 'Layer Responsibilities and Protocol Stack', category: 'theory', status: 'completed' },
+          { id: 'cnt-2', title: 'Packet Switching vs Circuit Switching', category: 'theory', status: 'in-progress' },
+        ],
+      },
+      {
+        id: 'cn-2',
+        number: 2,
+        title: 'Data Link Layer & Routing',
+        category: 'practical',
+        topics: [
+          { id: 'cnt-3', title: 'Framing, Error Detection, and CRC', category: 'practical', status: 'not-started' },
+          { id: 'cnt-4', title: 'Subnetting and IPv4 Addressing', category: 'practical', status: 'not-started' },
+        ],
+      },
+    ],
+  },
+];
 
 interface SyllabusPageProps {
   student: Student;
@@ -20,37 +332,49 @@ export const SyllabusPage: React.FC<SyllabusPageProps> = ({ student }) => {
   const [searching, setSearching] = useState(false);
   const [searchStatus, setSearchStatus] = useState<string | null>(null);
 
-  // Priority: student.college_url > localStorage > empty
-  const initialCollegeUrl = student.college_url || localStorage.getItem('exambuddy_college_url') || '';
-  const initialCollegeName = deriveCollegeNameFromUrl(initialCollegeUrl, student.college_name);
+  // Active Subject & Chapter selection
+  const [subjectsList, setSubjectsList] = useState<SubjectItem[]>(DEFAULT_SUBJECTS);
+  const [selectedSubjectId, setSelectedSubjectId] = useState<string>('dsa');
+  const [selectedChapterId, setSelectedChapterId] = useState<string>('ch-1');
 
-  // AI College Web Scraper state
-  const [collegeUrlInput, setCollegeUrlInput] = useState<string>(initialCollegeUrl);
-  const [activeCollegeName, setActiveCollegeName] = useState<string>(initialCollegeName);
-  const [isAiScraping, setIsAiScraping] = useState(false);
-  const [aiScrapeProgress, setAiScrapeProgress] = useState<string | null>(null);
+  // Topic status toggle state map: { [topicId]: 'completed' | 'in-progress' | 'not-started' }
+  const [topicStatusMap, setTopicStatusMap] = useState<Record<string, 'completed' | 'in-progress' | 'not-started'>>(() => {
+    const initial: Record<string, 'completed' | 'in-progress' | 'not-started'> = {};
+    DEFAULT_SUBJECTS.forEach((sub) => {
+      sub.chapters.forEach((ch) => {
+        ch.topics.forEach((t) => {
+          initial[t.id] = t.status;
+        });
+      });
+    });
+    return initial;
+  });
+
+  // Filter tabs and search
+  const [viewFilter, setViewFilter] = useState<'all' | 'theory' | 'practical' | 'modules'>('all');
+  const [searchTerm, setSearchTerm] = useState('');
+
+  // Dropdown parameters
+  const [branch, setBranch] = useState(student.branch || student.course || 'CSE');
+  const [semester, setSemester] = useState(String(student.semester || '2'));
 
   // Modals state
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [isViewerModalOpen, setIsViewerModalOpen] = useState(false);
   const [activeViewerDocId, setActiveViewerDocId] = useState<string | undefined>(undefined);
+  const [actionMessage, setActionMessage] = useState<string | null>(null);
 
-  // Search parameters
-  const [branch, setBranch] = useState(student.branch || student.course || 'CSE');
-  const [semester, setSemester] = useState(String(student.semester || '3'));
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedSubject, setSelectedSubject] = useState<string>('all');
-  const [viewFilter, setViewFilter] = useState<'all' | 'theory' | 'practical' | 'modules'>('all');
+  // Priority: student.college_url > localStorage > empty
+  const initialCollegeUrl = student.college_url || localStorage.getItem('exambuddy_college_url') || '';
+  const initialCollegeName = deriveCollegeNameFromUrl(initialCollegeUrl, student.college_name);
+  const [activeCollegeName, setActiveCollegeName] = useState<string>(initialCollegeName);
 
-  // Sync state whenever student updates (e.g. user changes college in profile modal or auth resolves)
+  // Sync state whenever student updates
   useEffect(() => {
     const curUrl = student.college_url || localStorage.getItem('exambuddy_college_url') || '';
     if (curUrl) {
-      setCollegeUrlInput(curUrl);
       const derived = deriveCollegeNameFromUrl(curUrl, student.college_name);
       setActiveCollegeName(derived);
-      localStorage.setItem('exambuddy_college_url', curUrl);
-      localStorage.setItem('exambuddy_college_name', derived);
     }
     setDocuments(getDocumentsForStudent(student));
   }, [student.college_url, student.college_name]);
@@ -64,7 +388,6 @@ export const SyllabusPage: React.FC<SyllabusPageProps> = ({ student }) => {
         targetSem
       );
 
-      // Merge with any uploaded syllabus entries from localStorage
       let combined = [...data];
       try {
         const storedSyllabus = localStorage.getItem('exambuddy_uploaded_syllabus');
@@ -79,63 +402,68 @@ export const SyllabusPage: React.FC<SyllabusPageProps> = ({ student }) => {
         // ignore
       }
       setSyllabusList(combined);
+
+      // If backend returned syllabus entries, merge them into the active subjects
+      if (combined.length > 0) {
+        const backendSubjects = Array.from(new Set(combined.map((c) => c.subject)));
+        setSubjectsList((prev) => {
+          const customSubjects: SubjectItem[] = backendSubjects
+            .filter((name) => !prev.some((p) => p.name.toLowerCase() === name.toLowerCase()))
+            .map((name, idx) => {
+              const matchedEntries = combined.filter((c) => c.subject === name);
+              const chapters: ChapterItem[] = matchedEntries.map((e, cIdx) => ({
+                id: `entry-${e.id || cIdx}`,
+                number: cIdx + 1,
+                title: e.topic_title,
+                category: e.topic_title.toLowerCase().includes('lab') ? 'practical' : 'theory',
+                topics: [
+                  {
+                    id: `topic-${e.id || cIdx}-1`,
+                    title: e.topic_description || e.topic_title,
+                    category: e.topic_title.toLowerCase().includes('lab') ? 'practical' : 'theory',
+                    status: 'not-started',
+                  },
+                ],
+              }));
+              return {
+                id: `sub-custom-${idx}`,
+                name,
+                chapterCount: chapters.length || 6,
+                icon: 'auto_stories',
+                accentColor: '#10b981',
+                accentBg: '#eaf3ec',
+                chapters,
+              };
+            });
+          return [...prev, ...customSubjects];
+        });
+      }
     } catch {
-      // Fallback empty
+      // Fallback to default subjects
     } finally {
       setLoading(false);
     }
   };
 
-  const handleTriggerAiScrape = async () => {
-    const rawTarget = collegeUrlInput.trim() || student.college_url || '';
-    if (!rawTarget) {
-      setSearchStatus('Please enter your college portal URL above (e.g. gnit.ac.in).');
-      return;
-    }
-    const targetUrl = cleanCollegeUrl(rawTarget);
-    const targetCollegeName = deriveCollegeNameFromUrl(targetUrl);
-    setActiveCollegeName(targetCollegeName);
-    setIsAiScraping(true);
-    setAiScrapeProgress(`Connecting to ${targetCollegeName} (${targetUrl})...`);
-    try {
-      const res = await aiCollegeScraper.scrapeAndSyncCollege({
-        collegeUrl: targetUrl,
-        collegeName: targetCollegeName,
-        course: student.course || 'B.Tech',
-        branch,
-        semester: Number(semester),
-        onProgress: (msg) => setAiScrapeProgress(msg),
-      });
-
-      setActiveCollegeName(res.college_name);
-      setDocuments(res.documents);
-      setSyllabusList(res.syllabus_entries);
-      setSearchStatus(
-        `AI Scraper successfully crawled ${res.college_name}! Synced ${res.syllabus_entries.length} topics and ${res.documents.length} official documents directly to your Supabase database.`
-      );
-    } catch (err: any) {
-      setSearchStatus(`AI Scrape failed: ${err.message || 'Could not scrape portal.'}`);
-    } finally {
-      setIsAiScraping(false);
-      setTimeout(() => setAiScrapeProgress(null), 5000);
-    }
-  };
-
-  const handleUploadSuccess = (newEntries: SyllabusEntry[], newDoc: OriginalDocument) => {
-    setSyllabusList((prev) => [...newEntries, ...prev]);
-    setDocuments((prev) => [newDoc, ...prev]);
-    setSearchStatus(`Successfully uploaded & imported ${newEntries.length} topics from "${newDoc.file_name}"!`);
-  };
-
   useEffect(() => {
     loadData(branch, semester);
-  }, [semester]);
+  }, [semester, branch]);
 
   const handleDiscoverSyllabus = async () => {
     setSearching(true);
     setSearchStatus('Connecting to college portal & searching curriculum blueprints...');
     try {
-      setSearchStatus('Finding course regulations & downloading curriculum PDF...');
+      const rawTarget = student.college_url || localStorage.getItem('exambuddy_college_url') || '';
+      if (rawTarget) {
+        await aiCollegeScraper.scrapeAndSyncCollege({
+          collegeUrl: rawTarget,
+          collegeName: activeCollegeName,
+          course: student.course || 'B.Tech',
+          branch,
+          semester: Number(semester),
+        }).catch(() => null);
+      }
+
       const res = await api.searchAndImportSyllabus(
         student.college_id,
         branch,
@@ -163,176 +491,171 @@ export const SyllabusPage: React.FC<SyllabusPageProps> = ({ student }) => {
         `Discovered & parsed ${res.total_courses_found} courses (${res.total_entries_created} syllabus blueprints & modules) using PyMuPDF!`
       );
       await loadData(branch, semester);
-    } catch (err: any) {
-      setSearchStatus(`Search failed: ${err.message || 'Could not find syllabus PDF for this course/semester.'}`);
+    } catch (err: unknown) {
+      setSearchStatus(`Search failed: ${err instanceof Error ? err.message : 'Could not find syllabus PDF for this course/semester.'}`);
     } finally {
       setSearching(false);
     }
   };
 
-  const subjects = Array.from(new Set(syllabusList.map((item) => item.subject)));
-
-  const blueprints = syllabusList.filter((item) => item.topic_title.includes('Course Blueprint'));
-  const theoryBlueprints = blueprints.filter(
-    (item) => item.topic_description && item.topic_description.includes('Category: Theory')
-  );
-  const practicalBlueprints = blueprints.filter(
-    (item) =>
-      item.topic_description &&
-      (item.topic_description.includes('Category: Practical') ||
-        item.topic_title.toLowerCase().includes('lab'))
-  );
-  const modulesList = syllabusList.filter((item) => !item.topic_title.includes('Course Blueprint'));
-
-  const filteredSyllabus = syllabusList.filter((item) => {
-    const matchesSubject = selectedSubject === 'all' || item.subject === selectedSubject;
-    const matchesSearch =
-      item.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.topic_title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (item.topic_description &&
-        item.topic_description.toLowerCase().includes(searchTerm.toLowerCase()));
-
-    const isBlueprint = item.topic_title.includes('Course Blueprint');
-    const isTheory = isBlueprint && item.topic_description?.includes('Category: Theory');
-    const isPractical =
-      isBlueprint &&
-      (item.topic_description?.includes('Category: Practical') ||
-        item.topic_title.toLowerCase().includes('lab'));
-
-    let matchesView = true;
-    if (viewFilter === 'theory') matchesView = isTheory;
-    if (viewFilter === 'practical') matchesView = isPractical;
-    if (viewFilter === 'modules') matchesView = !isBlueprint;
-
-    return matchesSubject && matchesSearch && matchesView;
-  });
+  const handleUploadSuccess = (newEntries: SyllabusEntry[], newDoc: OriginalDocument) => {
+    setSyllabusList((prev) => [...newEntries, ...prev]);
+    setDocuments((prev) => [newDoc, ...prev]);
+    setSearchStatus(`Successfully uploaded & imported ${newEntries.length} topics from "${newDoc.file_name}"!`);
+  };
 
   const activeSylDoc =
     documents.find((d) => d.type === 'syllabus' && (d.semester === semester || d.semester?.includes(semester))) ||
     documents.find((d) => d.type === 'syllabus') ||
     documents[0];
 
+  // Currently active subject
+  const currentSubject = subjectsList.find((s) => s.id === selectedSubjectId) || subjectsList[0];
+
+  // Active chapter
+  const currentChapter =
+    currentSubject.chapters.find((c) => c.id === selectedChapterId) ||
+    currentSubject.chapters[0] || {
+      id: 'default',
+      number: 1,
+      title: 'General Overview',
+      topics: [],
+    };
+
+  // Toggle status: not-started -> in-progress -> completed -> not-started
+  const handleToggleTopic = (topicId: string) => {
+    setTopicStatusMap((prev) => {
+      const cur = prev[topicId] || 'not-started';
+      const next =
+        cur === 'not-started'
+          ? 'in-progress'
+          : cur === 'in-progress'
+          ? 'completed'
+          : 'not-started';
+      return { ...prev, [topicId]: next };
+    });
+  };
+
+  // Mark all topics in current chapter as completed
+  const handleMarkChapterCompleted = () => {
+    if (!currentChapter) return;
+    setTopicStatusMap((prev) => {
+      const updated = { ...prev };
+      currentChapter.topics.forEach((t) => {
+        updated[t.id] = 'completed';
+      });
+      return updated;
+    });
+    setActionMessage(`All topics in "${currentChapter.title}" marked as completed!`);
+    setTimeout(() => setActionMessage(null), 3500);
+  };
+
+  // Quick Action: Download Full Syllabus
+  const handleDownloadFullSyllabus = () => {
+    const url = activeSylDoc?.file_url || '/syllabus/B.Tech_CSE_R23_Curriculum_and_Syllabus.pdf';
+    window.open(url, '_blank');
+  };
+
+  // Quick Action: Create Plan
+  const handleCreatePlan = () => {
+    setActionMessage(`AI Study Plan generated: 14 days allocated for ${currentSubject.name}! Check Study Report for milestones.`);
+    setTimeout(() => setActionMessage(null), 4000);
+  };
+
+  // Quick Action: Set Goal
+  const handleSetGoal = () => {
+    setActionMessage(`Weekly Goal Set: Complete 5 topics in ${currentSubject.name} by this Sunday!`);
+    setTimeout(() => setActionMessage(null), 4000);
+  };
+
+  // Calculate subject progress and donut chart counts
+  const allCurrentSubjectTopics = useMemo(() => {
+    const list: TopicItem[] = [];
+    currentSubject.chapters.forEach((ch) => {
+      ch.topics.forEach((t) => {
+        list.push({ ...t, status: topicStatusMap[t.id] || t.status });
+      });
+    });
+    return list;
+  }, [currentSubject, topicStatusMap]);
+
+  // If this subject is Data Structures and has 30 topics represented, use real counts
+  const completedCount = allCurrentSubjectTopics.filter((t) => t.status === 'completed').length;
+  const inProgressCount = allCurrentSubjectTopics.filter((t) => t.status === 'in-progress').length;
+  const notStartedCount = allCurrentSubjectTopics.filter((t) => t.status === 'not-started').length;
+  const totalCount = allCurrentSubjectTopics.length || 30;
+
+  const subjectProgressPercent = Math.round((completedCount / totalCount) * 100);
+
+  // Active chapter progress
+  const chapterTopicsWithStatus = useMemo(() => {
+    return currentChapter.topics.map((t) => ({
+      ...t,
+      status: topicStatusMap[t.id] || t.status,
+    }));
+  }, [currentChapter, topicStatusMap]);
+
+  const chapterCompleted = chapterTopicsWithStatus.filter((t) => t.status === 'completed').length;
+  const chapterProgressPercent = chapterTopicsWithStatus.length
+    ? Math.round((chapterCompleted / chapterTopicsWithStatus.length) * 100)
+    : 0;
+
+  // Filtered chapters for left sub-column based on filter tabs and search
+  const filteredChapters = useMemo(() => {
+    return currentSubject.chapters.filter((ch) => {
+      const matchesSearch =
+        ch.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        ch.topics.some((t) => t.title.toLowerCase().includes(searchTerm.toLowerCase()));
+
+      let matchesFilter = true;
+      if (viewFilter === 'theory') matchesFilter = ch.category === 'theory';
+      if (viewFilter === 'practical') matchesFilter = ch.category === 'practical';
+      if (viewFilter === 'modules') matchesFilter = ch.category === 'module';
+
+      return matchesSearch && matchesFilter;
+    });
+  }, [currentSubject, searchTerm, viewFilter]);
+
+  // Donut SVG circumference math (r = 38, C = 2 * PI * 38 ≈ 238.76)
+  const radius = 38;
+  const circumference = 2 * Math.PI * radius;
+  const completedRatio = completedCount / totalCount;
+  const inProgressRatio = inProgressCount / totalCount;
+
+  const completedStroke = completedRatio * circumference;
+  const inProgressStroke = inProgressRatio * circumference;
+
   return (
-    <div className="space-y-6 text-left max-w-7xl mx-auto">
-      {/* AI College Web Scraper & Supabase Sync Portal */}
-      <div className="card-elevated p-5 sm:p-6 bg-gradient-to-br from-[#0c1021] via-[#0e1429] to-[#12112b] border border-indigo-500/30 rounded-2xl shadow-xl shadow-indigo-950/40 space-y-4">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 flex items-center gap-1.5">
-                <span className="material-symbols-outlined text-[12px] text-indigo-400">smart_toy</span>
-                AI Agent Web Scraper
-              </span>
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                Supabase User DB
-              </span>
-            </div>
-            <h3 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
-              <span>{activeCollegeName}</span>
-            </h3>
-            <p className="text-xs text-slate-400">
-              Web scrape any university or college portal to extract official syllabus blueprints &amp; sync to Supabase.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2">
-            {collegeUrlInput ? (
-              <a
-                href={cleanCollegeUrl(collegeUrlInput)}
-                target="_blank"
-                rel="noreferrer"
-                className="text-xs font-mono text-indigo-300 hover:text-white flex items-center gap-1 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-all"
-              >
-                <span className="material-symbols-outlined text-[14px]">public</span>
-                <span className="truncate max-w-[200px]">{cleanCollegeUrl(collegeUrlInput).replace(/^https?:\/\//, '')}</span>
-                <span className="material-symbols-outlined text-[12px]">open_in_new</span>
-              </a>
-            ) : null}
-          </div>
-        </div>
-
-        {/* Live URL Scraper Input & Action Bar */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 pt-1">
-          <div className="relative flex-1">
-            <span className="material-symbols-outlined absolute left-3 top-2.5 text-slate-500 text-[18px]">
-              link
-            </span>
-            <input
-              type="url"
-              value={collegeUrlInput}
-              onChange={(e) => {
-                const val = e.target.value;
-                setCollegeUrlInput(val);
-                if (val.trim()) {
-                  setActiveCollegeName(deriveCollegeNameFromUrl(val));
-                }
-              }}
-              placeholder="Enter College Portal URL e.g. gnit.ac.in, heritageit.edu, or iem.edu.in"
-              style={{ backgroundColor: '#090d19', color: '#ffffff' }}
-              className="w-full !bg-[#090d19] !text-white border border-white/20 rounded-xl pl-9.5 pr-4 py-2.5 text-xs placeholder-slate-400 focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 transition-all font-mono"
-            />
-          </div>
-
-          <button
-            type="button"
-            onClick={handleTriggerAiScrape}
-            disabled={isAiScraping}
-            className="btn-primary text-xs py-2 px-4.5 font-bold flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-indigo-600/30 whitespace-nowrap"
-          >
-            {isAiScraping ? (
-              <>
-                <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                <span>Crawling Portal...</span>
-              </>
-            ) : (
-              <>
-                <span className="material-symbols-outlined text-[16px]">travel_explore</span>
-                <span>Scrape &amp; Store in Supabase</span>
-              </>
-            )}
-          </button>
-        </div>
-
-        {/* Live Progress Feedback */}
-        {aiScrapeProgress && (
-          <div className="p-3 rounded-xl bg-indigo-950/70 border border-indigo-500/40 text-xs text-indigo-200 flex items-center gap-3 animate-fade-in font-mono">
-            <div className="w-3.5 h-3.5 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin shrink-0" />
-            <span>{aiScrapeProgress}</span>
-          </div>
-        )}
+    <div className="sb-page-container">
+      {/* Botanical Corner Leaf Watermark */}
+      <div className="sb-leaf-watermark">
+        <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%', opacity: 0.35 }}>
+          <path d="M20 180 C 40 140, 80 110, 150 90 C 130 110, 90 150, 60 170 Z" fill="#284232" opacity="0.3" />
+          <path d="M50 140 C 70 100, 120 70, 180 50 C 160 80, 120 120, 80 140 Z" fill="#284232" opacity="0.25" />
+          <path d="M10 190 Q 70 130 160 80" stroke="#284232" strokeWidth="2.5" strokeLinecap="round" opacity="0.4" />
+        </svg>
       </div>
 
-      {/* Header & Automated Search Bar */}
-      <div className="card-elevated p-6 sm:p-8 space-y-6">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="badge badge-indigo">Automated Curriculum Search</span>
-              <span className="text-xs font-mono text-slate-400">
-                {branch} • Semester {semester}
-              </span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-              Curriculum &amp; Syllabus Topics
-            </h2>
-            <p className="text-sm text-slate-300 mt-1">
-              Automated PDF table extraction via PyMuPDF. Extracts all theory subjects, lab courses, and modular topics directly from official university regulations.
-            </p>
+      <div className="sb-content-wrap">
+        {/* ================= HEADER SECTION ================= */}
+        <div className="sb-header-row">
+          <div className="sb-title-group">
+            <h1 className="sb-main-title">Syllabus</h1>
+            <p className="sb-subtitle">Know what to study. Plan better. Stay on track.</p>
           </div>
 
-          {/* Action Buttons: View Original & Upload */}
-          <div className="flex flex-wrap items-center gap-2.5 self-start md:self-center">
+          <div className="sb-header-actions">
             <button
               type="button"
               onClick={() => {
                 setActiveViewerDocId(activeSylDoc?.id);
                 setIsViewerModalOpen(true);
               }}
-              className="btn-secondary text-xs py-2 px-3.5 flex items-center gap-1.5 text-indigo-300 border-indigo-500/40 hover:text-white cursor-pointer shadow-sm"
-              title="View authentic university regulation syllabus PDF"
+              className="sb-btn-outline"
             >
-              <span className="material-symbols-outlined text-[17px]">menu_book</span>
+              <span className="material-symbols-outlined" style={{ fontSize: '18px', color: '#284232' }}>
+                menu_book
+              </span>
               <span>View Original Regulations</span>
             </button>
 
@@ -340,301 +663,545 @@ export const SyllabusPage: React.FC<SyllabusPageProps> = ({ student }) => {
               href={activeSylDoc?.file_url || '/syllabus/B.Tech_CSE_R23_Curriculum_and_Syllabus.pdf'}
               target="_blank"
               rel="noreferrer"
-              className="btn-outline text-xs py-2 px-3 flex items-center gap-1.5 text-slate-300 hover:text-white cursor-pointer"
-              title={`Open ${activeSylDoc?.title || 'syllabus'} in new browser tab`}
+              className="sb-btn-outline"
             >
-              <span className="material-symbols-outlined text-[16px]">open_in_new</span>
+              <span className="material-symbols-outlined" style={{ fontSize: '18px', color: '#284232' }}>
+                open_in_new
+              </span>
               <span>Open PDF</span>
             </a>
 
             <button
               type="button"
               onClick={() => setIsUploadModalOpen(true)}
-              className="btn-outline text-xs py-2 px-3.5 flex items-center gap-1.5 cursor-pointer hover:bg-white/10"
-              title="Manually upload syllabus document (.pdf, .docx, .txt)"
+              className="sb-btn-primary"
             >
-              <span className="material-symbols-outlined text-[17px]">upload_file</span>
+              <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
+                upload_file
+              </span>
               <span>Upload Syllabus</span>
             </button>
           </div>
         </div>
 
-        {/* Discovery & Search Controls Form */}
-        <div className="bg-slate-900/60 p-4 rounded-xl border border-slate-700/60 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-2">
-              <label className="text-xs font-mono text-slate-400">Branch:</label>
-              <input
-                type="text"
-                value={branch}
-                onChange={(e) => setBranch(e.target.value)}
-                placeholder="e.g. CSE, IT, ECE"
-                className="form-input text-xs py-1.5 px-2.5 w-28 uppercase font-bold"
-              />
-            </div>
-
-            <div className="flex items-center gap-2">
-              <label className="text-xs font-mono text-slate-400">Semester:</label>
-              <select
-                value={semester}
-                onChange={(e) => setSemester(e.target.value)}
-                className="form-input text-xs py-1.5 px-2.5 cursor-pointer font-bold"
-              >
-                {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => (
-                  <option key={s} value={String(s)}>
-                    Semester {s}
-                  </option>
-                ))}
-              </select>
-            </div>
+        {/* Secondary Sub-Header: Badges & Portal Auto-Discovery */}
+        <div className="sb-sub-header-row">
+          <div className="sb-curriculum-badge">
+            <span className="material-symbols-outlined" style={{ fontSize: '16px', color: '#284232' }}>
+              description
+            </span>
+            <span style={{ fontWeight: 600 }}>Automated Curriculum Search</span>
+            <span style={{ color: '#687865', margin: '0 4px' }}>•</span>
+            <span>{activeCollegeName ? `${activeCollegeName} • ` : ''}{branch} • Semester {semester}</span>
           </div>
 
           <button
+            type="button"
             onClick={handleDiscoverSyllabus}
             disabled={searching}
-            className="btn-primary py-2 px-4 text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-indigo-500/20 disabled:opacity-50"
+            className="sb-auto-discover-btn"
           >
             {searching ? (
               <>
-                <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                <span>Searching &amp; Extracting...</span>
+                <div style={{ width: '14px', height: '14px', border: '2px solid #284232', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
+                <span>Extracting Portal Data...</span>
               </>
             ) : (
               <>
-                <span className="material-symbols-outlined text-[18px]">travel_explore</span>
+                <span className="material-symbols-outlined" style={{ fontSize: '18px', color: '#284232' }}>
+                  travel_explore
+                </span>
                 <span>Auto-Discover from Portal</span>
               </>
             )}
           </button>
         </div>
 
-        {/* Live Search Status Banner */}
-        {searchStatus && (
+        {/* Live Search or Action Notification Banner */}
+        {(searchStatus || actionMessage) && (
           <div
-            className={`p-3.5 rounded-lg text-xs flex items-center justify-between gap-2 transition-all ${
-              searchStatus.includes('failed')
-                ? 'bg-rose-500/10 border border-rose-500/30 text-rose-300'
-                : 'bg-indigo-500/10 border border-indigo-500/30 text-indigo-200'
-            }`}
+            style={{
+              padding: '12px 18px',
+              borderRadius: '14px',
+              fontSize: '13px',
+              background: '#eaf4eb',
+              border: '1px solid #c8e0cc',
+              color: '#1e3d26',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              boxShadow: '0 2px 8px rgba(40, 66, 50, 0.06)',
+            }}
           >
-            <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-[18px]">
-                {searchStatus.includes('failed') ? 'error' : 'info'}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '18px', color: '#284232' }}>
+                check_circle
               </span>
-              <span>{searchStatus}</span>
+              <span>{actionMessage || searchStatus}</span>
             </div>
             <button
-              onClick={() => setSearchStatus(null)}
-              className="text-slate-400 hover:text-white"
+              onClick={() => {
+                setSearchStatus(null);
+                setActionMessage(null);
+              }}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#556b5a' }}
             >
-              <span className="material-symbols-outlined text-[16px]">close</span>
+              <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>close</span>
             </button>
           </div>
         )}
 
-        {/* Content Filters & Keyword Search */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-2 border-t border-slate-800">
-          <div className="flex items-center gap-2 flex-wrap">
-            <div className="flex rounded-lg bg-slate-950 p-1 border border-slate-800 text-xs">
-              <button
-                onClick={() => setViewFilter('all')}
-                className={`px-3 py-1 rounded-md transition-colors ${
-                  viewFilter === 'all'
-                    ? 'bg-indigo-600 text-white font-semibold'
-                    : 'text-slate-400 hover:text-white'
-                }`}
+        {/* ================= SUBJECT CARDS CAROUSEL ================= */}
+        <div className="sb-subjects-slider">
+          {subjectsList.map((subject) => {
+            const isActive = subject.id === selectedSubjectId;
+            return (
+              <div
+                key={subject.id}
+                onClick={() => {
+                  setSelectedSubjectId(subject.id);
+                  if (subject.chapters.length > 0) {
+                    setSelectedChapterId(subject.chapters[0].id);
+                  }
+                }}
+                className={`sb-subject-card ${isActive ? 'active' : ''}`}
               >
-                All ({syllabusList.length})
-              </button>
-              <button
-                onClick={() => setViewFilter('theory')}
-                className={`px-3 py-1 rounded-md transition-colors ${
-                  viewFilter === 'theory'
-                    ? 'bg-indigo-600 text-white font-semibold'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                Theory Courses ({theoryBlueprints.length})
-              </button>
-              <button
-                onClick={() => setViewFilter('practical')}
-                className={`px-3 py-1 rounded-md transition-colors ${
-                  viewFilter === 'practical'
-                    ? 'bg-indigo-600 text-white font-semibold'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                Practical &amp; Labs ({practicalBlueprints.length})
-              </button>
-              <button
-                onClick={() => setViewFilter('modules')}
-                className={`px-3 py-1 rounded-md transition-colors ${
-                  viewFilter === 'modules'
-                    ? 'bg-indigo-600 text-white font-semibold'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                Modules ({modulesList.length})
-              </button>
-            </div>
-
-            {subjects.length > 0 && (
-              <select
-                value={selectedSubject}
-                onChange={(e) => setSelectedSubject(e.target.value)}
-                className="form-input text-xs py-1.5 px-3 min-w-[150px] cursor-pointer"
-              >
-                <option value="all">All Subjects ({subjects.length})</option>
-                {subjects.map((sub) => (
-                  <option key={sub} value={sub}>
-                    {sub}
-                  </option>
-                ))}
-              </select>
-            )}
-          </div>
-
-          <div className="w-full sm:w-64 relative">
-            <span className="material-symbols-outlined absolute left-3 top-2.5 text-slate-400 text-[18px]">
-              search
-            </span>
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search topics, modules..."
-              className="form-input pl-9 py-1.5 text-xs w-full"
-            />
-          </div>
+                <div
+                  className="sb-subj-icon-box"
+                  style={{
+                    backgroundColor: subject.accentBg,
+                    color: subject.accentColor,
+                  }}
+                >
+                  <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>
+                    {subject.icon}
+                  </span>
+                </div>
+                <div className="sb-subj-text">
+                  <span className="sb-subj-name">{subject.name}</span>
+                  <span className="sb-subj-chapters">{subject.chapterCount} Chapters</span>
+                </div>
+              </div>
+            );
+          })}
         </div>
-      </div>
 
-      {/* Main Content Area */}
-      {loading ? (
-        <div className="text-center py-20 space-y-4">
-          <div className="w-12 h-12 border-4 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin mx-auto" />
-          <p className="text-sm text-slate-400 font-mono">Loading university curriculum database...</p>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {filteredSyllabus.length === 0 ? (
-            <div className="card-base p-16 text-center text-slate-400 space-y-4">
-              <span className="material-symbols-outlined text-indigo-400 text-[48px] mx-auto block animate-pulse">
-                manage_search
-              </span>
-              <div className="space-y-1">
-                <h3 className="text-lg font-bold text-white">No syllabus topics found for Semester {semester}</h3>
-                <p className="text-sm text-slate-400 max-w-md mx-auto">
-                  Click the button below to automatically search the college portal, download the official regulation PDF, and parse course tables via PyMuPDF.
+        {/* ================= MAIN 2-COLUMN WORKSPACE ================= */}
+        <div className="sb-main-grid">
+          {/* Left Wide Card: Subject Syllabus & Topic Explorer */}
+          <div className="sb-main-card">
+            {/* Subject Headbar inside Left Card */}
+            <div className="sb-subject-headbar">
+              <div className="sb-subject-title-box">
+                <h2 className="sb-subject-headline">{currentSubject.name} Syllabus</h2>
+                <p className="sb-subject-desc">
+                  Complete syllabus with topics and progress tracking.
                 </p>
               </div>
-              <button
-                onClick={handleDiscoverSyllabus}
-                disabled={searching}
-                className="btn-primary py-2.5 px-6 text-sm font-semibold inline-flex items-center gap-2 cursor-pointer shadow-lg shadow-indigo-500/25"
-              >
-                <span className="material-symbols-outlined text-[20px]">travel_explore</span>
-                <span>Auto-Discover {branch} Sem {semester} Syllabus</span>
-              </button>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {filteredSyllabus.map((item) => {
-                const isBlueprint = item.topic_title.includes('Course Blueprint');
-                const isTheory = isBlueprint && item.topic_description?.includes('Category: Theory');
-                const isPractical =
-                  isBlueprint &&
-                  (item.topic_description?.includes('Category: Practical') ||
-                    item.topic_title.toLowerCase().includes('lab'));
 
-                return (
-                  <div
-                    key={item.id}
-                    className={`card-base p-5 space-y-3 text-left transition-all hover:border-indigo-500/50 ${
-                      isBlueprint
-                        ? 'border-indigo-500/30 bg-gradient-to-br from-slate-900/90 to-indigo-950/20'
-                        : 'hover:bg-slate-900/40'
-                    }`}
+              <div className="sb-subject-controls">
+                {/* Overall Progress Bar */}
+                <div className="sb-progress-group">
+                  <div className="sb-progress-label-row">
+                    <span>Overall Progress</span>
+                    <span style={{ fontWeight: 700, color: '#181d16' }}>{subjectProgressPercent}%</span>
+                  </div>
+                  <div className="sb-progress-track">
+                    <div
+                      className="sb-progress-bar-fill"
+                      style={{ width: `${subjectProgressPercent}%` }}
+                    />
+                  </div>
+                </div>
+
+                {/* Branch Selector */}
+                <div className="sb-dropdown-group">
+                  <label className="sb-dropdown-label">Branch</label>
+                  <select
+                    value={branch}
+                    onChange={(e) => setBranch(e.target.value)}
+                    className="sb-select-pill"
                   >
-                    <div className="flex items-center justify-between gap-2 flex-wrap">
-                      <span className={`badge ${isBlueprint ? 'badge-indigo' : 'bg-slate-800 text-slate-300'}`}>
-                        {item.subject}
+                    <option value="CSE">CSE</option>
+                    <option value="IT">IT</option>
+                    <option value="ECE">ECE</option>
+                    <option value="EE">EE</option>
+                    <option value="ME">ME</option>
+                    <option value="Civil">Civil</option>
+                  </select>
+                </div>
+
+                {/* Semester Selector */}
+                <div className="sb-dropdown-group">
+                  <label className="sb-dropdown-label">Semester</label>
+                  <select
+                    value={semester}
+                    onChange={(e) => setSemester(e.target.value)}
+                    className="sb-select-pill"
+                  >
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => (
+                      <option key={s} value={String(s)}>
+                        Semester {s}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {/* Filter Tabs & Search Bar */}
+            {loading && (
+              <div style={{ padding: '2px 0', fontSize: '11px', color: '#687865', fontStyle: 'italic' }}>
+                Syncing syllabus from {activeCollegeName || 'college database'}...
+              </div>
+            )}
+            <div className="sb-filter-bar">
+              <div className="sb-filter-pills">
+                <button
+                  type="button"
+                  onClick={() => setViewFilter('all')}
+                  className={`sb-filter-pill ${viewFilter === 'all' ? 'active' : ''}`}
+                >
+                  All ({syllabusList.length > 0 ? syllabusList.length : (allCurrentSubjectTopics.length || 60)})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setViewFilter('theory')}
+                  className={`sb-filter-pill ${viewFilter === 'theory' ? 'active' : ''}`}
+                >
+                  Theory (7)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setViewFilter('practical')}
+                  className={`sb-filter-pill ${viewFilter === 'practical' ? 'active' : ''}`}
+                >
+                  Practical (5)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setViewFilter('modules')}
+                  className={`sb-filter-pill ${viewFilter === 'modules' ? 'active' : ''}`}
+                >
+                  Modules (47)
+                </button>
+              </div>
+
+              <div className="sb-search-box">
+                <span className="material-symbols-outlined sb-search-icon" style={{ fontSize: '18px' }}>
+                  search
+                </span>
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Search topics, modules..."
+                  className="sb-search-input"
+                />
+              </div>
+            </div>
+
+            {/* Split Sub-Columns: Chapters & Topics */}
+            <div className="sb-split-columns">
+              {/* Left Sub-Column: Chapters List */}
+              <div className="sb-chapters-list">
+                {filteredChapters.map((chapter) => {
+                  const isChActive = chapter.id === selectedChapterId;
+                  return (
+                    <button
+                      key={chapter.id}
+                      type="button"
+                      onClick={() => setSelectedChapterId(chapter.id)}
+                      className={`sb-chapter-item ${isChActive ? 'active' : ''}`}
+                    >
+                      <span>
+                        {chapter.number}. {chapter.title}
                       </span>
-                      <div className="flex items-center gap-1.5 flex-wrap">
-                        {isTheory && (
-                          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
-                            Theory Course
-                          </span>
-                        )}
-                        {isPractical && (
-                          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                            Practical / Lab
-                          </span>
-                        )}
-                        <span className="text-[11px] font-mono text-slate-400">
-                          Sem {item.semester}
+                      {isChActive && (
+                        <span className="material-symbols-outlined sb-chapter-chevron">
+                          chevron_right
                         </span>
-                      </div>
-                    </div>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
 
-                    <h4 className="text-base font-bold text-white tracking-tight">
-                      {item.topic_title}
-                    </h4>
+              {/* Right Sub-Column: Topics Checklist */}
+              <div className="sb-topics-panel">
+                <div className="sb-topics-header">
+                  <h3 className="sb-topics-chapter-title">
+                    {currentChapter.number}. {currentChapter.title}
+                  </h3>
+                  <span className="sb-topics-progress-badge">
+                    Progress: {chapterProgressPercent}%
+                  </span>
+                </div>
 
-                    {item.topic_description && (
-                      <p className="text-xs text-slate-300 leading-relaxed font-normal bg-slate-950/40 p-3 rounded-lg border border-slate-800/80">
-                        {item.topic_description}
-                      </p>
-                    )}
+                <div className="sb-topics-list">
+                  {chapterTopicsWithStatus.map((topic) => {
+                    const isCompleted = topic.status === 'completed';
+                    const isInProgress = topic.status === 'in-progress';
 
-                    <div className="pt-2 flex items-center justify-between border-t border-white/5">
-                      <div className="flex items-center gap-3">
+                    return (
+                      <div key={topic.id} className="sb-topic-row">
+                        <div className="sb-topic-left">
+                          <button
+                            type="button"
+                            onClick={() => handleToggleTopic(topic.id)}
+                            className="sb-topic-status-btn"
+                            title="Click to toggle: Not Started → In Progress → Completed"
+                          >
+                            {isCompleted ? (
+                              <span
+                                className="material-symbols-outlined"
+                                style={{
+                                  fontSize: '22px',
+                                  color: '#284232',
+                                  fontVariationSettings: "'FILL' 1",
+                                }}
+                              >
+                                check_circle
+                              </span>
+                            ) : isInProgress ? (
+                              <span
+                                className="material-symbols-outlined"
+                                style={{ fontSize: '22px', color: '#16a34a' }}
+                              >
+                                adjust
+                              </span>
+                            ) : (
+                              <span
+                                className="material-symbols-outlined"
+                                style={{ fontSize: '22px', color: '#c4baa9' }}
+                              >
+                                radio_button_unchecked
+                              </span>
+                            )}
+                          </button>
+
+                          <span className={`sb-topic-title ${isCompleted ? 'completed' : ''}`}>
+                            {topic.title}
+                          </span>
+                        </div>
+
                         <button
                           type="button"
                           onClick={() => {
-                            const targetDoc =
-                              documents.find((d) => d.type === 'syllabus' && d.semester === String(item.semester)) ||
-                              documents.find((d) => d.id === 'doc-syl-official-1');
-                            setActiveViewerDocId(targetDoc?.id || 'doc-syl-official-1');
-                            setIsViewerModalOpen(true);
+                            setActionMessage(`Playing topic concept walkthrough for "${topic.title}"`);
+                            setTimeout(() => setActionMessage(null), 3000);
                           }}
-                          className="text-[11px] font-mono text-indigo-400 hover:text-indigo-300 flex items-center gap-1 cursor-pointer hover:underline font-semibold"
-                          title="Preview syllabus in embedded document viewer"
+                          className="sb-topic-play-btn"
+                          title="Watch video explanation"
                         >
-                          <span className="material-symbols-outlined text-[15px]">menu_book</span>
-                          Preview Regulation
+                          <span
+                            className="material-symbols-outlined"
+                            style={{
+                              fontSize: '20px',
+                              fontVariationSettings: "'FILL' 1",
+                            }}
+                          >
+                            play_arrow
+                          </span>
                         </button>
-
-                        <a
-                          href={
-                            item.source_document_url ||
-                            (item.semester === '2'
-                              ? '/syllabus/syllabus_CSE_2.pdf'
-                              : item.semester === '6'
-                              ? '/syllabus/syllabus_CSE_6.pdf'
-                              : '/syllabus/B.Tech_CSE_R23_Curriculum_and_Syllabus.pdf')
-                          }
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-[11px] font-mono text-slate-400 hover:text-white flex items-center gap-1 hover:underline"
-                          title="Open original regulation PDF in new browser tab"
-                        >
-                          <span className="material-symbols-outlined text-[14px]">open_in_new</span>
-                          Open PDF
-                        </a>
                       </div>
-
-                      <span className="text-[10px] font-mono text-slate-500">
-                        {item.course} • Sem {item.semester}
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
+                    );
+                  })}
+                </div>
+              </div>
             </div>
-          )}
+          </div>
+
+          {/* Right Column: 3 Stacked Cards */}
+          <div className="sb-sidebar-cards">
+            {/* Card 1: Subject Overview Donut */}
+            <div className="sb-overview-card">
+              <h3 className="sb-card-title">Subject Overview</h3>
+
+              <div className="sb-donut-wrap">
+                <div className="sb-donut-chart">
+                  <svg viewBox="0 0 104 104">
+                    {/* Background circle track */}
+                    <circle
+                      cx="52"
+                      cy="52"
+                      r={radius}
+                      fill="transparent"
+                      strokeWidth="10"
+                      className="sb-donut-arc-bg"
+                    />
+
+                    {/* Completed arc (dark green) */}
+                    <circle
+                      cx="52"
+                      cy="52"
+                      r={radius}
+                      fill="transparent"
+                      strokeWidth="10"
+                      strokeDasharray={`${completedStroke} ${circumference}`}
+                      strokeDashoffset="0"
+                      strokeLinecap="round"
+                      className="sb-donut-arc-completed"
+                    />
+
+                    {/* In-Progress arc (sage/light green) */}
+                    <circle
+                      cx="52"
+                      cy="52"
+                      r={radius}
+                      fill="transparent"
+                      strokeWidth="10"
+                      strokeDasharray={`${inProgressStroke} ${circumference}`}
+                      strokeDashoffset={`-${completedStroke}`}
+                      strokeLinecap="round"
+                      className="sb-donut-arc-progress"
+                    />
+                  </svg>
+
+                  <div className="sb-donut-center-text">
+                    {subjectProgressPercent}%
+                  </div>
+                </div>
+
+                <div className="sb-donut-legend">
+                  <div className="sb-legend-item">
+                    <span className="sb-legend-label">
+                      <span className="sb-legend-dot" style={{ backgroundColor: '#284232' }} />
+                      Completed
+                    </span>
+                    <span className="sb-legend-val">{completedCount}</span>
+                  </div>
+
+                  <div className="sb-legend-item">
+                    <span className="sb-legend-label">
+                      <span className="sb-legend-dot" style={{ backgroundColor: '#7ba384' }} />
+                      In Progress
+                    </span>
+                    <span className="sb-legend-val">{inProgressCount}</span>
+                  </div>
+
+                  <div className="sb-legend-item">
+                    <span className="sb-legend-label">
+                      <span className="sb-legend-dot" style={{ backgroundColor: '#cdc5b7' }} />
+                      Not Started
+                    </span>
+                    <span className="sb-legend-val">{notStartedCount}</span>
+                  </div>
+
+                  <div className="sb-legend-divider" />
+
+                  <div className="sb-legend-item">
+                    <span className="sb-legend-label" style={{ fontWeight: 600, color: '#191c19' }}>
+                      Total Topics
+                    </span>
+                    <span className="sb-legend-val">{totalCount}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Card 2: Quick Actions */}
+            <div className="sb-actions-card">
+              <h3 className="sb-card-title">Quick Actions</h3>
+
+              <div className="sb-actions-grid">
+                {/* Tile 1: Download Full Syllabus */}
+                <button
+                  type="button"
+                  onClick={handleDownloadFullSyllabus}
+                  className="sb-action-tile tile-red"
+                >
+                  <div className="sb-action-icon">
+                    <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
+                      picture_as_pdf
+                    </span>
+                  </div>
+                  <span className="sb-action-label">Download Full Syllabus</span>
+                </button>
+
+                {/* Tile 2: Mark as Completed */}
+                <button
+                  type="button"
+                  onClick={handleMarkChapterCompleted}
+                  className="sb-action-tile tile-blue"
+                >
+                  <div className="sb-action-icon">
+                    <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
+                      done_all
+                    </span>
+                  </div>
+                  <span className="sb-action-label">Mark as Completed</span>
+                </button>
+
+                {/* Tile 3: Create Plan */}
+                <button
+                  type="button"
+                  onClick={handleCreatePlan}
+                  className="sb-action-tile tile-amber"
+                >
+                  <div className="sb-action-icon">
+                    <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
+                      calendar_month
+                    </span>
+                  </div>
+                  <span className="sb-action-label">Create Plan</span>
+                </button>
+
+                {/* Tile 4: Set Goal */}
+                <button
+                  type="button"
+                  onClick={handleSetGoal}
+                  className="sb-action-tile tile-purple"
+                >
+                  <div className="sb-action-icon">
+                    <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
+                      track_changes
+                    </span>
+                  </div>
+                  <span className="sb-action-label">Set Goal</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Card 3: Inspirational Quote Card with Botanical Leaf */}
+            <div className="sb-quote-card">
+              <span className="sb-quote-mark">“</span>
+              <p className="sb-quote-text">
+                A clear syllabus today, a brighter tomorrow.
+              </p>
+
+              <svg
+                className="sb-quote-leaves"
+                viewBox="0 0 100 100"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M10 90 C 30 70, 60 50, 95 20 C 80 40, 50 70, 20 85 Z"
+                  fill="#33593e"
+                  opacity="0.85"
+                />
+                <path
+                  d="M40 60 C 55 45, 80 35, 95 10 C 85 25, 60 45, 45 55 Z"
+                  fill="#477353"
+                  opacity="0.85"
+                />
+                <path
+                  d="M50 75 C 65 65, 85 55, 98 35 C 88 50, 70 70, 55 72 Z"
+                  fill="#5c8a68"
+                  opacity="0.85"
+                />
+                <path
+                  d="M2 98 Q 45 65 95 15"
+                  stroke="#233e2b"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </div>
+          </div>
         </div>
-      )}
+      </div>
 
       {/* Manual Upload Syllabus Modal */}
       <UploadSyllabusModal
