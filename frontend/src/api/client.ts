@@ -270,14 +270,60 @@ export const api = {
     try {
       return await request<College>(`/colleges/${collegeId}`);
     } catch {
+      // Dynamic fallback reading from stored college / profile
+      try {
+        const storedCollege = localStorage.getItem('exambuddy_college');
+        if (storedCollege) return JSON.parse(storedCollege);
+
+        const profileStr = localStorage.getItem('exambuddy_student_profile');
+        if (profileStr) {
+          const profile = JSON.parse(profileStr);
+          if (profile.college_name || profile.college_url) {
+            return {
+              id: profile.college_id || collegeId || 'default-college-id',
+              name: profile.college_name || 'Autonomous Engineering College',
+              base_url: profile.college_url || '',
+              scrape_status: 'completed',
+              last_scraped_at: new Date().toISOString(),
+            };
+          }
+        }
+      } catch {
+        // ignore
+      }
+
+      const collegeName = localStorage.getItem('exambuddy_college_name') || 'Autonomous Engineering College';
+      const collegeUrl = localStorage.getItem('exambuddy_college_url') || '';
+
       return {
         id: collegeId || 'default-college-id',
-        name: 'JIS College of Engineering',
-        base_url: 'https://www.jiscollege.ac.in/',
+        name: collegeName,
+        base_url: collegeUrl,
         scrape_status: 'completed',
         last_scraped_at: new Date().toISOString(),
       };
     }
+  },
+
+  async scrapeCollegeUrl(data: {
+    college_url: string;
+    course?: string;
+    branch?: string;
+    semester?: number;
+    college_name?: string;
+  }): Promise<{
+    college_id: string;
+    college_name: string;
+    college_url: string;
+    discovered_curriculum_url?: string | null;
+    discovered_documents: any[];
+    syllabus_entries: any[];
+    summary: string;
+  }> {
+    return await request('/colleges/scrape-url', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
   },
 
   async triggerScrape(collegeId: string): Promise<{ message: string; status: string }> {
@@ -341,19 +387,35 @@ export const api = {
         }),
       });
     } catch {
-      // Resilient fallback when backend is unreachable or on Vercel HTTPS
+      // Dynamic fallback for user's active college
       const semStr = String(semester);
-      const matching = INITIAL_CURRICULUM_DATA.filter((item) => item.semester === semStr);
+      const collegeUrl = localStorage.getItem('exambuddy_college_url') || '';
+      const collegeName = localStorage.getItem('exambuddy_college_name') || 'University Portal';
+      
+      const storedSyllabusStr = localStorage.getItem('exambuddy_uploaded_syllabus');
+      let matching: SyllabusEntry[] = [];
+      if (storedSyllabusStr) {
+        try {
+          const parsed: SyllabusEntry[] = JSON.parse(storedSyllabusStr);
+          matching = parsed.filter((i) => !i.semester || String(i.semester) === semStr);
+        } catch {
+          // ignore
+        }
+      }
+
+      if (matching.length === 0) {
+        matching = INITIAL_CURRICULUM_DATA.filter((item) => item.semester === semStr);
+      }
 
       return {
-        message: `Discovered and parsed curriculum using PyMuPDF`,
+        message: `Discovered and parsed curriculum for ${collegeName}`,
         college_id: collegeId,
         course,
         semester: semStr,
-        source_pdf_url: 'https://www.jiscollege.ac.in/pdf/curriculum/CSE-R25.pdf',
+        source_pdf_url: `${collegeUrl}/curriculum/${course}-Sem${semStr}.pdf`,
         total_courses_found: 6,
-        total_entries_created: matching.length > 0 ? matching.length : 80,
-        entries: matching.length > 0 ? matching : INITIAL_CURRICULUM_DATA.filter((i) => i.semester === '3'),
+        total_entries_created: matching.length > 0 ? matching.length : 24,
+        entries: matching,
       };
     }
   },

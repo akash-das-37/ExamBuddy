@@ -79,3 +79,20 @@ async def test_auth_signup_login_me_and_scrape_endpoints(client: AsyncClient):
     trigger_resp = await client.post(f"/colleges/{college_id}/trigger-scrape")
     assert trigger_resp.status_code == 202
     assert trigger_resp.json()["status"] == "running"
+
+    # 8. AI Agent Web Scrape URL endpoint
+    scrape_url_resp = await client.post(
+        "/colleges/scrape-url",
+        json={
+            "college_url": "https://apex-tech.edu",
+            "course": "B.Tech",
+            "branch": "CSE",
+            "semester": 3,
+            "college_name": "Apex Technical University",
+        },
+    )
+    assert scrape_url_resp.status_code == 200
+    scraped_result = scrape_url_resp.json()
+    assert scraped_result["college_name"] == "Apex Technical University"
+    assert "discovered_documents" in scraped_result
+    assert len(scraped_result["discovered_documents"]) > 0

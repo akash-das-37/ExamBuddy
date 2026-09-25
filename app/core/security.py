@@ -73,7 +73,10 @@ async def get_current_student(
     except (JWTError, ValueError, TypeError):
         raise credentials_exception
 
-    result = await db.execute(select(Student).where(Student.id == student_id))
+    from sqlalchemy.orm import selectinload
+    result = await db.execute(
+        select(Student).options(selectinload(Student.college)).where(Student.id == student_id)
+    )
     student = result.scalar_one_or_none()
 
     if student is None:

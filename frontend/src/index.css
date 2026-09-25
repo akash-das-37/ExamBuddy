@@ -48,6 +48,20 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Ensure inputs never have browser-default white background in dark mode */
+input,
+textarea,
+select {
+  background-color: var(--bg-surface-elevated, #141926);
+  color: var(--text-primary, #ffffff);
+  border-color: var(--border-subtle, rgba(255, 255, 255, 0.12));
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-muted, #64748b);
+}
+
 /* Material Symbols */
 .material-symbols-outlined {
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;

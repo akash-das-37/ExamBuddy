@@ -3,6 +3,8 @@ export interface Student {
   name: string;
   email: string;
   college_id: string;
+  college_url?: string | null;
+  college_name?: string | null;
   course: string;
   branch: string;
   semester: number;

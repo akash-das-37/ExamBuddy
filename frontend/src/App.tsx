@@ -10,6 +10,7 @@ import { NoticesPage } from './pages/NoticesPage';
 import { StudyReportPage } from './pages/StudyReportPage';
 import { SyllabusPage } from './pages/SyllabusPage';
 import { PyqPage } from './pages/PyqPage';
+import { aiCollegeScraper, deriveCollegeNameFromUrl } from './services/aiCollegeScraper';
 import type { College, Notice, Student } from './types';
 
 export const App: React.FC = () => {
@@ -64,6 +65,30 @@ export const App: React.FC = () => {
       }
 
       if (token || cachedStudent) {
+        // Sync custom college & syllabus from Supabase User DB
+        if (isSupabaseConfigured) {
+          try {
+            const supaUser = await supabaseAuth.getUser();
+            if (supaUser?.user_metadata) {
+              const meta = supaUser.user_metadata;
+              if (meta.college_url) localStorage.setItem('exambuddy_college_url', meta.college_url);
+              if (meta.college_name) localStorage.setItem('exambuddy_college_name', meta.college_name);
+              if (meta.scraped_documents) {
+                localStorage.setItem('exambuddy_uploaded_docs', JSON.stringify(meta.scraped_documents));
+              }
+              if (meta.scraped_syllabus) {
+                localStorage.setItem('exambuddy_uploaded_syllabus', JSON.stringify(meta.scraped_syllabus));
+              }
+              if (cachedStudent) {
+                cachedStudent.college_url = meta.college_url || cachedStudent.college_url;
+                cachedStudent.college_name = meta.college_name || cachedStudent.college_name;
+              }
+            }
+          } catch {
+            // ignore
+          }
+        }
+
         try {
           const currentStudent = await api.getMe();
           await loadStudentData(currentStudent);
@@ -93,6 +118,8 @@ export const App: React.FC = () => {
             course: updated.course,
             branch: updated.branch,
             semester: updated.semester,
+            college_url: updated.college_url,
+            college_name: updated.college_name,
           });
         } catch {
           // ignore Supabase sync error if network fails
@@ -133,32 +160,31 @@ export const App: React.FC = () => {
   };
 
   const handleTriggerScrape = async () => {
-    if (!student?.college_id) return;
+    if (!student) return;
     setIsScraping(true);
-    showToast('Triggered college portal web crawler...', 'info');
-    try {
-      await api.triggerScrape(student.college_id);
-
-      // Poll status for up to 15 seconds
-      let attempts = 0;
-      const interval = setInterval(async () => {
-        attempts++;
-        try {
-          const statusData = await api.getScrapeStatus(student.college_id);
-          if (statusData.status === 'completed' || attempts >= 8) {
-            clearInterval(interval);
-            setIsScraping(false);
-            showToast('Portal crawling & document extraction complete!', 'success');
-            await loadStudentData(student);
-          }
-        } catch {
-          clearInterval(interval);
-          setIsScraping(false);
-        }
-      }, 2000);
-    } catch (err: unknown) {
+    const targetUrl = student.college_url || localStorage.getItem('exambuddy_college_url') || '';
+    if (!targetUrl) {
+      showToast('Please specify your college portal URL in your profile.', 'error');
       setIsScraping(false);
-      showToast(err instanceof Error ? err.message : 'Scrape trigger failed', 'error');
+      return;
+    }
+    const resolvedName = deriveCollegeNameFromUrl(targetUrl, student.college_name);
+    showToast(`AI Agent crawling ${resolvedName} (${targetUrl}) & syncing to Supabase...`, 'info');
+    try {
+      const res = await aiCollegeScraper.scrapeAndSyncCollege({
+        collegeUrl: targetUrl,
+        collegeName: resolvedName,
+        course: student.course,
+        branch: student.branch,
+        semester: student.semester,
+      });
+
+      showToast(`Successfully scraped ${res.college_name} and saved to Supabase!`, 'success');
+      await loadStudentData(student);
+    } catch (err: unknown) {
+      showToast(err instanceof Error ? err.message : 'Scraping failed', 'error');
+    } finally {
+      setIsScraping(false);
     }
   };
 

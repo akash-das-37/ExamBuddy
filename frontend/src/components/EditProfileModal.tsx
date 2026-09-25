@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import type { Student } from '../types';
+import { aiCollegeScraper, deriveCollegeNameFromUrl, cleanCollegeUrl } from '../services/aiCollegeScraper';
 
 interface EditProfileModalProps {
   isOpen: boolean;
   onClose: () => void;
   student: Student;
   onSave: (updated: Partial<Student>) => Promise<void>;
+  onScrapeComplete?: () => void;
 }
 
 const COMMON_BRANCHES = [
@@ -28,6 +30,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
   onClose,
   student,
   onSave,
+  onScrapeComplete,
 }) => {
   const [name, setName] = useState(student.name);
   const [course, setCourse] = useState(student.course || 'B.Tech');
@@ -38,6 +41,28 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
     COMMON_BRANCHES.includes(student.branch) ? '' : student.branch
   );
   const [semester, setSemester] = useState<number>(student.semester || 3);
+  
+  // College fields
+  const [collegeUrl, setCollegeUrl] = useState<string>(() => {
+    return (
+      student.college_url ||
+      localStorage.getItem('exambuddy_college_url') ||
+      ''
+    );
+  });
+  const [collegeName, setCollegeName] = useState<string>(() => {
+    if (student.college_name && !student.college_name.toLowerCase().startsWith('http')) {
+      return student.college_name;
+    }
+    const url = student.college_url || localStorage.getItem('exambuddy_college_url');
+    if (url) {
+      return deriveCollegeNameFromUrl(url);
+    }
+    return localStorage.getItem('exambuddy_college_name') || '';
+  });
+  const [scrapeOnSave, setScrapeOnSave] = useState(true);
+  const [scrapeProgress, setScrapeProgress] = useState<string | null>(null);
+
   const [emailNotifications, setEmailNotifications] = useState(
     student.email_notifications_enabled ?? true
   );
@@ -57,6 +82,13 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
       .substring(0, 2);
   };
 
+  const handleUrlBlur = () => {
+    if (collegeUrl.trim() && (!collegeName || collegeName === 'Autonomous Engineering College')) {
+      const derived = deriveCollegeNameFromUrl(collegeUrl.trim());
+      setCollegeName(derived);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) {
@@ -66,17 +98,37 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
 
     const effectiveBranch =
       branch === 'Other' ? (customBranch.trim() || 'Other') : branch;
+    const finalCollegeUrl = cleanCollegeUrl(collegeUrl.trim());
+    const finalCollegeName = collegeName.trim() || (finalCollegeUrl ? deriveCollegeNameFromUrl(finalCollegeUrl) : '');
 
     setError(null);
     setIsSubmitting(true);
+    setScrapeProgress(null);
+
     try {
+      if (scrapeOnSave && finalCollegeUrl) {
+        setScrapeProgress(`Connecting to ${finalCollegeName || finalCollegeUrl}...`);
+        await aiCollegeScraper.scrapeAndSyncCollege({
+          collegeUrl: finalCollegeUrl,
+          collegeName: finalCollegeName,
+          course: course.trim(),
+          branch: effectiveBranch,
+          semester,
+          onProgress: (msg) => setScrapeProgress(msg),
+        });
+        onScrapeComplete?.();
+      }
+
       await onSave({
         name: name.trim(),
         course: course.trim(),
         branch: effectiveBranch,
         semester,
+        college_url: finalCollegeUrl,
+        college_name: finalCollegeName,
         email_notifications_enabled: emailNotifications,
       });
+
       onClose();
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to update profile.');
@@ -175,6 +227,69 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                   Verified
                 </span>
               </div>
+            </div>
+
+            {/* College & University Portal */}
+            <div className="p-3.5 rounded-xl bg-indigo-950/20 border border-indigo-500/20 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-indigo-300 flex items-center gap-1.5">
+                  <span className="material-symbols-outlined text-[16px]">account_balance</span>
+                  College & Academic Portal
+                </span>
+                <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
+                  <span className="material-symbols-outlined text-[11px]">cloud_sync</span>
+                  Supabase DB Sync
+                </span>
+              </div>
+
+              {/* College Name */}
+              <div>
+                <label className="block text-[11px] font-semibold text-slate-300 mb-1">
+                  College / University Name
+                </label>
+                <input
+                  type="text"
+                  value={collegeName}
+                  onChange={(e) => setCollegeName(e.target.value)}
+                  placeholder="e.g. Guru Nanak Institute of Technology (GNIT)"
+                  style={{ backgroundColor: '#090d19', color: '#ffffff' }}
+                  className="w-full !bg-[#090d19] !text-white border border-white/20 rounded-xl px-3 py-2 text-xs placeholder-slate-400 focus:outline-none focus:border-indigo-400 transition-all font-medium"
+                />
+              </div>
+
+              {/* College Website URL */}
+              <div>
+                <label className="block text-[11px] font-semibold text-slate-300 mb-1">
+                  College Website / LMS Portal URL
+                </label>
+                <div className="relative">
+                  <span className="material-symbols-outlined absolute left-3 top-2.5 text-slate-500 text-[16px]">
+                    language
+                  </span>
+                  <input
+                    type="url"
+                    value={collegeUrl}
+                    onChange={(e) => setCollegeUrl(e.target.value)}
+                    onBlur={handleUrlBlur}
+                    placeholder="e.g. gnit.ac.in or https://heritageit.edu"
+                    style={{ backgroundColor: '#090d19', color: '#ffffff' }}
+                    className="w-full !bg-[#090d19] !text-white border border-white/20 rounded-xl pl-8.5 pr-3 py-2 text-xs placeholder-slate-400 focus:outline-none focus:border-indigo-400 transition-all font-mono"
+                  />
+                </div>
+              </div>
+
+              {/* Scrape on Save Toggle */}
+              <label className="flex items-center gap-2 cursor-pointer pt-1">
+                <input
+                  type="checkbox"
+                  checked={scrapeOnSave}
+                  onChange={(e) => setScrapeOnSave(e.target.checked)}
+                  className="w-3.5 h-3.5 rounded text-indigo-600 bg-slate-800 border-white/20 focus:ring-indigo-500 cursor-pointer"
+                />
+                <span className="text-[11px] text-slate-300 font-medium">
+                  AI Web Scrape this portal for syllabus & sync to Supabase database
+                </span>
+              </label>
             </div>
 
             {/* Course & Branch Row */}
@@ -277,6 +392,14 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 />
               </label>
             </div>
+
+            {/* AI Scrape Progress */}
+            {scrapeProgress && (
+              <div className="px-3.5 py-2.5 rounded-xl bg-indigo-950/80 border border-indigo-500/40 text-indigo-200 text-xs flex items-center gap-2.5 animate-pulse font-mono">
+                <div className="w-3.5 h-3.5 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin shrink-0" />
+                <span className="leading-snug">{scrapeProgress}</span>
+              </div>
+            )}
 
             {/* Actions */}
             <div className="flex items-center justify-end gap-3 pt-3 border-t border-white/10">

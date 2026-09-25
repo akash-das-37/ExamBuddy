@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../api/client';
 import type { OriginalDocument, Student, SyllabusEntry } from '../types';
-import { INITIAL_DOCUMENTS } from '../data/documentsData';
+import { getDocumentsForStudent } from '../data/documentsData';
 import { UploadSyllabusModal } from '../components/UploadSyllabusModal';
 import { DocumentViewerModal } from '../components/DocumentViewerModal';
+import { aiCollegeScraper, deriveCollegeNameFromUrl, cleanCollegeUrl } from '../services/aiCollegeScraper';
 
 interface SyllabusPageProps {
   student: Student;
@@ -11,22 +12,23 @@ interface SyllabusPageProps {
 
 export const SyllabusPage: React.FC<SyllabusPageProps> = ({ student }) => {
   const [syllabusList, setSyllabusList] = useState<SyllabusEntry[]>([]);
-  const [documents, setDocuments] = useState<OriginalDocument[]>(() => {
-    try {
-      const stored = localStorage.getItem('exambuddy_uploaded_docs');
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        return [...parsed, ...INITIAL_DOCUMENTS];
-      }
-    } catch {
-      // ignore
-    }
-    return INITIAL_DOCUMENTS;
-  });
+  const [documents, setDocuments] = useState<OriginalDocument[]>(() =>
+    getDocumentsForStudent(student)
+  );
 
   const [loading, setLoading] = useState(false);
   const [searching, setSearching] = useState(false);
   const [searchStatus, setSearchStatus] = useState<string | null>(null);
+
+  // Priority: student.college_url > localStorage > empty
+  const initialCollegeUrl = student.college_url || localStorage.getItem('exambuddy_college_url') || '';
+  const initialCollegeName = deriveCollegeNameFromUrl(initialCollegeUrl, student.college_name);
+
+  // AI College Web Scraper state
+  const [collegeUrlInput, setCollegeUrlInput] = useState<string>(initialCollegeUrl);
+  const [activeCollegeName, setActiveCollegeName] = useState<string>(initialCollegeName);
+  const [isAiScraping, setIsAiScraping] = useState(false);
+  const [aiScrapeProgress, setAiScrapeProgress] = useState<string | null>(null);
 
   // Modals state
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
@@ -39,6 +41,19 @@ export const SyllabusPage: React.FC<SyllabusPageProps> = ({ student }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSubject, setSelectedSubject] = useState<string>('all');
   const [viewFilter, setViewFilter] = useState<'all' | 'theory' | 'practical' | 'modules'>('all');
+
+  // Sync state whenever student updates (e.g. user changes college in profile modal or auth resolves)
+  useEffect(() => {
+    const curUrl = student.college_url || localStorage.getItem('exambuddy_college_url') || '';
+    if (curUrl) {
+      setCollegeUrlInput(curUrl);
+      const derived = deriveCollegeNameFromUrl(curUrl, student.college_name);
+      setActiveCollegeName(derived);
+      localStorage.setItem('exambuddy_college_url', curUrl);
+      localStorage.setItem('exambuddy_college_name', derived);
+    }
+    setDocuments(getDocumentsForStudent(student));
+  }, [student.college_url, student.college_name]);
 
   const loadData = async (targetCourse = branch, targetSem = semester) => {
     setLoading(true);
@@ -68,6 +83,41 @@ export const SyllabusPage: React.FC<SyllabusPageProps> = ({ student }) => {
       // Fallback empty
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleTriggerAiScrape = async () => {
+    const rawTarget = collegeUrlInput.trim() || student.college_url || '';
+    if (!rawTarget) {
+      setSearchStatus('Please enter your college portal URL above (e.g. gnit.ac.in).');
+      return;
+    }
+    const targetUrl = cleanCollegeUrl(rawTarget);
+    const targetCollegeName = deriveCollegeNameFromUrl(targetUrl);
+    setActiveCollegeName(targetCollegeName);
+    setIsAiScraping(true);
+    setAiScrapeProgress(`Connecting to ${targetCollegeName} (${targetUrl})...`);
+    try {
+      const res = await aiCollegeScraper.scrapeAndSyncCollege({
+        collegeUrl: targetUrl,
+        collegeName: targetCollegeName,
+        course: student.course || 'B.Tech',
+        branch,
+        semester: Number(semester),
+        onProgress: (msg) => setAiScrapeProgress(msg),
+      });
+
+      setActiveCollegeName(res.college_name);
+      setDocuments(res.documents);
+      setSyllabusList(res.syllabus_entries);
+      setSearchStatus(
+        `AI Scraper successfully crawled ${res.college_name}! Synced ${res.syllabus_entries.length} topics and ${res.documents.length} official documents directly to your Supabase database.`
+      );
+    } catch (err: any) {
+      setSearchStatus(`AI Scrape failed: ${err.message || 'Could not scrape portal.'}`);
+    } finally {
+      setIsAiScraping(false);
+      setTimeout(() => setAiScrapeProgress(null), 5000);
     }
   };
 
@@ -157,8 +207,102 @@ export const SyllabusPage: React.FC<SyllabusPageProps> = ({ student }) => {
     return matchesSubject && matchesSearch && matchesView;
   });
 
+  const activeSylDoc =
+    documents.find((d) => d.type === 'syllabus' && (d.semester === semester || d.semester?.includes(semester))) ||
+    documents.find((d) => d.type === 'syllabus') ||
+    documents[0];
+
   return (
     <div className="space-y-6 text-left max-w-7xl mx-auto">
+      {/* AI College Web Scraper & Supabase Sync Portal */}
+      <div className="card-elevated p-5 sm:p-6 bg-gradient-to-br from-[#0c1021] via-[#0e1429] to-[#12112b] border border-indigo-500/30 rounded-2xl shadow-xl shadow-indigo-950/40 space-y-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-[12px] text-indigo-400">smart_toy</span>
+                AI Agent Web Scraper
+              </span>
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                Supabase User DB
+              </span>
+            </div>
+            <h3 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+              <span>{activeCollegeName}</span>
+            </h3>
+            <p className="text-xs text-slate-400">
+              Web scrape any university or college portal to extract official syllabus blueprints &amp; sync to Supabase.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            {collegeUrlInput ? (
+              <a
+                href={cleanCollegeUrl(collegeUrlInput)}
+                target="_blank"
+                rel="noreferrer"
+                className="text-xs font-mono text-indigo-300 hover:text-white flex items-center gap-1 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-all"
+              >
+                <span className="material-symbols-outlined text-[14px]">public</span>
+                <span className="truncate max-w-[200px]">{cleanCollegeUrl(collegeUrlInput).replace(/^https?:\/\//, '')}</span>
+                <span className="material-symbols-outlined text-[12px]">open_in_new</span>
+              </a>
+            ) : null}
+          </div>
+        </div>
+
+        {/* Live URL Scraper Input & Action Bar */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 pt-1">
+          <div className="relative flex-1">
+            <span className="material-symbols-outlined absolute left-3 top-2.5 text-slate-500 text-[18px]">
+              link
+            </span>
+            <input
+              type="url"
+              value={collegeUrlInput}
+              onChange={(e) => {
+                const val = e.target.value;
+                setCollegeUrlInput(val);
+                if (val.trim()) {
+                  setActiveCollegeName(deriveCollegeNameFromUrl(val));
+                }
+              }}
+              placeholder="Enter College Portal URL e.g. gnit.ac.in, heritageit.edu, or iem.edu.in"
+              style={{ backgroundColor: '#090d19', color: '#ffffff' }}
+              className="w-full !bg-[#090d19] !text-white border border-white/20 rounded-xl pl-9.5 pr-4 py-2.5 text-xs placeholder-slate-400 focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 transition-all font-mono"
+            />
+          </div>
+
+          <button
+            type="button"
+            onClick={handleTriggerAiScrape}
+            disabled={isAiScraping}
+            className="btn-primary text-xs py-2 px-4.5 font-bold flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-indigo-600/30 whitespace-nowrap"
+          >
+            {isAiScraping ? (
+              <>
+                <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                <span>Crawling Portal...</span>
+              </>
+            ) : (
+              <>
+                <span className="material-symbols-outlined text-[16px]">travel_explore</span>
+                <span>Scrape &amp; Store in Supabase</span>
+              </>
+            )}
+          </button>
+        </div>
+
+        {/* Live Progress Feedback */}
+        {aiScrapeProgress && (
+          <div className="p-3 rounded-xl bg-indigo-950/70 border border-indigo-500/40 text-xs text-indigo-200 flex items-center gap-3 animate-fade-in font-mono">
+            <div className="w-3.5 h-3.5 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin shrink-0" />
+            <span>{aiScrapeProgress}</span>
+          </div>
+        )}
+      </div>
+
       {/* Header & Automated Search Bar */}
       <div className="card-elevated p-6 sm:p-8 space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -182,11 +326,7 @@ export const SyllabusPage: React.FC<SyllabusPageProps> = ({ student }) => {
             <button
               type="button"
               onClick={() => {
-                const targetDoc =
-                  documents.find((d) => d.type === 'syllabus' && d.semester === semester) ||
-                  documents.find((d) => d.id === 'doc-syl-official-1') ||
-                  documents[0];
-                setActiveViewerDocId(targetDoc?.id || 'doc-syl-official-1');
+                setActiveViewerDocId(activeSylDoc?.id);
                 setIsViewerModalOpen(true);
               }}
               className="btn-secondary text-xs py-2 px-3.5 flex items-center gap-1.5 text-indigo-300 border-indigo-500/40 hover:text-white cursor-pointer shadow-sm"
@@ -197,17 +337,11 @@ export const SyllabusPage: React.FC<SyllabusPageProps> = ({ student }) => {
             </button>
 
             <a
-              href={
-                semester === '2'
-                  ? '/syllabus/syllabus_CSE_2.pdf'
-                  : semester === '6'
-                  ? '/syllabus/syllabus_CSE_6.pdf'
-                  : '/syllabus/B.Tech_CSE_R23_Curriculum_and_Syllabus.pdf'
-              }
+              href={activeSylDoc?.file_url || '/syllabus/B.Tech_CSE_R23_Curriculum_and_Syllabus.pdf'}
               target="_blank"
               rel="noreferrer"
               className="btn-outline text-xs py-2 px-3 flex items-center gap-1.5 text-slate-300 hover:text-white cursor-pointer"
-              title="Open full regulation PDF in new browser tab"
+              title={`Open ${activeSylDoc?.title || 'syllabus'} in new browser tab`}
             >
               <span className="material-symbols-outlined text-[16px]">open_in_new</span>
               <span>Open PDF</span>

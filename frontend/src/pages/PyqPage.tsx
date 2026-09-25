@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../api/client';
 import type { OriginalDocument, PYQQuestion, Student } from '../types';
-import { INITIAL_DOCUMENTS } from '../data/documentsData';
+import { getDocumentsForStudent } from '../data/documentsData';
 import { UploadPyqModal } from '../components/UploadPyqModal';
 import { DocumentViewerModal } from '../components/DocumentViewerModal';
 
@@ -11,18 +11,9 @@ interface PyqPageProps {
 
 export const PyqPage: React.FC<PyqPageProps> = ({ student }) => {
   const [pyqList, setPyqList] = useState<PYQQuestion[]>([]);
-  const [documents, setDocuments] = useState<OriginalDocument[]>(() => {
-    try {
-      const stored = localStorage.getItem('exambuddy_uploaded_docs');
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        return [...parsed, ...INITIAL_DOCUMENTS];
-      }
-    } catch {
-      // ignore
-    }
-    return INITIAL_DOCUMENTS;
-  });
+  const [documents, setDocuments] = useState<OriginalDocument[]>(() =>
+    getDocumentsForStudent(student)
+  );
 
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -121,7 +112,10 @@ export const PyqPage: React.FC<PyqPageProps> = ({ student }) => {
             <button
               type="button"
               onClick={() => {
-                setActiveViewerDocId('doc-pyq-official-1');
+                const targetDoc =
+                  documents.find((d) => d.type === 'pyq') ||
+                  documents[0];
+                setActiveViewerDocId(targetDoc?.id);
                 setIsViewerModalOpen(true);
               }}
               className="btn-secondary text-xs py-2 px-3.5 flex items-center gap-1.5 text-cyan-300 border-cyan-500/40 hover:text-white cursor-pointer shadow-sm"

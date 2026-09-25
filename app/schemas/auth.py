@@ -33,6 +33,8 @@ class StudentResponse(BaseModel):
     name: str
     email: str
     college_id: uuid.UUID
+    college_url: str | None = None
+    college_name: str | None = None
     course: str
     branch: str
     semester: int
@@ -47,6 +49,8 @@ class StudentResponse(BaseModel):
 class UpdateProfileRequest(BaseModel):
     """Request body for PATCH /auth/me."""
     name: str | None = Field(None, min_length=1, max_length=255)
+    college_url: str | None = Field(None, max_length=2048)
+    college_name: str | None = Field(None, max_length=500)
     course: str | None = Field(None, min_length=1, max_length=255)
     branch: str | None = Field(None, min_length=1, max_length=255)
     semester: int | None = Field(None, ge=1, le=12)

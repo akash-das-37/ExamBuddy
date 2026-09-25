@@ -66,6 +66,12 @@ export const supabaseAuth = {
     course?: string;
     branch?: string;
     semester?: number;
+    college_url?: string;
+    college_name?: string;
+    scraped_syllabus?: any;
+    scraped_documents?: any;
+    last_scraped_at?: string;
+    [key: string]: any;
   }) {
     return await supabase.auth.updateUser({
       data: updates,

@@ -45,12 +45,24 @@ async def login(data: LoginRequest, db: AsyncSession = Depends(get_db)):
     return TokenResponse(access_token=token)
 
 
+from app.models.college import College
+from sqlalchemy import select
+
+
+def _format_student_response(student: Student) -> StudentResponse:
+    resp = StudentResponse.model_validate(student)
+    if student.college:
+        resp.college_url = student.college.base_url
+        resp.college_name = student.college.name
+    return resp
+
+
 @router.get("/me", response_model=StudentResponse)
 async def get_me(current_student: Student = Depends(get_current_student)):
     """
     Return the currently authenticated student's profile.
     """
-    return current_student
+    return _format_student_response(current_student)
 
 
 @router.patch("/me", response_model=StudentResponse)
@@ -73,7 +85,30 @@ async def update_me(
     if data.email_notifications_enabled is not None:
         current_student.email_notifications_enabled = data.email_notifications_enabled
 
+    if data.college_url:
+        clean_url = str(data.college_url).strip().rstrip("/")
+        if not clean_url.startswith(("http://", "https://")):
+            clean_url = f"https://{clean_url}"
+
+        college_stmt = select(College).where(College.base_url == clean_url)
+        college = (await db.execute(college_stmt)).scalar_one_or_none()
+        if not college:
+            college = College(
+                name=data.college_name.strip() if data.college_name else None,
+                base_url=clean_url,
+                scrape_status="idle",
+            )
+            db.add(college)
+            await db.flush()
+        elif data.college_name:
+            college.name = data.college_name.strip()
+
+        current_student.college_id = college.id
+        current_student.college = college
+    elif data.college_name and current_student.college:
+        current_student.college.name = data.college_name.strip()
+
     await db.commit()
     await db.refresh(current_student)
-    return current_student
+    return _format_student_response(current_student)
 
