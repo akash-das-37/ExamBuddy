@@ -1,0 +1,792 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&display=swap');
+
+/* ============================================================
+   EXAMBUDDY - EDITORIAL WARM DASHBOARD DESIGN
+   Matches exact warm ivory cream + forest green aesthetic
+   ============================================================ */
+
+.db-page-container {
+  position: relative;
+  width: calc(100% + 64px);
+  margin: -24px -32px;
+  min-height: calc(100vh - 65px);
+  background-color: #f7f4ee;
+  color: #191c19;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  padding: 32px 36px 64px;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+@media (max-width: 860px) {
+  .db-page-container {
+    width: calc(100% + 32px);
+    margin: -16px -16px;
+    padding: 20px 16px 48px;
+  }
+}
+
+/* Botanical Corner Leaf Watermark */
+.db-leaf-watermark {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 320px;
+  height: 320px;
+  pointer-events: none;
+  opacity: 0.35;
+  z-index: 1;
+}
+
+.db-content-wrap {
+  position: relative;
+  z-index: 2;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* ================= TOP HEADER & QUOTE ROW ================= */
+.db-top-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 24px;
+  align-items: center;
+}
+
+@media (max-width: 1080px) {
+  .db-top-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.db-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.db-main-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 38px;
+  font-weight: 700;
+  color: #181b18;
+  letter-spacing: -0.02em;
+  margin: 0;
+  line-height: 1.15;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.db-subtitle {
+  font-size: 15px;
+  color: #555f53;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* Inspirational Quote Card in Header Row */
+.db-quote-card {
+  position: relative;
+  background: #edf4ed;
+  border: 1px solid #d4e2d6;
+  border-radius: 20px;
+  padding: 18px 22px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 85px;
+  justify-content: center;
+}
+
+.db-quote-mark {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 40px;
+  line-height: 0.5;
+  color: #55725d;
+  opacity: 0.6;
+}
+
+.db-quote-text {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 14.5px;
+  font-style: italic;
+  font-weight: 500;
+  color: #26382a;
+  line-height: 1.4;
+  margin: 0;
+  max-width: 190px;
+}
+
+.db-quote-leaves {
+  position: absolute;
+  right: -5px;
+  bottom: -10px;
+  width: 100px;
+  height: 100px;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+/* ================= MAIN 2-COLUMN WORKSPACE ================= */
+.db-main-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 1080px) {
+  .db-main-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.db-left-col {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* ================= SECTION 1: TODAY'S PLAN ================= */
+.db-plan-card {
+  background: #ffffff;
+  border: 1px solid #e7e0d3;
+  border-radius: 22px;
+  padding: 24px 26px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.db-plan-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.db-plan-head-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.db-plan-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: #eaf3ec;
+  color: #284232;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.db-plan-title-box {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.db-plan-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #181d16;
+  margin: 0;
+}
+
+.db-plan-date {
+  font-size: 12px;
+  color: #6a7667;
+  font-weight: 500;
+}
+
+.db-view-plan-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #eaf3ec;
+  border: 1px solid #cce1d1;
+  color: #284232;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.db-view-plan-btn:hover {
+  background: #dbeee0;
+  transform: translateY(-1px);
+}
+
+.db-plan-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 140px;
+  gap: 20px;
+  align-items: center;
+}
+
+@media (max-width: 600px) {
+  .db-plan-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+.db-plan-tasks {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.db-task-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 14px;
+  border-radius: 12px;
+  background: #faf8f5;
+  border: 1px solid #eee8de;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.db-task-item:hover {
+  background: #ffffff;
+  border-color: #d8d0c2;
+}
+
+.db-task-item.active {
+  background: #edf5ef;
+  border-color: #cbe0ce;
+}
+
+.db-task-check {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #284232;
+}
+
+.db-task-title {
+  font-size: 13.5px;
+  color: #222a1f;
+  font-weight: 500;
+}
+
+.db-task-title.completed {
+  text-decoration: line-through;
+  color: #7b8677;
+}
+
+/* Donut Chart inside Today's Plan */
+.db-plan-gauge-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.db-plan-gauge {
+  position: relative;
+  width: 96px;
+  height: 96px;
+}
+
+.db-gauge-track-svg {
+  transform: rotate(-90deg);
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.db-plan-gauge-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #191c19;
+}
+
+.db-plan-gauge-label {
+  font-size: 11px;
+  color: #616e5e;
+  font-weight: 600;
+  text-align: center;
+  transition: color 0.3s ease;
+}
+
+/* Animated Green Checkmark within Gauge Circle */
+.db-gauge-tick-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  animation: tickBounceIn 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+.db-gauge-checkmark {
+  width: 44px;
+  height: 44px;
+  display: block;
+  filter: drop-shadow(0 2px 6px rgba(22, 163, 74, 0.35));
+}
+
+.db-gauge-checkmark-check {
+  stroke: #16a34a;
+  stroke-width: 4.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 45;
+  stroke-dashoffset: 45;
+  animation: tickDrawStroke 0.4s ease-out 0.12s forwards;
+}
+
+@keyframes tickBounceIn {
+  0% {
+    transform: scale(0.2) rotate(-90deg);
+    opacity: 0;
+  }
+  65% {
+    transform: scale(1.16) rotate(10deg);
+    opacity: 1;
+  }
+  85% {
+    transform: scale(0.96) rotate(-2deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes tickDrawStroke {
+  0% {
+    stroke-dashoffset: 45;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ================= SECTION 2: YOUR SUBJECTS ================= */
+.db-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.db-section-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #181d16;
+  margin: 0;
+}
+
+.db-view-all-link {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #284232;
+  text-decoration: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.15s ease;
+}
+
+.db-view-all-link:hover {
+  color: #14271c;
+  text-decoration: underline;
+}
+
+.db-subjects-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1280px) {
+  .db-subjects-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+}
+
+@media (max-width: 520px) {
+  .db-subjects-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.db-subject-card {
+  background: #ffffff;
+  border: 1px solid #e7e0d3;
+  border-radius: 18px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  text-align: left;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.db-subject-card:hover {
+  transform: translateY(-2px);
+  border-color: #bccbbd;
+  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.06);
+}
+
+.db-subject-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.db-subject-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.db-subject-arrow {
+  color: #8b9687;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.db-subject-name {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #181d16;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.db-subject-track {
+  width: 100%;
+  height: 6px;
+  background: #ede8dc;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.db-subject-fill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.4s ease;
+}
+
+.db-subject-count {
+  font-size: 11px;
+  color: #657161;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ================= SECTION 3: QUICK ACCESS ================= */
+.db-access-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1380px) {
+  .db-access-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+}
+
+@media (max-width: 520px) {
+  .db-access-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.db-access-card {
+  background: #ffffff;
+  border: 1px solid #e7e0d3;
+  border-radius: 16px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  text-align: left;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.db-access-card:hover {
+  transform: translateY(-2px);
+  border-color: #bccbbd;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.05);
+}
+
+.db-access-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow: hidden;
+  min-width: 0;
+  flex: 1;
+}
+
+.db-access-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.db-access-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.db-access-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #191e17;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.db-access-sub {
+  font-size: 10.5px;
+  color: #6c7868;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.db-access-arrow {
+  color: #8b9687;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+/* ================= RIGHT COLUMN: SIDEBAR ================= */
+.db-sidebar-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+  width: 100%;
+}
+
+.db-card-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #181d16;
+  margin: 0;
+}
+
+/* Card 1: Upcoming */
+.db-upcoming-card {
+  background: #ffffff;
+  border: 1px solid #e7e0d3;
+  border-radius: 22px;
+  padding: 22px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.db-card-headrow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.db-upcoming-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.db-upcoming-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 10px;
+  transition: background 0.18s ease;
+}
+
+.db-upcoming-item:hover {
+  background: #faf8f5;
+}
+
+.db-upcoming-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.db-date-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #faf8f5;
+  border: 1px solid #eee8de;
+  flex-shrink: 0;
+}
+
+.db-date-num {
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.db-date-month {
+  font-size: 9.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-top: 1px;
+}
+
+.db-date-num.red, .db-date-month.red { color: #dc2626; }
+.db-date-num.blue, .db-date-month.blue { color: #2563eb; }
+.db-date-num.green, .db-date-month.green { color: #16a34a; }
+.db-date-num.purple, .db-date-month.purple { color: #7e22ce; }
+
+.db-upcoming-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.db-upcoming-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #191e17;
+  line-height: 1.25;
+}
+
+.db-upcoming-sub {
+  font-size: 11px;
+  color: #727e6e;
+}
+
+.db-upcoming-arrow {
+  font-size: 16px;
+  color: #8b9687;
+  flex-shrink: 0;
+}
+
+/* Card 2: Study Stats */
+.db-stats-card {
+  background: #ffffff;
+  border: 1px solid #e7e0d3;
+  border-radius: 22px;
+  padding: 22px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.db-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.db-stat-tile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #faf8f5;
+  border: 1px solid #eee8de;
+  text-align: left;
+}
+
+.db-stat-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.db-stat-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.db-stat-val {
+  font-size: 14px;
+  font-weight: 700;
+  color: #191e17;
+  line-height: 1.2;
+}
+
+.db-stat-sub {
+  font-size: 10px;
+  color: #727e6e;
+}

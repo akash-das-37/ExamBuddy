@@ -294,7 +294,9 @@ export const App: React.FC = () => {
             />
           )}
 
-          {activeTab === 'study-report' && <StudyReportPage student={student} />}
+          {activeTab === 'study-report' && (
+            <StudyReportPage student={student} onNavigateTab={setActiveTab} />
+          )}
 
           {activeTab === 'syllabus' && <SyllabusPage student={student} />}
 

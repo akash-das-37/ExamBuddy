@@ -102,23 +102,28 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               type="button"
               onClick={() => setIsEditModalOpen(true)}
-              className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-xl hover:bg-white/[0.08] border border-transparent hover:border-white/15 transition-all cursor-pointer group text-left"
+              className="nav-profile-chip group"
               title="Click to edit profile, branch & semester"
             >
-              <div className="relative">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-xs font-bold text-white shadow-sm group-hover:scale-105 group-hover:ring-2 group-hover:ring-indigo-400/60 transition-all">
+              <div className="relative flex-shrink-0">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-xs font-bold text-white shadow-sm ring-1 ring-white/20 group-hover:scale-105 transition-transform">
                   {getInitials(student.name)}
                 </div>
-                <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full bg-indigo-600 border border-[#0d101c] flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity shadow-sm">
+                <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-indigo-600 border border-[#0d101c] flex items-center justify-center text-white shadow-sm">
                   <span className="material-symbols-outlined text-[9px]">edit</span>
                 </div>
               </div>
-              <div className="hidden xl:flex flex-col text-left">
-                <span className="text-xs font-semibold text-white leading-tight group-hover:text-indigo-300 transition-colors">
-                  {student.name}
-                </span>
-                <span className="text-[10px] font-mono text-slate-400 leading-tight">
-                  {student.branch} • Sem {student.semester}
+              <div className="flex flex-col text-left min-w-0">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs font-semibold text-white leading-tight group-hover:text-indigo-300 transition-colors truncate max-w-[120px]">
+                    {student.name}
+                  </span>
+                  <span className="px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-400 font-mono text-[9px] font-bold border border-emerald-500/30">
+                    Sem {student.semester}
+                  </span>
+                </div>
+                <span className="text-[10px] font-medium text-slate-300 leading-tight truncate max-w-[160px]">
+                  {student.branch}
                 </span>
               </div>
             </button>
