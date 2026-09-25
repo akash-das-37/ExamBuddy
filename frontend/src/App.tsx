@@ -11,6 +11,7 @@ import { StudyReportPage } from './pages/StudyReportPage';
 import { SyllabusPage } from './pages/SyllabusPage';
 import { PyqPage } from './pages/PyqPage';
 import { EditProfileModal } from './components/EditProfileModal';
+import { SettingsPage } from './pages/SettingsPage';
 import { aiCollegeScraper, deriveCollegeNameFromUrl } from './services/aiCollegeScraper';
 import type { College, Notice, Student } from './types';
 
@@ -110,8 +111,54 @@ export const App: React.FC = () => {
 
   const handleUpdateStudent = async (updatedFields: Partial<Student>) => {
     try {
-      const updated = await api.updateProfile(updatedFields);
-      setStudent(updated);
+      if (updatedFields.avatar_url !== undefined) {
+        if (updatedFields.avatar_url) {
+          try {
+            localStorage.setItem('exambuddy_avatar', updatedFields.avatar_url);
+          } catch {
+            // ignore
+          }
+        } else {
+          localStorage.removeItem('exambuddy_avatar');
+        }
+      }
+
+      if (updatedFields.college_url) {
+        localStorage.setItem('exambuddy_college_url', updatedFields.college_url);
+      }
+
+      if (updatedFields.regulation) {
+        localStorage.setItem('exambuddy_regulation', updatedFields.regulation);
+      }
+
+      let updated: Student;
+      try {
+        updated = await api.updateProfile(updatedFields);
+      } catch {
+        updated = {
+          ...(student || ({} as Student)),
+          ...updatedFields,
+        } as Student;
+      }
+
+      // Explicitly attach avatar_url and regulation to updated student
+      if (updatedFields.avatar_url !== undefined) {
+        updated.avatar_url = updatedFields.avatar_url;
+      } else if (!updated.avatar_url) {
+        updated.avatar_url = localStorage.getItem('exambuddy_avatar') || null;
+      }
+
+      if (!updated.regulation) {
+        updated.regulation = localStorage.getItem('exambuddy_regulation') || null;
+      }
+
+      try {
+        localStorage.setItem('exambuddy_student_profile', JSON.stringify(updated));
+      } catch {
+        // ignore
+      }
+
+      setStudent({ ...updated });
 
       if (isSupabaseConfigured) {
         try {
@@ -278,7 +325,7 @@ export const App: React.FC = () => {
         college={college}
         noticesCount={notices.length}
         onLogout={handleLogout}
-        onOpenSettings={() => setIsProfileModalOpen(true)}
+        onOpenSettings={() => setActiveTab('settings')}
       />
 
       {/* Main Viewport: Top Navbar + Page Body */}
@@ -291,7 +338,7 @@ export const App: React.FC = () => {
           onTriggerScrape={handleTriggerScrape}
           isScraping={isScraping}
           onUpdateStudent={handleUpdateStudent}
-          onOpenProfileModal={() => setIsProfileModalOpen(true)}
+          onOpenProfileModal={() => setActiveTab('settings')}
         />
 
         <main className="eb-page-body">
@@ -322,6 +369,18 @@ export const App: React.FC = () => {
               student={student}
               notices={notices}
               onToggleNotifications={handleToggleNotifications}
+            />
+          )}
+
+          {activeTab === 'settings' && (
+            <SettingsPage
+              student={student}
+              college={college}
+              onUpdateStudent={handleUpdateStudent}
+              onTriggerScrape={handleTriggerScrape}
+              isScraping={isScraping}
+              onLogout={handleLogout}
+              showToast={showToast}
             />
           )}
         </main>

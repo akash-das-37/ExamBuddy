@@ -10,6 +10,8 @@ export interface Student {
   semester: number;
   email_notifications_enabled: boolean;
   is_active: boolean;
+  avatar_url?: string | null;
+  regulation?: string | null;
 }
 
 export interface College {

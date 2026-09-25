@@ -80,8 +80,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <div className="eb-sidebar-bottom-actions">
         <button
           type="button"
-          onClick={() => onOpenSettings && onOpenSettings()}
-          className="eb-editorial-nav-btn eb-sidebar-action-btn"
+          onClick={() => {
+            setActiveTab('settings');
+            if (onOpenSettings) onOpenSettings();
+          }}
+          className={`eb-editorial-nav-btn eb-sidebar-action-btn ${activeTab === 'settings' ? 'active' : ''}`}
           title="Profile & Settings"
         >
           <div className="eb-nav-btn-inner">

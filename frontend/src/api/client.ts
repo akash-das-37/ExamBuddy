@@ -224,41 +224,65 @@ export const api = {
   },
 
   async updateProfile(updates: Partial<Student>): Promise<Student> {
-    try {
-      const updated = await request<Student>('/auth/me', {
-        method: 'PATCH',
-        body: JSON.stringify(updates),
-      });
-      localStorage.setItem('exambuddy_student_profile', JSON.stringify(updated));
-      return updated;
-    } catch {
-      // Offline / fallback mode
-      const cached = localStorage.getItem('exambuddy_student_profile');
-      let base: Student = {
-        id: 'student-id',
-        name: 'Akash Das',
-        email: 'akash@example.com',
-        college_id: 'default-college-id',
-        course: 'B.Tech',
-        branch: 'CSE',
-        semester: 3,
-        email_notifications_enabled: true,
-        is_active: true,
-      };
-      if (cached) {
-        try {
-          base = JSON.parse(cached);
-        } catch {
-          // ignore
-        }
+    const cached = localStorage.getItem('exambuddy_student_profile');
+    let base: Student = {
+      id: 'student-id',
+      name: 'Akash Das',
+      email: 'akash@example.com',
+      college_id: 'default-college-id',
+      course: 'B.Tech',
+      branch: 'CSE',
+      semester: 3,
+      email_notifications_enabled: true,
+      is_active: true,
+    };
+    if (cached) {
+      try {
+        base = JSON.parse(cached);
+      } catch {
+        // ignore
       }
-      const updated: Student = {
-        ...base,
-        ...updates,
-      };
-      localStorage.setItem('exambuddy_student_profile', JSON.stringify(updated));
-      return updated;
     }
+
+    const { avatar_url, regulation, ...backendFields } = updates;
+    let remoteUpdated: Partial<Student> = {};
+
+    if (Object.keys(backendFields).length > 0) {
+      try {
+        remoteUpdated = await request<Student>('/auth/me', {
+          method: 'PATCH',
+          body: JSON.stringify(backendFields),
+        });
+      } catch {
+        // Backend offline or fallback
+      }
+    }
+
+    const finalStudent: Student = {
+      ...base,
+      ...remoteUpdated,
+      ...updates,
+    };
+
+    if (avatar_url !== undefined) {
+      finalStudent.avatar_url = avatar_url;
+      if (avatar_url) {
+        try {
+          localStorage.setItem('exambuddy_avatar', avatar_url);
+        } catch {
+          // ignore storage quota error
+        }
+      } else {
+        localStorage.removeItem('exambuddy_avatar');
+      }
+    }
+
+    try {
+      localStorage.setItem('exambuddy_student_profile', JSON.stringify(finalStudent));
+    } catch {
+      // ignore
+    }
+    return finalStudent;
   },
 
   logout(): void {
