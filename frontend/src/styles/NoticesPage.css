@@ -1,0 +1,600 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&display=swap');
+
+/* ============================================================
+   EXAMBUDDY - EDITORIAL WARM NOTICES PAGE DESIGN
+   Matches exact warm ivory cream + forest green aesthetic
+   ============================================================ */
+
+.nt-page-container {
+  position: relative;
+  width: calc(100% + 64px);
+  margin: -24px -32px;
+  min-height: calc(100vh - 65px);
+  background-color: #f7f4ee;
+  color: #191c19;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  padding: 32px 36px 64px;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+@media (max-width: 860px) {
+  .nt-page-container {
+    width: calc(100% + 32px);
+    margin: -16px -16px;
+    padding: 20px 16px 48px;
+  }
+}
+
+/* Botanical Corner Leaf Watermark */
+.nt-leaf-watermark {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 320px;
+  height: 320px;
+  pointer-events: none;
+  opacity: 0.35;
+  z-index: 1;
+}
+
+.nt-content-wrap {
+  position: relative;
+  z-index: 2;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* ================= TOP HEADER & QUOTE ROW ================= */
+.nt-top-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 24px;
+  align-items: center;
+}
+
+@media (max-width: 1080px) {
+  .nt-top-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.nt-header-col {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.nt-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nt-main-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 38px;
+  font-weight: 700;
+  color: #181b18;
+  letter-spacing: -0.02em;
+  margin: 0;
+  line-height: 1.1;
+}
+
+.nt-subtitle {
+  font-size: 15px;
+  color: #555f53;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* Category Filter Pills in Header */
+.nt-filter-pills {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding-top: 2px;
+}
+
+.nt-filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  border: 1px solid #ded5c6;
+  border-radius: 9999px;
+  padding: 7px 16px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #3b4638;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.nt-filter-pill:hover {
+  background: #fbf9f4;
+  border-color: #284232;
+  color: #181d16;
+}
+
+.nt-filter-pill.active {
+  background: #284232;
+  border-color: #284232;
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(40, 66, 50, 0.2);
+}
+
+/* Inspirational Quote Card in Header Row */
+.nt-quote-card {
+  position: relative;
+  background: #edf4ed;
+  border: 1px solid #d4e2d6;
+  border-radius: 20px;
+  padding: 18px 22px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 85px;
+  justify-content: center;
+}
+
+.nt-quote-mark {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 40px;
+  line-height: 0.5;
+  color: #55725d;
+  opacity: 0.6;
+}
+
+.nt-quote-text {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 14.5px;
+  font-style: italic;
+  font-weight: 500;
+  color: #26382a;
+  line-height: 1.4;
+  margin: 0;
+  max-width: 190px;
+}
+
+.nt-quote-leaves {
+  position: absolute;
+  right: -5px;
+  bottom: -10px;
+  width: 100px;
+  height: 100px;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+/* ================= MAIN 2-COLUMN WORKSPACE ================= */
+.nt-main-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 1080px) {
+  .nt-main-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ================= LEFT COLUMN: NOTICES FEED ================= */
+.nt-notices-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.nt-notice-card {
+  background: #ffffff;
+  border: 1px solid #e7e0d3;
+  border-radius: 20px;
+  padding: 18px 22px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  text-align: left;
+}
+
+.nt-notice-card:hover {
+  transform: translateY(-2px);
+  border-color: #bccbbd;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+}
+
+.nt-notice-icon-box {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.nt-notice-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.nt-notice-headrow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.nt-notice-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #191e17;
+  line-height: 1.3;
+}
+
+.nt-notice-date {
+  font-size: 12px;
+  color: #727e6e;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.nt-notice-desc {
+  font-size: 13px;
+  color: #555f52;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.nt-notice-tags {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding-top: 2px;
+}
+
+.nt-tag-pill {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2.5px 9px;
+  border-radius: 6px;
+}
+
+.nt-tag-pill.academic {
+  background: #fde8e8;
+  color: #c81e1e;
+}
+
+.nt-tag-pill.exam {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.nt-tag-pill.assignment {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.nt-tag-pill.deco {
+  background: #e0f2fe;
+  color: #0284c7;
+}
+
+.nt-tag-pill.college {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.nt-tag-pill.holiday {
+  background: #f3e8ff;
+  color: #7e22ce;
+}
+
+.nt-tag-pill.event {
+  background: #ede9fe;
+  color: #6d28d9;
+}
+
+.nt-tag-pill.ai {
+  background: #fce7f3;
+  color: #be185d;
+}
+
+.nt-tag-pill.result {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.nt-notice-arrow {
+  color: #8b9687;
+  font-size: 20px;
+  align-self: center;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.nt-notice-card:hover .nt-notice-arrow {
+  transform: translateX(2px);
+  color: #284232;
+}
+
+/* ================= RIGHT COLUMN: SIDEBAR ================= */
+.nt-sidebar-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.nt-card-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #181d16;
+  margin: 0;
+}
+
+.nt-card-headrow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nt-view-all-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: #284232;
+  text-decoration: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  transition: color 0.15s ease;
+}
+
+.nt-view-all-link:hover {
+  color: #14271c;
+  text-decoration: underline;
+}
+
+/* Card 1: Important Dates */
+.nt-dates-card {
+  background: #ffffff;
+  border: 1px solid #e7e0d3;
+  border-radius: 22px;
+  padding: 22px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.nt-dates-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.nt-date-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 12px;
+  transition: background 0.18s ease;
+}
+
+.nt-date-item:hover {
+  background: #faf8f5;
+}
+
+.nt-date-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.nt-date-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #faf8f5;
+  border: 1px solid #eee8de;
+  flex-shrink: 0;
+}
+
+.nt-date-num {
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.nt-date-month {
+  font-size: 9.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-top: 1px;
+}
+
+.nt-date-num.red, .nt-date-month.red { color: #dc2626; }
+.nt-date-num.blue, .nt-date-month.blue { color: #2563eb; }
+.nt-date-num.green, .nt-date-month.green { color: #16a34a; }
+.nt-date-num.purple, .nt-date-month.purple { color: #7e22ce; }
+
+.nt-date-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nt-date-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #191e17;
+  line-height: 1.25;
+}
+
+.nt-date-sub {
+  font-size: 11px;
+  color: #727e6e;
+}
+
+.nt-date-arrow {
+  font-size: 16px;
+  color: #8b9687;
+  flex-shrink: 0;
+}
+
+/* Card 2: Filter Notices */
+.nt-filters-card {
+  background: #ffffff;
+  border: 1px solid #e7e0d3;
+  border-radius: 22px;
+  padding: 22px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.nt-filters-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.nt-filter-tag {
+  background: #faf7f2;
+  border: 1px solid #ded5c6;
+  border-radius: 9999px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #3e483b;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.nt-filter-tag:hover {
+  background: #f3eee3;
+  color: #181d16;
+}
+
+.nt-filter-tag.active {
+  background: #284232;
+  border-color: #284232;
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(40, 66, 50, 0.2);
+}
+
+/* Card 3: Quick Links */
+.nt-links-card {
+  background: #ffffff;
+  border: 1px solid #e7e0d3;
+  border-radius: 22px;
+  padding: 22px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.nt-links-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.nt-link-tile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  background: #faf8f5;
+  text-align: left;
+}
+
+.nt-link-tile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.nt-link-tile.tile-red {
+  background: #fdf5f5;
+  border-color: #f7e0e0;
+}
+.nt-link-tile.tile-red .nt-link-icon {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.nt-link-tile.tile-blue {
+  background: #f2f7fd;
+  border-color: #dbe8fb;
+}
+.nt-link-tile.tile-blue .nt-link-icon {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.nt-link-tile.tile-green {
+  background: #f0f7f1;
+  border-color: #dcece0;
+}
+.nt-link-tile.tile-green .nt-link-icon {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.nt-link-tile.tile-purple {
+  background: #f9f4fd;
+  border-color: #edd9fa;
+}
+.nt-link-tile.tile-purple .nt-link-icon {
+  background: #f3e8ff;
+  color: #7e22ce;
+}
+
+.nt-link-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.nt-link-title {
+  font-size: 11.5px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #1d241b;
+}
