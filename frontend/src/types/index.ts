@@ -90,6 +90,7 @@ export interface SyllabusEntry {
   subject: string;
   topic_title: string;
   topic_description: string | null;
+  source_document_id?: string | null;
 }
 
 export interface PYQQuestion {
