@@ -1,7 +1,39 @@
 import React, { useState } from 'react';
 import { api } from '../api/client';
+import { getStudentAvatarUrl, generateInitialsAvatarSvg } from '../utils/avatar';
 import type { Student } from '../types';
 import '../styles/LoginPage.css';
+
+const QUICK_PRESET_AVATARS = [
+  {
+    id: 'scholar',
+    name: 'Scholar',
+    dataUrl: `data:image/svg+xml;utf8,${encodeURIComponent(
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="50" fill="#e0f2fe"/><path d="M18 98 C25 80, 38 74, 50 74 C62 74, 75 80, 82 98 Z" fill="#1e3a8a"/><path d="M44 74 L50 82 L56 74 Z" fill="#ffffff"/><rect x="44" y="60" width="12" height="16" rx="3" fill="#fed7aa"/><ellipse cx="50" cy="50" rx="21" ry="23" fill="#fed7aa"/><circle cx="42" cy="49" r="6" stroke="#1e293b" strokeWidth="1.8" fill="none"/><circle cx="58" cy="49" r="6" stroke="#1e293b" strokeWidth="1.8" fill="none"/><line x1="48" y1="49" x2="52" y2="49" stroke="#1e293b" strokeWidth="1.8"/><ellipse cx="42" cy="49" rx="2" ry="2" fill="#191c19"/><ellipse cx="58" cy="49" rx="2" ry="2" fill="#191c19"/><path d="M46 61 Q50 63 54 61" stroke="#b45309" strokeWidth="1.5" strokeLinecap="round"/><path d="M26 42 C24 28, 35 18, 50 18 C65 18, 76 28, 74 42 C68 30, 58 25, 50 25 C42 25, 32 30, 26 42 Z" fill="#1e293b"/></svg>'
+    )}`,
+  },
+  {
+    id: 'tech_girl',
+    name: 'Tech Girl',
+    dataUrl: `data:image/svg+xml;utf8,${encodeURIComponent(
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="50" fill="#fce7f3"/><path d="M18 98 C25 80, 38 74, 50 74 C62 74, 75 80, 82 98 Z" fill="#831843"/><rect x="44" y="60" width="12" height="16" rx="3" fill="#fbcfe8"/><ellipse cx="50" cy="50" rx="21" ry="23" fill="#fce7f3"/><ellipse cx="42" cy="49" rx="2.5" ry="3" fill="#831843"/><ellipse cx="58" cy="49" rx="2.5" ry="3" fill="#831843"/><circle cx="43" cy="48" r="1" fill="#ffffff"/><circle cx="59" cy="48" r="1" fill="#ffffff"/><path d="M46 60 Q50 63 54 60" stroke="#db2777" strokeWidth="1.5" strokeLinecap="round"/><path d="M28 50 C26 30, 36 20, 50 20 C64 20, 74 30, 72 50 C68 34, 58 30, 50 30 C42 30, 32 34, 28 50 Z" fill="#4c0519"/><rect x="22" y="44" width="6" height="14" rx="3" fill="#0284c7"/><rect x="72" y="44" width="6" height="14" rx="3" fill="#0284c7"/><path d="M25 44 C25 25, 75 25, 75 44" stroke="#0284c7" strokeWidth="3" fill="none"/></svg>'
+    )}`,
+  },
+  {
+    id: 'hoodie',
+    name: 'Green Hoodie',
+    dataUrl: `data:image/svg+xml;utf8,${encodeURIComponent(
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="50" fill="#d1fae5"/><path d="M18 98 C25 80, 38 74, 50 74 C62 74, 75 80, 82 98 Z" fill="#064e3b"/><rect x="44" y="60" width="12" height="16" rx="3" fill="#fde68a"/><ellipse cx="50" cy="50" rx="21" ry="23" fill="#fde68a"/><ellipse cx="42" cy="49" rx="2.8" ry="3.2" fill="#064e3b"/><ellipse cx="58" cy="49" rx="2.8" ry="3.2" fill="#064e3b"/><circle cx="43" cy="48" r="1" fill="#ffffff"/><circle cx="59" cy="48" r="1" fill="#ffffff"/><path d="M46 60 Q50 63 54 60" stroke="#064e3b" strokeWidth="1.5" strokeLinecap="round"/><path d="M26 46 C24 30, 34 22, 50 22 C66 22, 76 30, 74 46 C70 32, 60 27, 50 27 C40 27, 30 32, 26 46 Z" fill="#064e3b"/><path d="M24 50 L20 60 L24 64" stroke="#064e3b" strokeWidth="3" strokeLinecap="round" fill="none"/><path d="M76 50 L80 60 L76 64" stroke="#064e3b" strokeWidth="3" strokeLinecap="round" fill="none"/></svg>'
+    )}`,
+  },
+  {
+    id: 'classic',
+    name: 'Classic Boy',
+    dataUrl: `data:image/svg+xml;utf8,${encodeURIComponent(
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="50" fill="#f7ede2"/><path d="M18 98 C25 80, 38 74, 50 74 C62 74, 75 80, 82 98 Z" fill="#181b18"/><path d="M42 74 L50 86 L58 74 Z" fill="#dc2626"/><path d="M46 74 L50 81 L54 74 Z" fill="#ffffff"/><rect x="44" y="60" width="12" height="16" rx="3" fill="#f6c29b"/><ellipse cx="50" cy="50" rx="21" ry="23" fill="#f6c29b"/><ellipse cx="42" cy="49" rx="3" ry="3.5" fill="#191c19"/><ellipse cx="58" cy="49" rx="3" ry="3.5" fill="#191c19"/><circle cx="43.2" cy="47.8" r="1.2" fill="#ffffff"/><circle cx="59.2" cy="47.8" r="1.2" fill="#ffffff"/><path d="M46 60 Q50 63 54 60" stroke="#b45309" strokeWidth="1.5" strokeLinecap="round"/><path d="M26 48 C22 33, 32 20, 50 20 C68 20, 78 33, 74 48 C70 34, 60 28, 50 28 C40 28, 30 34, 26 48 Z" fill="#191c19"/><path d="M28 40 L36 46 L32 30 L45 44 L40 24 L52 42 L56 26 L58 43 L68 33 L64 45 L72 38" stroke="#191c19" strokeWidth="5.5" strokeLinecap="round" strokeLinejoin="round" fill="#191c19"/></svg>'
+    )}`,
+  },
+];
 
 interface LoginPageProps {
   onNavigateToHome: () => void;
@@ -256,6 +288,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(true);
+  const [selectedAvatar, setSelectedAvatar] = useState<string>('');
 
   // Academic Details
   const [collegeUrl, setCollegeUrl] = useState('');
@@ -348,6 +381,10 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
     setLoading(true);
     try {
+      const effectiveAvatar =
+        selectedAvatar ||
+        generateInitialsAvatarSvg(name.trim() || 'Learner', registerEmail.trim() || 'you@college.edu');
+
       await api.register({
         name: name.trim() || 'Learner',
         email: registerEmail.trim(),
@@ -357,6 +394,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
         branch: finalBranch,
         semester: semester || 6,
         email_notifications_enabled: true,
+        avatar_url: effectiveAvatar,
       });
 
       const student = await api.getMe();
@@ -377,9 +415,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({
     setError(null);
     setLoading(true);
     try {
-      // Simulate quick authentication
       const demoEmail = provider === 'Google' ? 'demo.google@learner.edu' : 'demo.github@learner.edu';
       const demoName = provider === 'Google' ? 'Google Scholar' : 'GitHub Developer';
+      const providerAvatar = generateInitialsAvatarSvg(demoName, demoEmail);
       
       try {
         await api.login(demoEmail, 'SecurePass123!');
@@ -394,12 +432,13 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           branch: 'CSE',
           semester: 6,
           email_notifications_enabled: true,
+          avatar_url: providerAvatar,
         });
       }
       const student = await api.getMe();
       onAuthSuccess(student);
-    } catch {
-      setError(`${provider} authentication is ready in development demo mode.`);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : `${provider} authentication failed.`);
     } finally {
       setLoading(false);
     }
@@ -477,6 +516,48 @@ export const LoginPage: React.FC<LoginPageProps> = ({
         {/* ================= REGISTER VIEW ================= */}
         {activeTab === 'register' ? (
           <form onSubmit={handleRegister} className="pm-form">
+            {/* Live Interactive Avatar Card for Registration */}
+            <div className="pm-reg-avatar-card">
+              <div className="pm-reg-avatar-left">
+                <div className="pm-reg-avatar-ring">
+                  <img
+                    src={selectedAvatar || generateInitialsAvatarSvg(name || 'Your Name', registerEmail || 'you@college.edu')}
+                    alt="Your Avatar"
+                    className="pm-reg-avatar-img"
+                  />
+                </div>
+                <div className="pm-reg-avatar-info">
+                  <span className="pm-reg-avatar-title">Your Profile Picture</span>
+                  <span className="pm-reg-avatar-desc">
+                    {selectedAvatar ? 'Selected illustrated avatar' : 'Uniquely created for you'}
+                  </span>
+                </div>
+              </div>
+              <div className="pm-reg-avatar-presets">
+                {QUICK_PRESET_AVATARS.map((p) => (
+                  <button
+                    key={p.id}
+                    type="button"
+                    className={`pm-reg-avatar-chip ${selectedAvatar === p.dataUrl ? 'active' : ''}`}
+                    onClick={() => setSelectedAvatar(p.dataUrl)}
+                    title={p.name}
+                  >
+                    <img src={p.dataUrl} alt={p.name} />
+                  </button>
+                ))}
+                {selectedAvatar && (
+                  <button
+                    type="button"
+                    className="pm-reg-avatar-reset"
+                    onClick={() => setSelectedAvatar('')}
+                    title="Use personal monogram initials"
+                  >
+                    Monogram
+                  </button>
+                )}
+              </div>
+            </div>
+
             {/* Full Name */}
             <div className="pm-field-group">
               <label className="pm-label">Full Name</label>
@@ -789,6 +870,23 @@ export const LoginPage: React.FC<LoginPageProps> = ({
         ) : (
           /* ================= SIGN IN VIEW ================= */
           <form onSubmit={handleSignIn} className="pm-form">
+            {/* Dynamic User DP Indicator during Login */}
+            <div className="pm-login-avatar-row">
+              <div className="pm-login-avatar-ring">
+                <img
+                  src={getStudentAvatarUrl({ email: signInEmail || 'student@college.edu' })}
+                  alt="Student"
+                  className="pm-login-avatar-thumb"
+                />
+              </div>
+              <div className="pm-login-avatar-label-group">
+                <span className="pm-login-avatar-title">
+                  {signInEmail.includes('@') ? signInEmail.split('@')[0] : 'ExamBuddy Workspace'}
+                </span>
+                <span className="pm-login-avatar-sub">Sign in with your student credentials</span>
+              </div>
+            </div>
+
             {/* Email */}
             <div className="pm-field-group">
               <label className="pm-label">Email</label>
@@ -934,6 +1032,34 @@ export const LoginPage: React.FC<LoginPageProps> = ({
               />
             </svg>
             <span>Continue with GitHub</span>
+          </button>
+        </div>
+
+        {/* Instant 1-Click Demo Login Button for Guest/Evaluation */}
+        <div className="pm-demo-login-wrap">
+          <button
+            type="button"
+            disabled={loading}
+            onClick={async () => {
+              setError(null);
+              setLoading(true);
+              try {
+                await api.login('demo.student@exambuddy.edu', 'ExamBuddy2026!');
+                const student = await api.getMe();
+                onAuthSuccess(student);
+              } catch (err: unknown) {
+                setError(err instanceof Error ? err.message : 'Demo sign-in failed');
+              } finally {
+                setLoading(false);
+              }
+            }}
+            className="pm-demo-quick-btn"
+            title="Instant 1-click test sign-in with complete student dashboard"
+          >
+            <span className="material-symbols-outlined" style={{ fontSize: '18px', color: '#284232' }}>
+              bolt
+            </span>
+            <span>Instant 1-Click Demo Login</span>
           </button>
         </div>
 

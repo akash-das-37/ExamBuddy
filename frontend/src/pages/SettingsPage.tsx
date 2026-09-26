@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { getStudentAvatarUrl } from '../utils/avatar';
 import type { College, Student } from '../types';
 import '../styles/SettingsPage.css';
 
@@ -82,20 +83,26 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
   // File input ref for photo upload
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  // Profile Picture state
-  const [avatarUrl, setAvatarUrl] = useState<string>(
-    student.avatar_url || localStorage.getItem('exambuddy_avatar') || ''
-  );
+  // Profile Picture state (user-scoped)
+  const getUserStoredAvatar = () => {
+    if (student.avatar_url) return student.avatar_url;
+    if (student.email) {
+      const scoped = localStorage.getItem(`exambuddy_avatar_${student.email.toLowerCase().trim()}`);
+      if (scoped) return scoped;
+    }
+    return '';
+  };
+
+  const [avatarUrl, setAvatarUrl] = useState<string>(getUserStoredAvatar());
 
   // Sync avatarUrl whenever student prop updates
   useEffect(() => {
-    const current = student.avatar_url || localStorage.getItem('exambuddy_avatar') || '';
-    setAvatarUrl(current);
-  }, [student.avatar_url]);
+    setAvatarUrl(getUserStoredAvatar());
+  }, [student.avatar_url, student.email]);
 
   // Personal Info state
-  const [fullName, setFullName] = useState(student.name || 'Akash Das');
-  const [email, setEmail] = useState(student.email || 'akashdas123@example.com');
+  const [fullName, setFullName] = useState(student.name || 'Student');
+  const [email, setEmail] = useState(student.email || 'student@example.edu');
 
   // Academic Info state
   const [collegeUrl, setCollegeUrl] = useState(
@@ -172,6 +179,9 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
 
   const handleSelectPresetAvatar = async (dataUrl: string) => {
     setAvatarUrl(dataUrl);
+    if (student.email) {
+      localStorage.setItem(`exambuddy_avatar_${student.email.toLowerCase().trim()}`, dataUrl);
+    }
     localStorage.setItem('exambuddy_avatar', dataUrl);
     setIsChangePhotoModalOpen(false);
     try {
@@ -200,6 +210,9 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
       }
       setAvatarUrl(compressedDataUrl);
       try {
+        if (student.email) {
+          localStorage.setItem(`exambuddy_avatar_${student.email.toLowerCase().trim()}`, compressedDataUrl);
+        }
         localStorage.setItem('exambuddy_avatar', compressedDataUrl);
       } catch {
         // ignore storage quota error
@@ -215,11 +228,14 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
   // Photo Remove Handler
   const handleRemovePhoto = async () => {
     setAvatarUrl('');
+    if (student.email) {
+      localStorage.removeItem(`exambuddy_avatar_${student.email.toLowerCase().trim()}`);
+    }
     localStorage.removeItem('exambuddy_avatar');
     setIsChangePhotoModalOpen(false);
     try {
       await onUpdateStudent({ avatar_url: null });
-      if (showToast) showToast('Profile picture reset to default.', 'info');
+      if (showToast) showToast('Profile picture reset to personal monogram.', 'info');
     } catch {
       if (showToast) showToast('Profile picture reset.', 'info');
     }
@@ -361,30 +377,10 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
               <div className="set-avatar-center-wrap">
                 <div className="set-avatar-ring-container">
                   <div className="set-avatar-circle">
-                    {avatarUrl ? (
-                      <img src={avatarUrl} alt={fullName} />
-                    ) : (
-                      <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="50" cy="50" r="50" fill="#f7ede2" />
-                        {/* Dark Shirt with red accents */}
-                        <path d="M18 98 C25 80, 38 74, 50 74 C62 74, 75 80, 82 98 Z" fill="#181b18" />
-                        <path d="M42 74 L50 86 L58 74 Z" fill="#dc2626" />
-                        <path d="M46 74 L50 81 L54 74 Z" fill="#ffffff" />
-                        {/* Neck & Face */}
-                        <rect x="44" y="60" width="12" height="16" rx="3" fill="#f6c29b" />
-                        <ellipse cx="50" cy="50" rx="21" ry="23" fill="#f6c29b" />
-                        {/* Eyes */}
-                        <ellipse cx="42" cy="49" rx="3" ry="3.5" fill="#191c19" />
-                        <ellipse cx="58" cy="49" rx="3" ry="3.5" fill="#191c19" />
-                        <circle cx="43.2" cy="47.8" r="1.2" fill="#ffffff" />
-                        <circle cx="59.2" cy="47.8" r="1.2" fill="#ffffff" />
-                        {/* Subtle smile */}
-                        <path d="M46 60 Q50 63 54 60" stroke="#b45309" strokeWidth="1.5" strokeLinecap="round" />
-                        {/* Spiky Dark Hair */}
-                        <path d="M26 48 C22 33, 32 20, 50 20 C68 20, 78 33, 74 48 C70 34, 60 28, 50 28 C40 28, 30 34, 26 48 Z" fill="#191c19" />
-                        <path d="M28 40 L36 46 L32 30 L45 44 L40 24 L52 42 L56 26 L58 43 L68 33 L64 45 L72 38" stroke="#191c19" strokeWidth="5.5" strokeLinecap="round" strokeLinejoin="round" fill="#191c19" />
-                      </svg>
-                    )}
+                    <img
+                      src={avatarUrl || getStudentAvatarUrl({ ...student, name: fullName, email })}
+                      alt={fullName}
+                    />
                   </div>
 
                   <button
