@@ -10,6 +10,7 @@ import { NoticesPage } from './pages/NoticesPage';
 import { StudyReportPage } from './pages/StudyReportPage';
 import { SyllabusPage } from './pages/SyllabusPage';
 import { PyqPage } from './pages/PyqPage';
+import { SuggestionsPage } from './pages/SuggestionsPage';
 import { EditProfileModal } from './components/EditProfileModal';
 import { SettingsPage } from './pages/SettingsPage';
 import { aiCollegeScraper, deriveCollegeNameFromUrl } from './services/aiCollegeScraper';
@@ -363,6 +364,10 @@ export const App: React.FC = () => {
           {activeTab === 'syllabus' && <SyllabusPage student={student} />}
 
           {activeTab === 'pyqs' && <PyqPage student={student} />}
+
+          {activeTab === 'suggestions' && (
+            <SuggestionsPage student={student} onNavigateTab={setActiveTab} />
+          )}
 
           {activeTab === 'notices' && (
             <NoticesPage

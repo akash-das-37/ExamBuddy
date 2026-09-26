@@ -521,19 +521,20 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
                 {/* 4. Suggestions */}
                 <div
-                  onClick={() => setIsTipsModalOpen(true)}
+                  onClick={() => onNavigateTab('suggestions')}
                   className="db-access-card"
+                  style={{ cursor: 'pointer' }}
                 >
                   <div className="db-access-left">
                     <div
                       className="db-access-icon"
                       style={{ backgroundColor: '#f3e8ff', color: '#9333ea' }}
                     >
-                      <span className="material-symbols-outlined">chat</span>
+                      <span className="material-symbols-outlined">tips_and_updates</span>
                     </div>
                     <div className="db-access-info">
                       <span className="db-access-title">Suggestions</span>
-                      <span className="db-access-sub">Get study tips</span>
+                      <span className="db-access-sub">High-weightage topics</span>
                     </div>
                   </div>
                   <span className="material-symbols-outlined db-access-arrow">

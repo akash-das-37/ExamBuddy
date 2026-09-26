@@ -23,6 +23,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'study-report', label: 'Study Report', icon: 'poll', badge: null },
     { id: 'syllabus', label: 'Syllabus', icon: 'menu_book', badge: null },
     { id: 'pyqs', label: 'Question Bank (PYQs)', icon: 'quiz', badge: null },
+    { id: 'suggestions', label: 'Suggestions', icon: 'tips_and_updates', badge: null },
     {
       id: 'notices',
       label: 'Notices',
