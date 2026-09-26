@@ -19,10 +19,17 @@ const isLocalhost =
     window.location.hostname === '127.0.0.1' ||
     window.location.hostname === '0.0.0.0');
 
-// Avoid pointing to http://127.0.0.1:8000 on HTTPS remote devices/Vercel (causes Mixed Content "Failed to fetch")
-const API_BASE =
-  (import.meta.env.VITE_API_BASE as string) ||
-  (isLocalhost ? 'http://127.0.0.1:8000' : '');
+const envApiBase = (import.meta.env.VITE_API_BASE as string) || '';
+const isLoopback =
+  envApiBase.includes('localhost') ||
+  envApiBase.includes('127.0.0.1') ||
+  envApiBase.includes('0.0.0.0');
+
+// Avoid pointing to loopback (127.0.0.1:8000) on HTTPS remote devices/Vercel (causes Mixed Content "Failed to fetch")
+const API_BASE = isLocalhost
+  ? (envApiBase || 'http://127.0.0.1:8000')
+  : (isLoopback ? '' : envApiBase);
+
 
 function getAuthHeader(): Record<string, string> {
   const token = localStorage.getItem('exambuddy_token');
@@ -176,6 +183,10 @@ export const api = {
   async login(email: string, password: string): Promise<{ access_token: string; token_type: string }> {
     const normalizedEmail = email.toLowerCase().trim();
 
+    if (!normalizedEmail || !password) {
+      throw new Error('Please enter both your email and password.');
+    }
+
     // 1. If backend URL is available, try local/configured server first
     if (API_BASE) {
       try {
@@ -240,7 +251,7 @@ export const api = {
       }
     }
 
-    // 3. Check local registered user database (exambuddy_users_db)
+    // 3. Check registered user database in localStorage (exambuddy_users_db)
     const usersDbStr = localStorage.getItem('exambuddy_users_db');
     const usersDb: Record<string, any> = usersDbStr ? JSON.parse(usersDbStr) : {};
     if (usersDb[normalizedEmail]) {
@@ -254,26 +265,38 @@ export const api = {
       return { access_token: token, token_type: 'bearer' };
     }
 
-    // 4. Resilient demo/direct access on new devices (so it NEVER shows "Failed to fetch")
-    const namePart = normalizedEmail.split('@')[0].replace(/[._-]/g, ' ');
-    const formattedName = namePart.charAt(0).toUpperCase() + namePart.slice(1);
-    const demoStudent: Student = {
-      id: `stud-${Date.now()}`,
-      name: formattedName || 'Student Learner',
-      email: normalizedEmail,
-      college_id: 'default-college-id',
-      college_url: 'https://www.iitb.ac.in/',
-      course: 'B.Tech',
-      branch: 'CSE',
-      semester: 3,
-      avatar_url: getStudentAvatarUrl({ name: formattedName, email: normalizedEmail }),
-      email_notifications_enabled: true,
-      is_active: true,
-    };
-    const token = `eb_tok_${Date.now()}`;
-    localStorage.setItem('exambuddy_token', token);
-    localStorage.setItem('exambuddy_student_profile', JSON.stringify(demoStudent));
-    return { access_token: token, token_type: 'bearer' };
+    // 4. Built-in verified demo credentials
+    if (
+      (normalizedEmail === 'demo@learner.edu' ||
+        normalizedEmail === 'demo.google@learner.edu' ||
+        normalizedEmail === 'demo.github@learner.edu') &&
+      password === 'SecurePass123!'
+    ) {
+      const demoStudent: Student = {
+        id: 'demo-learner-1',
+        name: normalizedEmail.includes('google')
+          ? 'Google Scholar'
+          : normalizedEmail.includes('github')
+          ? 'GitHub Developer'
+          : 'Demo Learner',
+        email: normalizedEmail,
+        college_id: 'default-college-id',
+        college_url: 'https://www.iitb.ac.in/',
+        course: 'B.Tech',
+        branch: 'CSE',
+        semester: 6,
+        avatar_url: getStudentAvatarUrl({ name: 'Demo Learner', email: normalizedEmail }),
+        email_notifications_enabled: true,
+        is_active: true,
+      };
+      const token = `eb_demo_${Date.now()}`;
+      localStorage.setItem('exambuddy_token', token);
+      localStorage.setItem('exambuddy_student_profile', JSON.stringify(demoStudent));
+      return { access_token: token, token_type: 'bearer' };
+    }
+
+    // 5. Account not found or wrong credentials: REJECT LOGIN!
+    throw new Error('Invalid email or password. Please check your credentials or register for an account.');
   },
 
   async register(studentData: {
