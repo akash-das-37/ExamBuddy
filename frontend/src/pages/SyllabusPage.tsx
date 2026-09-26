@@ -337,6 +337,12 @@ export const SyllabusPage: React.FC<SyllabusPageProps> = ({ student }) => {
 
   // Topic status toggle state map
   const [topicStatusMap, setTopicStatusMap] = useState<Record<string, 'completed' | 'in-progress' | 'not-started'>>(() => {
+    try {
+      const stored = localStorage.getItem('exambuddy_topic_statuses');
+      if (stored) return JSON.parse(stored);
+    } catch {
+      // ignore
+    }
     const initial: Record<string, 'completed' | 'in-progress' | 'not-started'> = {};
     const initialList = buildSemesterSubjects(initialSem, initialBranch, INITIAL_CURRICULUM_DATA);
     initialList.forEach((sub) => {
@@ -377,6 +383,29 @@ export const SyllabusPage: React.FC<SyllabusPageProps> = ({ student }) => {
     setBranch(curBranch);
     setSemester(curSem);
   }, [student.college_url, student.college_name, student.branch, student.course, student.semester]);
+
+  // Handle subject selection navigation from Dashboard
+  useEffect(() => {
+    try {
+      const navSubj = sessionStorage.getItem('exambuddy_selected_subject');
+      if (navSubj && subjectsList.length > 0) {
+        sessionStorage.removeItem('exambuddy_selected_subject');
+        const cleanNav = navSubj.toLowerCase().replace(/[^a-z0-9]/g, '');
+        const match = subjectsList.find((s) => {
+          const sNorm = s.name.toLowerCase().replace(/[^a-z0-9]/g, '');
+          return sNorm === cleanNav || sNorm.includes(cleanNav) || cleanNav.includes(sNorm);
+        });
+        if (match) {
+          setSelectedSubjectId(match.id);
+          if (match.chapters.length > 0) {
+            setSelectedChapterId(match.chapters[0].id);
+          }
+        }
+      }
+    } catch {
+      // ignore
+    }
+  }, [subjectsList]);
 
   const loadData = async (targetCourse = branch, targetSem = semester) => {
     setLoading(true);
@@ -529,13 +558,22 @@ export const SyllabusPage: React.FC<SyllabusPageProps> = ({ student }) => {
   const handleToggleTopic = (topicId: string) => {
     setTopicStatusMap((prev) => {
       const cur = prev[topicId] || 'not-started';
-      const next =
+      const next: 'completed' | 'in-progress' | 'not-started' =
         cur === 'not-started'
           ? 'in-progress'
           : cur === 'in-progress'
           ? 'completed'
           : 'not-started';
-      return { ...prev, [topicId]: next };
+      const updated: Record<string, 'completed' | 'in-progress' | 'not-started'> = {
+        ...prev,
+        [topicId]: next,
+      };
+      try {
+        localStorage.setItem('exambuddy_topic_statuses', JSON.stringify(updated));
+      } catch {
+        // ignore
+      }
+      return updated;
     });
   };
 
@@ -547,6 +585,11 @@ export const SyllabusPage: React.FC<SyllabusPageProps> = ({ student }) => {
       currentChapter.topics.forEach((t) => {
         updated[t.id] = 'completed';
       });
+      try {
+        localStorage.setItem('exambuddy_topic_statuses', JSON.stringify(updated));
+      } catch {
+        // ignore
+      }
       return updated;
     });
     setActionMessage(`All topics in "${currentChapter.title}" marked as completed!`);

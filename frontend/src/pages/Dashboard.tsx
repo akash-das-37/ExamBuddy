@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
-import type { College, Notice, Student } from '../types';
+import React, { useState, useMemo } from 'react';
+import type { College, Notice, Student, SyllabusEntry } from '../types';
+import { getSubjectsForSemester, getSubjectVisuals } from '../data/semesterSubjects';
+import { getPresetForSubject } from '../data/subjectPresets';
+import { INITIAL_CURRICULUM_DATA } from '../data/curriculumData';
 import '../styles/Dashboard.css';
 
 interface DashboardProps {
@@ -32,49 +35,6 @@ interface SubjectOverview {
   barColor: string;
 }
 
-const DEFAULT_SUBJECTS: SubjectOverview[] = [
-  {
-    id: 'math',
-    name: 'Mathematics',
-    completedChapters: 12,
-    totalChapters: 16,
-    icon: 'calculate',
-    accentBg: '#fee2e2',
-    accentColor: '#ef4444',
-    barColor: '#16a34a',
-  },
-  {
-    id: 'physics',
-    name: 'Physics',
-    completedChapters: 10,
-    totalChapters: 14,
-    icon: 'science',
-    accentBg: '#f3e8ff',
-    accentColor: '#a855f7',
-    barColor: '#7c3aed',
-  },
-  {
-    id: 'chemistry',
-    name: 'Chemistry',
-    completedChapters: 8,
-    totalChapters: 16,
-    icon: 'biotech',
-    accentBg: '#ffedd5',
-    accentColor: '#f97316',
-    barColor: '#f59e0b',
-  },
-  {
-    id: 'deco',
-    name: 'DECO',
-    completedChapters: 6,
-    totalChapters: 10,
-    icon: 'memory',
-    accentBg: '#e0f2fe',
-    accentColor: '#0284c7',
-    barColor: '#16a34a',
-  },
-];
-
 interface UpcomingMilestone {
   id: string;
   day: string;
@@ -83,41 +43,6 @@ interface UpcomingMilestone {
   subtitle: string;
   color: 'red' | 'blue' | 'green' | 'purple';
 }
-
-const UPCOMING_MILESTONES: UpcomingMilestone[] = [
-  {
-    id: 'up-1',
-    day: '25',
-    month: 'Sep',
-    title: 'DECO Lab File Submission',
-    subtitle: 'Assignment Deadline',
-    color: 'red',
-  },
-  {
-    id: 'up-2',
-    day: '28',
-    month: 'Sep',
-    title: 'Tech Talk: Career Opportunities in AI',
-    subtitle: 'College Event',
-    color: 'blue',
-  },
-  {
-    id: 'up-3',
-    day: '02',
-    month: 'Oct',
-    title: 'Gandhi Jayanti',
-    subtitle: 'College Holiday',
-    color: 'green',
-  },
-  {
-    id: 'up-4',
-    day: '10',
-    month: 'Oct',
-    title: 'Semester 2 Exams Begin',
-    subtitle: 'Examination',
-    color: 'purple',
-  },
-];
 
 export const Dashboard: React.FC<DashboardProps> = ({
   student,
@@ -130,6 +55,183 @@ export const Dashboard: React.FC<DashboardProps> = ({
   onToggleNotifications: _onToggleNotifications,
   isScraping: _isScraping,
 }) => {
+  // Dynamically compute subjects strictly for the student's active semester
+  const subjects = useMemo<SubjectOverview[]>(() => {
+    const sem = String(student?.semester || '2');
+
+    // 1. User uploaded / scraped syllabus entries for this semester
+    const semSubjectsFromUpload: string[] = [];
+    try {
+      const sylRaw = localStorage.getItem('exambuddy_uploaded_syllabus');
+      if (sylRaw) {
+        const parsed: SyllabusEntry[] = JSON.parse(sylRaw);
+        parsed.forEach((entry) => {
+          if (entry.subject && String(entry.semester) === sem) {
+            const norm = entry.subject.trim();
+            if (norm && !semSubjectsFromUpload.includes(norm)) {
+              semSubjectsFromUpload.push(norm);
+            }
+          }
+        });
+      }
+    } catch {
+      // ignore
+    }
+
+    // 2. Initial curriculum data entries for this semester
+    const semSubjectsFromData: string[] = [];
+    INITIAL_CURRICULUM_DATA.forEach((entry) => {
+      if (String(entry.semester) === sem && entry.subject) {
+        const norm = entry.subject.trim();
+        const lower = norm.toLowerCase();
+        const isLab = lower.endsWith('lab') || lower.includes('workshop') || lower.includes('nss') || lower.includes('activities');
+        if (!isLab && !semSubjectsFromData.includes(norm)) {
+          semSubjectsFromData.push(norm);
+        }
+      }
+    });
+
+    // 3. Fallback standard semester subjects from curated curriculum
+    const fallbackList = getSubjectsForSemester(sem, student?.branch);
+
+    // Merge in priority order
+    const subjectNames: string[] = [];
+    const addUnique = (name: string) => {
+      const trimmed = name.trim();
+      if (!trimmed) return;
+      if (!subjectNames.some((s) => s.toLowerCase() === trimmed.toLowerCase())) {
+        subjectNames.push(trimmed);
+      }
+    };
+
+    if (semSubjectsFromUpload.length > 0) {
+      semSubjectsFromUpload.forEach(addUnique);
+    } else if (semSubjectsFromData.length > 0) {
+      semSubjectsFromData.forEach(addUnique);
+    } else {
+      fallbackList.forEach(addUnique);
+    }
+    fallbackList.forEach(addUnique);
+
+    // 4. Stored custom subjects from user if any
+    try {
+      const userSubjsRaw = localStorage.getItem('exambuddy_user_subjects');
+      if (userSubjsRaw) {
+        const customSubjs = JSON.parse(userSubjsRaw);
+        if (Array.isArray(customSubjs)) {
+          customSubjs.forEach((cs: { name?: string }) => {
+            if (cs.name) addUnique(cs.name);
+          });
+        }
+      }
+    } catch {
+      // ignore
+    }
+
+    // 5. Stored topic statuses for dynamic progress calculation
+    let storedStatuses: Record<string, string> = {};
+    try {
+      const st = localStorage.getItem('exambuddy_topic_statuses');
+      if (st) storedStatuses = JSON.parse(st);
+    } catch {
+      // ignore
+    }
+
+    // Curated vibrant bar colors matching the botanical theme
+    const BAR_COLORS = ['#16a34a', '#0284c7', '#7c3aed', '#f59e0b', '#10b981', '#6366f1', '#ec4899', '#14b8a6'];
+
+    return subjectNames.map((name, idx) => {
+      const visuals = getSubjectVisuals(name, idx);
+      const preset = getPresetForSubject(name);
+
+      let totalChapters = 5;
+      let completedChapters = 3;
+
+      if (preset && preset.length > 0) {
+        totalChapters = preset.length;
+        let completedTopics = 0;
+        let totalTopics = 0;
+        preset.forEach((ch) => {
+          ch.topics.forEach((t) => {
+            totalTopics++;
+            const st = storedStatuses[t.id] || t.status;
+            if (st === 'completed') completedTopics++;
+          });
+        });
+
+        if (totalTopics > 0) {
+          completedChapters = Math.round((completedTopics / totalTopics) * totalChapters);
+          if (completedChapters === 0 && completedTopics > 0) completedChapters = 1;
+        } else {
+          completedChapters = Math.max(1, Math.round(totalChapters * 0.6));
+        }
+      } else {
+        const defaults = [
+          { comp: 4, tot: 6 },
+          { comp: 3, tot: 5 },
+          { comp: 4, tot: 6 },
+          { comp: 3, tot: 5 },
+          { comp: 3, tot: 5 },
+          { comp: 2, tot: 4 },
+          { comp: 2, tot: 3 },
+        ];
+        const d = defaults[idx % defaults.length];
+        completedChapters = d.comp;
+        totalChapters = d.tot;
+      }
+
+      return {
+        id: `sub-${name.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${idx}`,
+        name,
+        completedChapters,
+        totalChapters,
+        icon: visuals.icon,
+        accentBg: visuals.accentBg,
+        accentColor: visuals.accentColor,
+        barColor: BAR_COLORS[idx % BAR_COLORS.length],
+      };
+    });
+  }, [student?.semester, student?.branch]);
+
+  // Dynamically compute upcoming milestones
+  const upcomingMilestones = useMemo<UpcomingMilestone[]>(() => {
+    const sem = String(student?.semester || '2');
+    return [
+      {
+        id: 'up-1',
+        day: '25',
+        month: 'Sep',
+        title: sem === '2' ? 'DECO Lab File Submission' : 'Lab File Submission & Viva',
+        subtitle: 'Assignment Deadline',
+        color: 'red',
+      },
+      {
+        id: 'up-2',
+        day: '28',
+        month: 'Sep',
+        title: 'Tech Talk: Career Opportunities in AI',
+        subtitle: 'College Event',
+        color: 'blue',
+      },
+      {
+        id: 'up-3',
+        day: '02',
+        month: 'Oct',
+        title: 'Gandhi Jayanti',
+        subtitle: 'College Holiday',
+        color: 'green',
+      },
+      {
+        id: 'up-4',
+        day: '10',
+        month: 'Oct',
+        title: `Semester ${sem} Exams Begin`,
+        subtitle: 'Examination',
+        color: 'purple',
+      },
+    ];
+  }, [student?.semester]);
+
   // Tasks state for Today's Plan - 6 out of 6 tasks directly on screen
   const [tasks, setTasks] = useState<PlanTask[]>([
     {
@@ -384,7 +486,22 @@ export const Dashboard: React.FC<DashboardProps> = ({
             {/* Section 2: Your Subjects */}
             <div>
               <div className="db-section-header">
-                <h3 className="db-section-title">Your Subjects</h3>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <h3 className="db-section-title">Your Subjects</h3>
+                  <span
+                    style={{
+                      fontSize: '11.5px',
+                      fontWeight: 700,
+                      color: '#284232',
+                      background: '#eaf4eb',
+                      padding: '3px 10px',
+                      borderRadius: '9999px',
+                      border: '1px solid #c8decb',
+                    }}
+                  >
+                    Semester {student?.semester || '2'}
+                  </span>
+                </div>
                 <span
                   onClick={() => onNavigateTab('syllabus')}
                   className="db-view-all-link"
@@ -397,13 +514,21 @@ export const Dashboard: React.FC<DashboardProps> = ({
               </div>
 
               <div className="db-subjects-grid">
-                {DEFAULT_SUBJECTS.map((sub) => {
+                {subjects.map((sub) => {
                   const percent = Math.round((sub.completedChapters / sub.totalChapters) * 100);
                   return (
                     <div
                       key={sub.id}
-                      onClick={() => onNavigateTab('syllabus')}
+                      onClick={() => {
+                        try {
+                          sessionStorage.setItem('exambuddy_selected_subject', sub.name);
+                        } catch {
+                          // ignore
+                        }
+                        onNavigateTab('syllabus');
+                      }}
                       className="db-subject-card"
+                      title={`${sub.name} – Click to explore syllabus`}
                     >
                       <div className="db-subject-head">
                         <div
@@ -420,7 +545,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                         </span>
                       </div>
 
-                      <div className="db-subject-name">{sub.name}</div>
+                      <div className="db-subject-name" title={sub.name}>{sub.name}</div>
 
                       <div className="db-subject-track">
                         <div
@@ -563,7 +688,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
               </div>
 
               <div className="db-upcoming-list">
-                {UPCOMING_MILESTONES.map((item) => (
+                {upcomingMilestones.map((item) => (
                   <div
                     key={item.id}
                     onClick={() => onNavigateTab('notices')}
