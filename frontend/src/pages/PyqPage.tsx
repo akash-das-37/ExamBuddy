@@ -2,6 +2,8 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { api } from '../api/client';
 import type { OriginalDocument, PYQQuestion, Student, SyllabusEntry } from '../types';
 import { getDocumentsForStudent } from '../data/documentsData';
+import { getSubjectsForSemester, getSubjectVisuals, PALETTES } from '../data/semesterSubjects';
+import { INITIAL_CURRICULUM_DATA } from '../data/curriculumData';
 import { UploadPyqModal } from '../components/UploadPyqModal';
 import { DocumentViewerModal } from '../components/DocumentViewerModal';
 import '../styles/PyqPage.css';
@@ -41,17 +43,6 @@ export interface RecentSolveItem {
   accentColor: string;
 }
 
-const PALETTES = [
-  { bg: '#dcfce7', color: '#16a34a' },
-  { bg: '#e0f2fe', color: '#0284c7' },
-  { bg: '#f3e8ff', color: '#9333ea' },
-  { bg: '#fee2e2', color: '#ef4444' },
-  { bg: '#ffedd5', color: '#f97316' },
-  { bg: '#fef3c7', color: '#d97706' },
-  { bg: '#e0e7ff', color: '#4f46e5' },
-  { bg: '#fce7f3', color: '#db2777' },
-];
-
 const AVAILABLE_ICONS = [
   { id: 'database', label: 'Data / DBMS' },
   { id: 'memory', label: 'Hardware / Circuits' },
@@ -62,36 +53,6 @@ const AVAILABLE_ICONS = [
   { id: 'calculate', label: 'Math / Logic' },
   { id: 'menu_book', label: 'Theory / Core' },
 ];
-
-function getSubjectVisuals(name: string, index: number) {
-  const lower = name.toLowerCase();
-  let icon = 'menu_book';
-  if (lower.includes('data') || lower.includes('dsa') || lower.includes('dbms') || lower.includes('database')) {
-    icon = 'database';
-  } else if (
-    lower.includes('circuit') ||
-    lower.includes('digital') ||
-    lower.includes('logic') ||
-    lower.includes('hardware') ||
-    lower.includes('deco') ||
-    lower.includes('arch') ||
-    lower.includes('computer org')
-  ) {
-    icon = 'memory';
-  } else if (lower.includes('ai') || lower.includes('ml') || lower.includes('intelligence') || lower.includes('learning')) {
-    icon = 'psychology';
-  } else if (lower.includes('math') || lower.includes('discrete') || lower.includes('calculus') || lower.includes('algebra')) {
-    icon = 'calculate';
-  } else if (lower.includes('program') || lower.includes('code') || lower.includes('oop') || lower.includes('java') || lower.includes('python') || lower.includes('c++')) {
-    icon = 'code';
-  } else if (lower.includes('network') || lower.includes('communication') || lower.includes('web') || lower.includes('cloud')) {
-    icon = 'lan';
-  } else if (lower.includes('os') || lower.includes('operating') || lower.includes('system') || lower.includes('unix') || lower.includes('linux')) {
-    icon = 'terminal';
-  }
-  const palette = PALETTES[index % PALETTES.length];
-  return { icon, accentBg: palette.bg, accentColor: palette.color };
-}
 
 const USER_SUBJECTS_STORAGE_KEY = 'exambuddy_user_subjects';
 
@@ -140,9 +101,15 @@ export const PyqPage: React.FC<PyqPageProps> = ({ student }) => {
 
   // Modals & Action Toast state
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [uploadInitialSubject, setUploadInitialSubject] = useState<string | undefined>(undefined);
   const [isViewerModalOpen, setIsViewerModalOpen] = useState(false);
   const [activeViewerDocId, setActiveViewerDocId] = useState<string | undefined>(undefined);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const handleOpenUpload = (subjName?: string) => {
+    setUploadInitialSubject(subjName);
+    setIsUploadModalOpen(true);
+  };
 
   // Add Subject Modal state
   const [isAddSubjectOpen, setIsAddSubjectOpen] = useState(false);
@@ -152,6 +119,70 @@ export const PyqPage: React.FC<PyqPageProps> = ({ student }) => {
 
   // Practice Modal state
   const [practicePaper, setPracticePaper] = useState<PaperData | null>(null);
+
+  // Track deleted paper IDs (custom & default)
+  const [deletedPaperIds, setDeletedPaperIds] = useState<string[]>(() => {
+    try {
+      return JSON.parse(localStorage.getItem('exambuddy_deleted_pyq_ids') || '[]');
+    } catch {
+      return [];
+    }
+  });
+
+  // Paper pending delete confirmation
+  const [confirmDeletePaper, setConfirmDeletePaper] = useState<{ id: string; title: string } | null>(null);
+
+  const handleDeletePaper = (paperId: string, paperTitle: string) => {
+    // 1. Add to deleted IDs in state & localStorage
+    setDeletedPaperIds((prev) => {
+      const next = prev.includes(paperId) ? prev : [...prev, paperId];
+      try {
+        localStorage.setItem('exambuddy_deleted_pyq_ids', JSON.stringify(next));
+      } catch {
+        // ignore
+      }
+      return next;
+    });
+
+    // 2. Remove matching document from documents and storage
+    setDocuments((prevDocs) => {
+      const nextDocs = prevDocs.filter(
+        (d) => d.id !== paperId && d.file_name.replace(/\.[^/.]+$/, '') !== paperTitle
+      );
+      try {
+        localStorage.setItem('exambuddy_uploaded_docs', JSON.stringify(nextDocs));
+      } catch {
+        // ignore
+      }
+      return nextDocs;
+    });
+
+    // 3. Remove corresponding questions from pyqList and storage
+    setPyqList((prevPyqs) => {
+      const nextPyqs = prevPyqs.filter(
+        (q) => q.source_document_id !== paperId && q.id !== paperId
+      );
+      try {
+        localStorage.setItem('exambuddy_uploaded_pyqs', JSON.stringify(nextPyqs));
+      } catch {
+        // ignore
+      }
+      return nextPyqs;
+    });
+
+    // 4. Close practice modal if active
+    if (practicePaper && practicePaper.id === paperId) {
+      setPracticePaper(null);
+    }
+    setConfirmDeletePaper(null);
+
+    // 5. Update custom version for reactive updates
+    setCustomVersion((v) => v + 1);
+
+    // 6. Toast feedback
+    setToastMessage(`Deleted PYQ "${paperTitle}" successfully.`);
+    setTimeout(() => setToastMessage(null), 4000);
+  };
 
   const loadData = async () => {
     setLoading(true);
@@ -182,12 +213,15 @@ export const PyqPage: React.FC<PyqPageProps> = ({ student }) => {
   const handleUploadSuccess = (newQuestions: PYQQuestion[], newDoc: OriginalDocument) => {
     setPyqList((prev) => [...newQuestions, ...prev]);
     setDocuments((prev) => [newDoc, ...prev]);
-    setToastMessage(`Successfully imported ${newQuestions.length} questions from "${newDoc.file_name}"!`);
-    setTimeout(() => setToastMessage(null), 4000);
+    setCustomVersion((v) => v + 1);
+    setToastMessage(`Successfully uploaded ${newQuestions.length} questions for "${newDoc.subject}"!`);
+    setTimeout(() => setToastMessage(null), 4500);
   };
 
-  // Build the list of subjects strictly given by the user
+  // Build the list of subjects strictly for the user's active semester
   const userSubjects = useMemo<UserSubject[]>(() => {
+    const currentSem = String(student?.semester || '2');
+
     const subjectMap = new Map<
       string,
       {
@@ -202,46 +236,17 @@ export const PyqPage: React.FC<PyqPageProps> = ({ student }) => {
       }
     >();
 
-    // 1. User custom subjects saved in localStorage
-    const stored = getStoredCustomSubjects();
-    stored.forEach((item, idx) => {
-      const normName = item.name.trim();
-      if (!normName) return;
-      const key = normName.toLowerCase();
-      const visuals = getSubjectVisuals(normName, idx);
-      subjectMap.set(key, {
-        id: item.id || key,
-        name: normName,
-        years: new Set(['2024', '2023']),
-        questionCount: 0,
-        icon: item.icon || visuals.icon,
-        accentBg: item.accentBg || visuals.accentBg,
-        accentColor: item.accentColor || visuals.accentColor,
-        isCustom: true,
-      });
-    });
-
-    // 2. From uploaded syllabus
+    // 1. Gather semester subjects from user uploaded/scraped syllabus
+    const semSubjectsFromUpload: string[] = [];
     try {
       const sylRaw = localStorage.getItem('exambuddy_uploaded_syllabus');
       if (sylRaw) {
         const parsed: SyllabusEntry[] = JSON.parse(sylRaw);
-        parsed.forEach((entry, idx) => {
-          if (entry.subject && entry.subject.trim()) {
+        parsed.forEach((entry) => {
+          if (entry.subject && String(entry.semester) === currentSem) {
             const norm = entry.subject.trim();
-            const key = norm.toLowerCase();
-            if (!subjectMap.has(key)) {
-              const visuals = getSubjectVisuals(norm, subjectMap.size + idx);
-              subjectMap.set(key, {
-                id: key,
-                name: norm,
-                years: new Set(['2024', '2023']),
-                questionCount: 0,
-                icon: visuals.icon,
-                accentBg: visuals.accentBg,
-                accentColor: visuals.accentColor,
-                isCustom: false,
-              });
+            if (norm && !semSubjectsFromUpload.includes(norm)) {
+              semSubjectsFromUpload.push(norm);
             }
           }
         });
@@ -250,53 +255,114 @@ export const PyqPage: React.FC<PyqPageProps> = ({ student }) => {
       // ignore
     }
 
-    // 3. From user uploaded PYQs
-    pyqList.forEach((q, idx) => {
-      if (q.subject && q.subject.trim()) {
-        const norm = q.subject.trim();
-        const key = norm.toLowerCase();
-        if (!subjectMap.has(key)) {
-          const visuals = getSubjectVisuals(norm, subjectMap.size + idx);
-          subjectMap.set(key, {
-            id: key,
-            name: norm,
-            years: new Set(),
-            questionCount: 0,
-            icon: visuals.icon,
-            accentBg: visuals.accentBg,
-            accentColor: visuals.accentColor,
-            isCustom: false,
-          });
-        }
-        const item = subjectMap.get(key)!;
-        item.questionCount += 1;
-        if (q.exam_year) {
-          item.years.add(String(q.exam_year));
+    // 2. Gather semester subjects from initial curriculum data
+    const semSubjectsFromData: string[] = [];
+    INITIAL_CURRICULUM_DATA.forEach((entry) => {
+      if (String(entry.semester) === currentSem && entry.subject) {
+        const norm = entry.subject.trim();
+        const lower = norm.toLowerCase();
+        const isLab = lower.endsWith('lab') || lower.includes('workshop') || lower.includes('nss') || lower.includes('activities');
+        if (!isLab && !semSubjectsFromData.includes(norm)) {
+          semSubjectsFromData.push(norm);
         }
       }
     });
 
-    // 4. From student documents
-    documents.forEach((doc, idx) => {
-      if (doc.subject && doc.subject.trim()) {
-        const norm = doc.subject.trim();
-        const key = norm.toLowerCase();
-        if (!subjectMap.has(key)) {
-          const visuals = getSubjectVisuals(norm, subjectMap.size + idx);
-          subjectMap.set(key, {
-            id: key,
-            name: norm,
-            years: new Set(),
-            questionCount: 0,
-            icon: visuals.icon,
-            accentBg: visuals.accentBg,
-            accentColor: visuals.accentColor,
-            isCustom: false,
-          });
+    // 3. Fallback standard semester subjects
+    const fallbackList = getSubjectsForSemester(currentSem, student?.branch);
+
+    // Merge semester subjects in priority order
+    const semesterSubjectNames: string[] = [];
+    const addUnique = (name: string) => {
+      const trimmed = name.trim();
+      if (!trimmed) return;
+      if (!semesterSubjectNames.some((s) => s.toLowerCase() === trimmed.toLowerCase())) {
+        semesterSubjectNames.push(trimmed);
+      }
+    };
+
+    if (semSubjectsFromUpload.length > 0) {
+      semSubjectsFromUpload.forEach(addUnique);
+    } else if (semSubjectsFromData.length > 0) {
+      semSubjectsFromData.forEach(addUnique);
+    } else {
+      fallbackList.forEach(addUnique);
+    }
+
+    // Ensure standard subjects for this semester are included
+    fallbackList.forEach(addUnique);
+
+    // Populate subjectMap with the student's active semester subjects
+    const defaultCounts = [18, 24, 15, 20, 28, 16, 22];
+    semesterSubjectNames.forEach((subjName, idx) => {
+      const norm = subjName.trim();
+      const key = norm.toLowerCase();
+      const visuals = getSubjectVisuals(norm, idx);
+      subjectMap.set(key, {
+        id: key,
+        name: norm,
+        years: new Set(['2024', '2025']),
+        questionCount: defaultCounts[idx % defaultCounts.length],
+        icon: visuals.icon,
+        accentBg: visuals.accentBg,
+        accentColor: visuals.accentColor,
+        isCustom: false,
+      });
+    });
+
+    // 4. Add custom subjects saved by the student
+    const stored = getStoredCustomSubjects();
+    stored.forEach((item, idx) => {
+      const normName = item.name.trim();
+      if (!normName) return;
+      const key = normName.toLowerCase();
+      const visuals = getSubjectVisuals(normName, subjectMap.size + idx);
+      if (subjectMap.has(key)) {
+        const existing = subjectMap.get(key)!;
+        existing.isCustom = true;
+        if (item.icon) existing.icon = item.icon;
+        if (item.accentBg) existing.accentBg = item.accentBg;
+        if (item.accentColor) existing.accentColor = item.accentColor;
+      } else {
+        subjectMap.set(key, {
+          id: item.id || key,
+          name: normName,
+          years: new Set(['2024', '2025']),
+          questionCount: 15,
+          icon: item.icon || visuals.icon,
+          accentBg: item.accentBg || visuals.accentBg,
+          accentColor: item.accentColor || visuals.accentColor,
+          isCustom: true,
+        });
+      }
+    });
+
+    // 5. Update question counts and years from student's PYQs matching these semester subjects
+    pyqList.forEach((q) => {
+      if (q.subject && q.subject.trim()) {
+        const qSub = q.subject.trim().toLowerCase();
+        for (const [key, item] of subjectMap.entries()) {
+          if (qSub === key || qSub.includes(key) || key.includes(qSub)) {
+            item.questionCount += 1;
+            if (q.exam_year) item.years.add(String(q.exam_year));
+          }
         }
-        const item = subjectMap.get(key)!;
-        if (doc.exam_year) item.years.add(String(doc.exam_year));
-        if (doc.extracted_count) item.questionCount += doc.extracted_count;
+      }
+    });
+
+    // 6. Update question counts and years from student's documents matching these semester subjects
+    documents.forEach((doc) => {
+      if (doc.subject && doc.subject.trim()) {
+        if (doc.semester && String(doc.semester) !== currentSem && !String(doc.semester).includes(currentSem)) {
+          return;
+        }
+        const docSub = doc.subject.trim().toLowerCase();
+        for (const [key, item] of subjectMap.entries()) {
+          if (docSub === key || docSub.includes(key) || key.includes(docSub)) {
+            if (doc.exam_year) item.years.add(String(doc.exam_year));
+            if (doc.extracted_count) item.questionCount += doc.extracted_count;
+          }
+        }
       }
     });
 
@@ -307,19 +373,19 @@ export const PyqPage: React.FC<PyqPageProps> = ({ student }) => {
           ? `${yearsArr[yearsArr.length - 1]} - ${yearsArr[0]}`
           : yearsArr.length === 1
           ? `Year ${yearsArr[0]}`
-          : '2023 - 2024';
+          : '2024 - 2025';
       return {
         id: s.id,
         name: s.name,
         years: yearsStr,
-        questionCount: `${s.questionCount > 0 ? s.questionCount : '15+'} Questions`,
+        questionCount: `${s.questionCount > 0 ? s.questionCount : 15} Questions`,
         icon: s.icon || 'menu_book',
         accentBg: s.accentBg || '#eaf3ec',
         accentColor: s.accentColor || '#284232',
         isCustom: s.isCustom,
       };
     });
-  }, [customVersion, pyqList, documents]);
+  }, [customVersion, pyqList, documents, student?.semester, student?.branch]);
 
   // Handle adding custom subject
   const handleAddSubjectSubmit = (e: React.FormEvent) => {
@@ -375,6 +441,7 @@ export const PyqPage: React.FC<PyqPageProps> = ({ student }) => {
     documents
       .filter((d) => d.type === 'pyq')
       .forEach((doc) => {
+        if (deletedPaperIds.includes(doc.id)) return;
         const docYear = String(doc.exam_year || '2024');
         if (activeYearTab !== 'all' && docYear !== activeYearTab) return;
         if (activeSubjectId && !doc.subject?.toLowerCase().includes(activeSubjectId.toLowerCase())) {
@@ -392,11 +459,13 @@ export const PyqPage: React.FC<PyqPageProps> = ({ student }) => {
 
     // 2. Generate user subject semester papers
     userSubjects.forEach((sub) => {
+      const paperId = `paper-${sub.id}-${activeYearTab}`;
+      if (deletedPaperIds.includes(paperId)) return;
       if (activeSubjectId && sub.id !== activeSubjectId && !sub.name.toLowerCase().includes(activeSubjectId)) {
         return;
       }
       list.push({
-        id: `paper-${sub.id}-${activeYearTab}`,
+        id: paperId,
         exam: 'Semester Exam',
         year: activeYearTab,
         title: `${sub.name} - End Semester Question Paper ${activeYearTab}`,
@@ -406,7 +475,7 @@ export const PyqPage: React.FC<PyqPageProps> = ({ student }) => {
     });
 
     return list;
-  }, [userSubjects, documents, activeYearTab, activeSubjectId, student.branch]);
+  }, [userSubjects, documents, activeYearTab, activeSubjectId, student.branch, deletedPaperIds]);
 
   // Donut chart math for accuracy
   const accuracyPercent = 72;
@@ -569,7 +638,10 @@ export const PyqPage: React.FC<PyqPageProps> = ({ student }) => {
                   </button>
                   <button
                     type="button"
-                    onClick={() => setIsUploadModalOpen(true)}
+                    onClick={() => {
+                      const activeSub = activeSubjectId ? userSubjects.find((s) => s.id === activeSubjectId)?.name : undefined;
+                      handleOpenUpload(activeSub);
+                    }}
                     className="pyq-upload-pill-btn"
                   >
                     <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>upload_file</span>
@@ -601,7 +673,7 @@ export const PyqPage: React.FC<PyqPageProps> = ({ student }) => {
                     </button>
                     <button
                       type="button"
-                      onClick={() => setIsUploadModalOpen(true)}
+                      onClick={() => handleOpenUpload()}
                       className="pyq-upload-pill-btn"
                     >
                       <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>upload_file</span>
@@ -638,7 +710,22 @@ export const PyqPage: React.FC<PyqPageProps> = ({ student }) => {
                           </div>
                         </div>
 
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <button
+                            type="button"
+                            title={`Upload PYQ for ${sub.name}`}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleOpenUpload(sub.name);
+                            }}
+                            className="pyq-subj-action-upload-btn"
+                          >
+                            <span className="material-symbols-outlined" style={{ fontSize: '15px' }}>
+                              upload_file
+                            </span>
+                            <span className="pyq-subj-upload-text">Upload</span>
+                          </button>
+
                           {sub.isCustom && (
                             <button
                               type="button"
@@ -704,7 +791,12 @@ export const PyqPage: React.FC<PyqPageProps> = ({ student }) => {
                   </div>
                 ) : (
                   filteredPapers.map((paper) => (
-                    <div key={paper.id} className="pyq-paper-row">
+                    <div
+                      key={paper.id}
+                      className="pyq-paper-row"
+                      onClick={() => handleSolvePaper(paper)}
+                      style={{ cursor: 'pointer' }}
+                    >
                       <div className="pyq-paper-left">
                         <span className="material-symbols-outlined pyq-paper-icon">
                           article
@@ -725,7 +817,10 @@ export const PyqPage: React.FC<PyqPageProps> = ({ student }) => {
 
                         <button
                           type="button"
-                          onClick={() => handleSolvePaper(paper)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleSolvePaper(paper);
+                          }}
                           className="pyq-solve-btn"
                         >
                           <span>Solve</span>
@@ -992,91 +1087,277 @@ export const PyqPage: React.FC<PyqPageProps> = ({ student }) => {
       </div>
 
       {/* Interactive Practice Question Modal */}
-      {practicePaper && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.55)',
-            backdropFilter: 'blur(4px)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 100,
-            padding: '20px',
-          }}
-        >
+      {practicePaper && (() => {
+        const matchedDoc = documents.find(
+          (d) => d.id === practicePaper.id || d.file_name.replace(/\.[^/.]+$/, '') === practicePaper.title
+        );
+        const isDocImage =
+          matchedDoc?.file_url?.match(/\.(png|jpe?g|webp)$/i) ||
+          matchedDoc?.file_name?.match(/\.(png|jpe?g|webp)$/i);
+        const relatedQuestions = pyqList.filter(
+          (q) =>
+            q.source_document_id === practicePaper.id ||
+            (practicePaper.tags[0] &&
+              q.subject?.toLowerCase().includes(practicePaper.tags[0].label.toLowerCase()))
+        );
+
+        return (
           <div
             style={{
-              backgroundColor: '#ffffff',
-              borderRadius: '22px',
-              border: '1px solid #ded5c6',
-              maxWidth: '650px',
-              width: '100%',
-              padding: '28px',
-              boxShadow: '0 20px 45px rgba(0, 0, 0, 0.15)',
+              position: 'fixed',
+              inset: 0,
+              backgroundColor: 'rgba(0, 0, 0, 0.55)',
+              backdropFilter: 'blur(4px)',
               display: 'flex',
-              flexDirection: 'column',
-              gap: '18px',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 100,
+              padding: '20px',
             }}
+            onClick={() => setPracticePaper(null)}
           >
-            <div style={{ display: 'flex', alignItems: 'center', justifySelf: 'stretch', justifyContent: 'space-between' }}>
-              <div>
-                <span style={{ fontSize: '11px', textTransform: 'uppercase', fontWeight: 700, color: '#284232' }}>
-                  Practice Mode • {practicePaper.year}
-                </span>
-                <h3 style={{ fontFamily: 'Playfair Display, serif', fontSize: '20px', fontWeight: 700, margin: '2px 0 0', color: '#181d16' }}>
-                  {practicePaper.title}
-                </h3>
+            <div
+              style={{
+                backgroundColor: '#ffffff',
+                borderRadius: '22px',
+                border: '1px solid #ded5c6',
+                maxWidth: '650px',
+                width: '100%',
+                maxHeight: '88vh',
+                overflowY: 'auto',
+                padding: '26px 28px',
+                boxShadow: '0 20px 45px rgba(0, 0, 0, 0.15)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '16px',
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '12px' }}>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                    <span
+                      style={{
+                        fontSize: '11px',
+                        textTransform: 'uppercase',
+                        fontWeight: 700,
+                        color: '#284232',
+                        backgroundColor: '#eaf4eb',
+                        padding: '2px 8px',
+                        borderRadius: '9999px',
+                      }}
+                    >
+                      {practicePaper.year} Examination
+                    </span>
+                    {practicePaper.tags.map((tag, i) => (
+                      <span key={i} className={`pyq-sub-badge ${tag.type}`} style={{ fontSize: '11px' }}>
+                        {tag.label}
+                      </span>
+                    ))}
+                  </div>
+                  <h3 style={{ fontFamily: 'Playfair Display, serif', fontSize: '20px', fontWeight: 700, margin: '4px 0 0', color: '#181d16' }}>
+                    {practicePaper.title}
+                  </h3>
+                </div>
+                <button
+                  onClick={() => setPracticePaper(null)}
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '20px', color: '#687865', padding: '4px' }}
+                >
+                  ✕
+                </button>
               </div>
-              <button
-                onClick={() => setPracticePaper(null)}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '20px', color: '#687865' }}
-              >
-                ✕
-              </button>
+
+              {/* Image Preview if uploaded file is image */}
+              {isDocImage && matchedDoc?.file_url && matchedDoc.file_url !== '#' && (
+                <div style={{ borderRadius: '12px', overflow: 'hidden', border: '1px solid #e2d9cc', backgroundColor: '#faf8f5', textAlign: 'center' }}>
+                  <img
+                    src={matchedDoc.file_url}
+                    alt={matchedDoc.title}
+                    style={{ maxHeight: '220px', width: 'auto', maxWidth: '100%', objectFit: 'contain', margin: '0 auto', display: 'block' }}
+                  />
+                </div>
+              )}
+
+              {/* Questions preview */}
+              <div style={{ background: '#faf8f5', padding: '16px', borderRadius: '14px', border: '1px solid #eee8de', fontSize: '13px', lineHeight: 1.6, color: '#2b3329', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <div style={{ fontWeight: 700, color: '#181d16', display: 'flex', justifyContent: 'space-between' }}>
+                  <span>Sample Examination Questions</span>
+                  <span style={{ fontSize: '11px', color: '#687865', fontWeight: 500 }}>
+                    {practicePaper.questionCount}
+                  </span>
+                </div>
+                {relatedQuestions.length > 0 ? (
+                  relatedQuestions.slice(0, 3).map((q, idx) => (
+                    <div key={q.id || idx} style={{ padding: '8px 10px', background: '#ffffff', borderRadius: '8px', border: '1px solid #f0eae1' }}>
+                      <div style={{ fontWeight: 600, color: '#284232', fontSize: '12px', marginBottom: '2px' }}>
+                        Question {idx + 1} ({q.marks || 10} Marks)
+                      </div>
+                      <div style={{ fontSize: '12.5px', color: '#2b3329' }}>
+                        {q.question_text}
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div style={{ padding: '8px 10px', background: '#ffffff', borderRadius: '8px', border: '1px solid #f0eae1' }}>
+                    <div style={{ fontWeight: 600, color: '#284232', fontSize: '12px', marginBottom: '2px' }}>
+                      Question 1: {practicePaper.tags[0]?.label || 'Subject Core'}
+                    </div>
+                    <div style={{ fontSize: '12.5px', color: '#2b3329' }}>
+                      Explain the principle of operation and state the time and space complexity trade-offs for the fundamental algorithms in this module.
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Modal Actions */}
+              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center', paddingTop: '4px' }}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setToastMessage('Answer recorded and verified successfully!');
+                    setPracticePaper(null);
+                    setTimeout(() => setToastMessage(null), 4000);
+                  }}
+                  className="pyq-solve-btn"
+                  style={{ flex: 1, minWidth: '150px', justifyContent: 'center', padding: '10px' }}
+                >
+                  Solve Questions
+                </button>
+
+                {matchedDoc && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setActiveViewerDocId(matchedDoc.id);
+                      setIsViewerModalOpen(true);
+                      setPracticePaper(null);
+                    }}
+                    style={{
+                      padding: '10px 16px',
+                      borderRadius: '9999px',
+                      border: '1px solid #ded5c6',
+                      background: '#ffffff',
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      color: '#284232',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '5px',
+                    }}
+                  >
+                    <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
+                      {isDocImage ? 'image' : 'menu_book'}
+                    </span>
+                    <span>View Document</span>
+                  </button>
+                )}
+
+                <button
+                  type="button"
+                  onClick={() => setConfirmDeletePaper({ id: practicePaper.id, title: practicePaper.title })}
+                  style={{
+                    padding: '10px 16px',
+                    borderRadius: '9999px',
+                    border: '1px solid #fecaca',
+                    background: '#fef2f2',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    color: '#dc2626',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                    transition: 'all 0.15s ease',
+                  }}
+                >
+                  <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
+                    delete
+                  </span>
+                  <span>Delete PYQ</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* Delete PYQ Confirmation Modal */}
+      {confirmDeletePaper && (
+        <div
+          className="pyq-modal-overlay"
+          onClick={() => setConfirmDeletePaper(null)}
+          style={{ zIndex: 100000 }}
+        >
+          <div
+            className="pyq-modal-box"
+            onClick={(e) => e.stopPropagation()}
+            style={{ maxWidth: '440px', padding: '26px', textAlign: 'center' }}
+          >
+            <div
+              style={{
+                width: '50px',
+                height: '50px',
+                borderRadius: '50%',
+                backgroundColor: '#fee2e2',
+                color: '#dc2626',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 14px',
+              }}
+            >
+              <span className="material-symbols-outlined" style={{ fontSize: '28px' }}>
+                delete_forever
+              </span>
             </div>
 
-            <div style={{ background: '#faf8f5', padding: '16px', borderRadius: '14px', border: '1px solid #eee8de', fontSize: '13px', lineHeight: 1.6, color: '#2b3329' }}>
-              <div style={{ fontWeight: 600, color: '#181d16', marginBottom: '8px' }}>
-                Question 1: {practicePaper.tags[0]?.label || 'Subject Core'}
-              </div>
-              &quot;Explain the principle of operation and state the time and space complexity trade-offs for the fundamental algorithms in this module.&quot;
-            </div>
+            <h3 style={{ margin: '0 0 8px', fontSize: '18px', fontWeight: 700, color: '#181b18' }}>
+              Delete PYQ Paper?
+            </h3>
+            <p style={{ margin: '0 0 22px', fontSize: '13px', color: '#687865', lineHeight: 1.5 }}>
+              Are you sure you want to delete <strong style={{ color: '#181b18' }}>{confirmDeletePaper.title}</strong>? This will permanently remove this question paper from your question bank.
+            </p>
 
-            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
               <button
                 type="button"
-                onClick={() => {
-                  setToastMessage('Answer recorded and verified successfully!');
-                  setPracticePaper(null);
-                  setTimeout(() => setToastMessage(null), 4000);
-                }}
-                className="pyq-solve-btn"
-                style={{ flex: 1, justifyContent: 'center', padding: '10px' }}
-              >
-                Submit Answer &amp; Verify
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  const targetDoc = documents.find((d) => d.type === 'pyq') || documents[0];
-                  setActiveViewerDocId(targetDoc?.id);
-                  setIsViewerModalOpen(true);
-                  setPracticePaper(null);
-                }}
+                onClick={() => setConfirmDeletePaper(null)}
                 style={{
-                  padding: '10px 18px',
+                  padding: '9px 20px',
                   borderRadius: '9999px',
-                  border: '1px solid #ded5c6',
-                  background: '#ffffff',
-                  fontSize: '12px',
+                  border: '1px solid #d4c9b8',
+                  backgroundColor: '#ffffff',
+                  fontSize: '13px',
+                  fontWeight: 600,
+                  color: '#556b5a',
+                  cursor: 'pointer',
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => handleDeletePaper(confirmDeletePaper.id, confirmDeletePaper.title)}
+                style={{
+                  padding: '9px 22px',
+                  borderRadius: '9999px',
+                  border: 'none',
+                  backgroundColor: '#dc2626',
+                  color: '#ffffff',
+                  fontSize: '13px',
                   fontWeight: 600,
                   cursor: 'pointer',
-                  color: '#284232',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  boxShadow: '0 2px 8px rgba(220, 38, 38, 0.25)',
                 }}
               >
-                View Full Paper Solution PDF
+                <span className="material-symbols-outlined" style={{ fontSize: '17px' }}>
+                  delete
+                </span>
+                <span>Yes, Delete</span>
               </button>
             </div>
           </div>
@@ -1232,6 +1513,8 @@ export const PyqPage: React.FC<PyqPageProps> = ({ student }) => {
         isOpen={isUploadModalOpen}
         onClose={() => setIsUploadModalOpen(false)}
         student={student}
+        availableSubjects={userSubjects.map((s) => s.name)}
+        initialSubject={uploadInitialSubject}
         onUploadSuccess={handleUploadSuccess}
       />
 
@@ -1242,6 +1525,7 @@ export const PyqPage: React.FC<PyqPageProps> = ({ student }) => {
         documents={documents}
         initialDocumentId={activeViewerDocId}
         category="pyq"
+        onDeleteDocument={(docId, docTitle) => handleDeletePaper(docId, docTitle)}
       />
     </div>
   );

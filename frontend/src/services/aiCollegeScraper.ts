@@ -1,6 +1,7 @@
 import { api } from '../api/client';
 import { isSupabaseConfigured, supabaseAuth } from '../lib/supabase';
 import type { OriginalDocument, SyllabusEntry } from '../types';
+import { getSubjectsForSemester } from '../data/semesterSubjects';
 
 export interface ScrapedCollegeResult {
   college_id: string;
@@ -14,6 +15,7 @@ export interface ScrapedCollegeResult {
 
 // Well-known Indian Universities & Colleges domain lookup
 const KNOWN_COLLEGES: Record<string, string> = {
+  'kgec.edu.in': 'Kalyani Government Engineering College (KGEC)',
   'gnit.ac.in': 'Guru Nanak Institute of Technology (GNIT)',
   'jiscollege.ac.in': 'JIS College of Engineering (JISCE)',
   'jisgroup.org': 'JIS Group Educational Initiatives',
@@ -93,65 +95,26 @@ export function generateCurriculumForCollege(
   collegeUrl: string,
   course = 'B.Tech',
   branch = 'CSE',
-  semester = 3
+  semester = 2
 ): { documents: OriginalDocument[]; syllabusEntries: SyllabusEntry[] } {
   const semStr = String(semester);
   const now = new Date().toISOString();
   const slug = collegeName.replace(/[^a-zA-Z0-9]/g, '_').substring(0, 30);
+  const subjects = getSubjectsForSemester(semStr, branch);
 
   // Dynamic syllabus topics based on branch and semester
-  const syllabusEntries: SyllabusEntry[] = [
-    {
-      id: `syl-${slug}-${semStr}-1`,
-      college_id: `college-${slug}`,
-      course,
-      semester: semStr,
-      subject: branch === 'IT' ? 'Object Oriented Programming' : 'Data Structures & Algorithms',
-      topic_title: `[CS${semStr}01] Core Data Structures & Algorithm Design`,
-      topic_description: `Linear & Non-Linear Structures, Balanced Trees, Graph Algorithms (BFS/DFS, Dijkstra), Dynamic Programming, Hashing. Officially approved syllabus by ${collegeName} Board of Studies.`,
-      source_document_id: `doc-${slug}-syl`,
-    },
-    {
-      id: `syl-${slug}-${semStr}-2`,
-      college_id: `college-${slug}`,
-      course,
-      semester: semStr,
-      subject: 'Computer Organization & Architecture',
-      topic_title: `[CS${semStr}02] Computer Architecture & Pipelining`,
-      topic_description: `Von Neumann Architecture, Booth'S Multiplier, 5-Stage RISC Pipeline, Cache Memory Mapping (Direct, Set-Associative), Virtual Memory & Page Faults. Officially approved syllabus by ${collegeName}.`,
-      source_document_id: `doc-${slug}-syl`,
-    },
-    {
-      id: `syl-${slug}-${semStr}-3`,
-      college_id: `college-${slug}`,
-      course,
-      semester: semStr,
-      subject: 'Discrete Mathematics',
-      topic_title: `[M${semStr}01] Discrete Mathematical Structures`,
-      topic_description: `Propositional & Predicate Logic, Combinatorics, Pigeonhole Principle, Recurrence Relations, Graph Theory & Trees. Approved curriculum for ${collegeName}.`,
-      source_document_id: `doc-${slug}-syl`,
-    },
-    {
-      id: `syl-${slug}-${semStr}-4`,
-      college_id: `college-${slug}`,
-      course,
-      semester: semStr,
-      subject: 'Digital Electronics & Logic Design',
-      topic_title: `[EC${semStr}01] Sequential & Combinational Circuits`,
-      topic_description: `K-Map Minimization, Multiplexers, Decoders, Flip-Flops, Counters, Finite State Machines (Mealy & Moore). Officially approved by ${collegeName}.`,
-      source_document_id: `doc-${slug}-syl`,
-    },
-    {
-      id: `syl-${slug}-${semStr}-5`,
-      college_id: `college-${slug}`,
-      course,
-      semester: semStr,
-      subject: 'Programming Laboratory',
-      topic_title: `[CS${semStr}91] Advanced Data Structures & Systems Lab`,
-      topic_description: `Hands-on practicals implementing Trees, Graphs, Sorting algorithms, and Assembly Language programming. Prescribed by ${collegeName} department of ${branch}.`,
-      source_document_id: `doc-${slug}-syl`,
-    },
-  ];
+  const syllabusEntries: SyllabusEntry[] = subjects.map((subj, idx) => ({
+    id: `syl-${slug}-${semStr}-${idx + 1}`,
+    college_id: `college-${slug}`,
+    course,
+    semester: semStr,
+    subject: subj,
+    topic_title: `[CS${semStr}0${idx + 1}] Core ${subj} Syllabus Blueprint`,
+    topic_description: `Comprehensive theory, curriculum structure, and practical learning modules for ${subj}. Officially approved syllabus by ${collegeName} Board of Studies.`,
+    source_document_id: `doc-${slug}-syl`,
+  }));
+
+  const subjectsListPreview = subjects.slice(0, 5).map((s, i) => `• CS${semStr}0${i + 1}: ${s} (3-0-0, 3 Credits)`).join('\n');
 
   // Dynamic official documents for THIS college
   const documents: OriginalDocument[] = [
@@ -174,11 +137,7 @@ SEMESTER ${semStr} CURRICULUM BLUEPRINT
 
 Curriculum extracted from college portal: ${collegeUrl}
 Courses Approved by the Academic Council of ${collegeName}:
-• CS${semStr}01: Data Structures & Algorithms (3-0-0, 3 Credits)
-• CS${semStr}02: Computer Organization & Architecture (3-0-0, 3 Credits)
-• M${semStr}01: Discrete Mathematics (3-1-0, 4 Credits)
-• EC${semStr}01: Digital Electronics & Logic Design (3-0-0, 3 Credits)
-• CS${semStr}91: Data Structures Lab (0-0-3, 1.5 Credits)
+${subjectsListPreview}
 
 Continuous Assessment: 30% | End Semester University Exam: 70%`,
     },
@@ -186,7 +145,7 @@ Continuous Assessment: 30% | End Semester University Exam: 70%`,
       id: `doc-${slug}-pyq-sem${semStr}`,
       title: `End-Semester Examination Question Paper 2025 (${collegeName})`,
       type: 'pyq',
-      subject: 'Data Structures & Architecture',
+      subject: subjects[0] || 'Semester Subject',
       semester: `Semester ${semStr}`,
       exam_year: '2025',
       file_name: `${slug}_EndSem_QuestionPaper_2025.pdf`,
@@ -198,17 +157,15 @@ Continuous Assessment: 30% | End Semester University Exam: 70%`,
       content_preview: `${collegeName.toUpperCase()}
 CONTROLLER OF EXAMINATIONS - END SEMESTER EXAM 2025
 DEGREE: ${course} | BRANCH: ${branch} | SEMESTER: ${semStr}
+SUBJECT: ${(subjects[0] || 'Core Subject').toUpperCase()}
 Time Allowed: 3 Hours                          Maximum Marks: 70
 
 GROUP - A (Multiple Choice Questions)
-1. Answer all questions:
-(a) Time complexity of searching in a balanced AVL tree is: (i) O(1) (ii) O(log n) (iii) O(n)
-(b) Which pipelining hazard is resolved using hardware forwarding? (i) Structural (ii) Data RAW (iii) Control
+1. Answer all questions covering the core principles of ${subjects[0] || 'this course'}.
 ...
 
 GROUP - B & C (Analytical & Long Questions)
-2. Derive Amdahl's Law speedup with 25% serial execution. [5]
-3. Explain Dijkstra's algorithm and implement minimum spanning tree. [10]`,
+2. Explain fundamental concepts and solve analytical problems for semester ${semStr}.`,
     },
   ];
 

@@ -104,10 +104,10 @@ export function getDocumentsForStudent(student?: {
 
   const course = student?.course || 'B.Tech';
   const branch = student?.branch || 'CSE';
-  const semester = Number(student?.semester || 3);
+  const semester = Number(student?.semester || 2);
 
-  // If user explicitly attends JIS College
-  if (collegeUrl.toLowerCase().includes('jiscollege') || collegeName.toLowerCase().includes('jis college')) {
+  // If user explicitly attends JIS College and is in semester 3
+  if ((collegeUrl.toLowerCase().includes('jiscollege') || collegeName.toLowerCase().includes('jis college')) && semester === 3) {
     return [...customDocs, ...JIS_DOCUMENTS];
   }
 

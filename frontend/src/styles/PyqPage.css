@@ -155,6 +155,31 @@
   border-color: #284232;
 }
 
+.pyq-subj-action-upload-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background-color: #f7f4ee;
+  border: 1px solid #ded5c6;
+  color: #284232;
+  cursor: pointer;
+  padding: 4px 9px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 600;
+  transition: all 0.18s ease;
+}
+.pyq-subj-action-upload-btn:hover {
+  background-color: #284232;
+  border-color: #284232;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(40, 66, 50, 0.2);
+}
+.pyq-subj-upload-text {
+  font-size: 11px;
+}
+
 .pyq-subj-del-btn {
   background: transparent;
   border: none;
@@ -1073,3 +1098,184 @@
   color: #7b8677;
   line-height: 1.2;
 }
+
+/* ==========================================================================
+   PYQ Upload Modal (Self-Contained Vanilla CSS)
+   ========================================================================== */
+.pyq-upload-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(18, 25, 20, 0.65);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  padding: 16px;
+  animation: pyqModalFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes pyqModalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.pyq-upload-modal-box {
+  background: #ffffff;
+  border: 1px solid #dcd4c6;
+  border-radius: 24px;
+  width: 580px;
+  max-width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 28px 30px;
+  box-shadow: 0 24px 60px rgba(24, 33, 27, 0.32);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  position: relative;
+  box-sizing: border-box;
+  color: #1a231b;
+}
+
+.pyq-upload-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  border-bottom: 1px solid #ece4d7;
+  padding-bottom: 14px;
+}
+
+.pyq-upload-modal-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pyq-upload-modal-icon-badge {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #eaf4eb;
+  color: #284232;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.pyq-upload-modal-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a231b;
+  margin: 0;
+}
+
+.pyq-upload-modal-sub {
+  font-size: 12px;
+  color: #647565;
+  margin-top: 3px;
+}
+
+.pyq-sem-badge-pill {
+  display: inline-block;
+  background-color: #eaf4eb;
+  color: #284232;
+  border: 1px solid #c8decb;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 700;
+  margin-left: 6px;
+}
+
+/* Subject Chips Selector */
+.pyq-subject-chips-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  max-height: 140px;
+  overflow-y: auto;
+  padding: 3px 1px;
+}
+
+.pyq-subject-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 10px;
+  font-size: 11.5px;
+  font-weight: 500;
+  border: 1.5px solid #ded5c6;
+  background-color: #faf8f5;
+  color: #38493a;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+.pyq-subject-chip:hover {
+  border-color: #284232;
+  background-color: #f3eee6;
+}
+.pyq-subject-chip.selected {
+  border-color: #284232;
+  background-color: #eaf4eb;
+  color: #1e3326;
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(40, 66, 50, 0.14);
+}
+
+/* File Drop Zone */
+.pyq-file-dropzone {
+  border: 2px dashed #cfc5b3;
+  background-color: #faf8f4;
+  border-radius: 14px;
+  padding: 18px 16px;
+  text-align: center;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.18s ease;
+}
+.pyq-file-dropzone:hover {
+  border-color: #284232;
+  background-color: #f5f0e6;
+}
+
+/* Paper Row Delete Button */
+.pyq-paper-delete-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: #8b9987;
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.18s ease;
+  flex-shrink: 0;
+}
+
+.pyq-paper-delete-btn:hover {
+  background: #fee2e2;
+  border-color: #fca5a5;
+  color: #dc2626;
+  transform: scale(1.05);
+}
+
+.pyq-paper-row:hover .pyq-paper-delete-btn {
+  color: #dc2626;
+}
+
