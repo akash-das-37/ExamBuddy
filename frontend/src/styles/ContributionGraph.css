@@ -33,6 +33,29 @@
   flex-wrap: wrap;
 }
 
+.cg-brand-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #284232;
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(40, 66, 50, 0.22);
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.cg-brand-icon:hover {
+  transform: scale(1.06);
+}
+
+.cg-brand-icon .material-symbols-outlined {
+  font-size: 16px;
+  line-height: 1;
+}
+
 .cg-github-icon {
   width: 26px;
   height: 26px;
