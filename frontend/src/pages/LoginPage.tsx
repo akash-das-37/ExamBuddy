@@ -237,7 +237,7 @@ export const COURSE_CATALOG: Record<string, CourseConfig> = {
 export const LoginPage: React.FC<LoginPageProps> = ({
   onNavigateToHome,
   onAuthSuccess,
-  initialTab = 'register',
+  initialTab = 'signin',
 }) => {
   const [activeTab, setActiveTab] = useState<'signin' | 'register'>(initialTab);
   const [showPassword, setShowPassword] = useState(false);

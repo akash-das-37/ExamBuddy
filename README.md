@@ -1,14 +1,14 @@
 # 🎓 ExamBuddy — Autonomous AI Exam Preparation Copilot
 
-[![Live on Vercel](https://img.shields.io/badge/Vercel-Live%20Demo-black?style=for-the-badge&logo=vercel)](https://exambuddy-psi.vercel.app)
+[![Live on Vercel](https://img.shields.io/badge/Vercel-Live%20Demo-black?style=for-the-badge&logo=vercel)](https://exambuddy-akr.vercel.app)
 [![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github)](https://github.com/akash-das-37/ExamBuddy)
 [![Python Version](https://img.shields.io/badge/Python-3.12%2B-blue?style=for-the-badge&logo=python)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115%2B-009688?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com)
 [![React](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org)
-[![Vite](https://img.shields.io/badge/Vite-6.1-646CFF?style=for-the-badge&logo=vite)](https://vitejs.dev)
+[![Vite](https://img.shields.io/badge/Vite-6.4-646CFF?style=for-the-badge&logo=vite)](https://vitejs.dev)
 
-> **ExamBuddy** is an autonomous academic intelligence copilot built for developers, engineers, and technical students. Tech students spend their semester building real projects, grinding LeetCode, and developing industry skills—leaving college academics for the last minute. When exams knock at the door, ExamBuddy uses automated portal crawling, **PyMuPDF table extraction**, and a **recency-weighted mathematical decay algorithm** to distill massive syllabi and past papers into an actionable, high-yield revision blueprint.
+> **ExamBuddy** is an autonomous academic intelligence copilot built for developers, engineers, and technical students. Tech students spend their semester building real projects, grinding LeetCode, and developing industry skills—leaving college academics for the last minute. When exams knock at the door, ExamBuddy uses automated portal crawling, **PyMuPDF table extraction**, a **recency-weighted mathematical decay algorithm**, and a **GitHub-style study activity heatmap** to distill massive syllabi and past papers into an actionable, high-yield revision blueprint.
 
 ---
 
@@ -17,13 +17,14 @@
 1. [The Real Problem: The Coder's Dilemma](#-the-real-problem-the-coders-dilemma)
 2. [The Solution: Pareto Exam Intelligence](#-the-solution-pareto-exam-intelligence)
 3. [Live Application](#-live-application)
-4. [High-Level Architecture](#-high-level-architecture)
-5. [Core Pipelines](#-core-pipelines)
-   - [1. Autonomous College Crawler](#1-autonomous-college-crawler)
-   - [2. Syllabus Discovery & PyMuPDF Table Extractor](#2-syllabus-discovery--pymupdf-table-extractor)
-   - [3. PYQ Ingestion & Question Bank](#3-pyq-ingestion--question-bank)
-   - [4. Mathematical Topic Scoring & Study Planner](#4-mathematical-topic-scoring--study-planner)
-   - [5. Official Circular & Notice Monitor](#5-official-circular--notice-monitor)
+4. [Key Features & User Modules](#-key-features--user-modules)
+   - [1. GitHub-Style Learned Topics Heatmap](#1-github-style-learned-topics-heatmap)
+   - [2. High-Yield Exam Suggestions & Video Drills](#2-high-yield-exam-suggestions--video-drills)
+   - [3. Dynamic Semester Syllabus Blueprint](#3-dynamic-semester-syllabus-blueprint)
+   - [4. PYQ Question Bank & Multi-Format Ingestion](#4-pyq-question-bank--multi-format-ingestion)
+   - [5. AI Study Planner & Daily Goal Tracker](#5-ai-study-planner--daily-goal-tracker)
+   - [6. Autonomous College Crawler & Notice Watchdog](#6-autonomous-college-crawler--notice-watchdog)
+5. [High-Level Architecture](#-high-level-architecture)
 6. [Mathematical Scoring Formulation](#-mathematical-scoring-formulation)
 7. [Technology Stack](#-technology-stack)
 8. [Project Structure](#-project-structure)
@@ -42,7 +43,7 @@ Students in technical fields (Computer Science, Information Technology, AI/ML, E
 * 🌪️ **Chaos in the Portal**: They scramble to find what to study:
   1. **Buried Regulations**: College websites are labyrinths of broken links, outdated PDF circulars, and conflicting curriculum versions (e.g., R18 vs R21 vs R23 vs R25).
   2. **500-Page Overload**: Trying to read massive textbooks cover-to-cover in 48 hours is impossible and demoralizing.
-  3. **Blind PYQ Guesswork**: Past year question papers (PYQs) are unsearchable scans scattered across WhatsApp groups. Students have no data on which questions repeat or carry maximum marks.
+  3. **Blind PYQ Guesswork**: Past year question papers (PYQs) are unsearchable scans scattered across messaging groups. Students have no data on which questions repeat or carry maximum marks.
   4. **Missed Administrative Deadlines**: Important circulars regarding exam form fill-up deadlines, admit card enrollment, and schedule postponements get lost in bureaucratic portals.
   5. **Unfair GPA Penalties**: Exceptionally talented programmers suffer GPA drops simply because they lack the time to manually decipher college exam patterns.
 
@@ -52,21 +53,56 @@ Students in technical fields (Computer Science, Information Technology, AI/ML, E
 
 **ExamBuddy** bridges the gap between technical passion and academic survival. It applies the **Pareto Principle (the 80/20 Rule)** to semester exams: *identify the top ~20% of high-yield concepts that produce ~80% of examination marks.*
 
-* ⚡ **1-Click Curriculum Discovery (PyMuPDF)**: Automatically scans university portals, discovers the official regulation PDF (e.g. `CSE-R25.pdf`), parses semester course tables (`CS301`, `EC(CS)301`, `M(CS)301`, labs, contact hours, and credits), and breaks down modular topics in seconds.
+* ⚡ **1-Click Curriculum Discovery (PyMuPDF)**: Automatically scans university portals, discovers the official regulation PDF (e.g. `CSE-R23.pdf`), parses semester course tables (`CS301`, `EC(CS)301`, `M(CS)301`, labs, contact hours, and credits), and breaks down modular topics in seconds.
 * 🎯 **3-Tier Emergency Revision Planner**:
   * **Tier 1 (Core Must-Pass)**: High-frequency, recurring exam topics to secure passing marks and strong baseline grades in minimal hours.
   * **Tier 2 (Grade Booster)**: Moderately tested concepts to push from average to an 8.5+ GPA.
   * **Tier 3 (Breadth Buffer)**: Peripheral syllabus items to review only if extra time permits.
 * 📊 **Recency-Weighted PYQ Analytics**: Quantifies topic importance using a mathematical time-decay formula—prioritizing recent exam patterns over questions from a decade ago.
+* 🌿 **Learned Topics Calendar**: An interactive GitHub-inspired 53-week study activity calendar embedded in the Study Report that tracks daily topic completions, streaks, and curriculum mastery.
 * 🔔 **Silent Notice Watchdog**: Continuously monitors college circular boards for examination schedules, postponements, and form deadlines, pushing targeted alerts to students based on branch and semester.
-* 🖥️ **Developer-Grade Dark UI**: Fast, responsive glassmorphic web dashboard with instant search, subject filters, and past-year question exploration.
+* 🖥️ **Editorial Botanical Aesthetics**: Clean, responsive web dashboard with modern serif typography (Playfair Display), smooth micro-animations, and dynamic semester adaptivity.
 
 ---
 
 ## 🌐 Live Application
 
-* **Production URL**: [https://exambuddy-psi.vercel.app](https://exambuddy-psi.vercel.app)
+* **Production URL**: [https://exambuddy-akr.vercel.app](https://exambuddy-akr.vercel.app)
 * **GitHub Repository**: [https://github.com/akash-das-37/ExamBuddy](https://github.com/akash-das-37/ExamBuddy)
+
+---
+
+## ✨ Key Features & User Modules
+
+### 1. GitHub-Style Learned Topics Heatmap
+* **53-Week Interactive Calendar**: Built with an authentic GitHub contribution layout (`ContributionGraph.tsx`) directly embedded in the **Study Report** section.
+* **Topic Activity Visualization**: Displays 371 days across 7 days of the week (`Mon` to `Sun`) with 5 visual intensity levels (`#ebedf0` to `#15803d`).
+* **Hover Tooltips & Day Inspection**: Hovering reveals date and topic counts; clicking reveals verified curriculum topics learned on that day.
+* **Annual Breakdown Modal**: Summarizes cumulative topics learned across the academic year with retention rate estimates, study streaks, and direct links to syllabus blueprint modules.
+
+### 2. High-Yield Exam Suggestions & Video Drills
+* **Semester-Filtered Suggestions (`SuggestionsPage.tsx`)**: Recommends the highest-frequency topics across all 8 university semesters.
+* **Exam Frequency Metrics**: Highlights exact repetition probability (e.g. `24/25 (96%)` in recent question papers) with color-coded importance badges (*Very High*, *High*, *Medium*, *Low*).
+* **1-Click Plan Integration**: Add high-priority suggestions directly to "Today's Plan" with persistent `localStorage` synchronization.
+* **Curated Video References**: Direct links to top engineering educators on YouTube (Neso Academy, Gate Smashers, Abdul Bari, Striver) tailored to the exact topic query.
+
+### 3. Dynamic Semester Syllabus Blueprint
+* **Active Semester Alignment (`Dashboard.tsx` & `SyllabusPage.tsx`)**: The "Your Subjects" section dynamically reflects the student's active semester (e.g. Semester 2: *Data Structures & Algorithms*, *Digital Logic & Computer Organization*, *Introduction to Artificial Intelligence*, *Engineering Mathematics–II*, *Engineering Chemistry*, *Constitution of India*, *Design Thinking*).
+* **Multi-Source Subject Aggregation**: Merges scanned university regulations, uploaded syllabi, user-added subjects, and official MAKAUT/AICTE curriculum presets.
+* **Seamless Cross-Navigation**: Clicking any subject on the Dashboard immediately opens that subject and chapter in the Syllabus explorer.
+
+### 4. PYQ Question Bank & Multi-Format Ingestion
+* **Universal Uploader (`UploadPyqModal.tsx`)**: Supports multi-format question paper uploads across **PDF, Images (JPG, PNG), and Word documents (DOCX)**.
+* **Subject & Year Filtering**: Browse papers by academic year (`2024`, `2023`, `2022`, ...) and active semester subjects.
+* **Interactive Document Viewer (`DocumentViewerModal.tsx`)**: Native viewer for scanned question papers with zoom controls and safe deletion management.
+
+### 5. AI Study Planner & Daily Goal Tracker
+* **Interactive Daily Goals**: 6-task structured study routine on the Dashboard with completion gauge and animated milestone checkmarks.
+* **Real-Time Cross-App Sync**: Checking off daily goals immediately updates today's activity on the Study Report heatmap.
+
+### 6. Autonomous College Crawler & Notice Watchdog
+* **Priority Spider**: Asynchronous crawling engine (`app/services/crawler.py`) prioritizing academic schedules, postponements, and examination circulars.
+* **Smart Alert Matching**: Dispatches notifications tailored to the student's enrolled course and current semester.
 
 ---
 
@@ -75,8 +111,12 @@ Students in technical fields (Computer Science, Information Technology, AI/ML, E
 ```mermaid
 flowchart TB
     subgraph Client["Frontend Client (React + Vite + TypeScript)"]
-        UI["Modern Glassmorphic UI\n(Dashboard, Syllabus, PYQs, Planner)"]
-        ClientAPI["Typed API Client\n(JWT Auth + Axios/Fetch)"]
+        UI["Editorial Botanical UI\n(Dashboard, Study Report, Syllabus, PYQs, Suggestions)"]
+        Heatmap["Learned Topics Heatmap\n(53-Week GitHub-Style Activity Grid)"]
+        Suggestions["Exam Suggestions Copilot\n(High-Yield Topics + YouTube Links)"]
+        ClientAPI["Typed API Client\n(JWT Auth + Fetch)"]
+        UI --> Heatmap
+        UI --> Suggestions
         UI --> ClientAPI
     end
 
@@ -109,40 +149,6 @@ flowchart TB
     Backend <--> Filesystem
     Crawler -->|Fetch HTTP/HTML| UniPortal["University Web Portal\n(e.g., jiscollege.ac.in)"]
 ```
-
----
-
-## ⚙️ Core Pipelines
-
-### 1. Autonomous College Crawler
-* Implemented in [`app/services/crawler.py`](file:///c:/Users/iamne/OneDrive/Desktop/ExamBuddy/app/services/crawler.py).
-* Prioritizes priority keywords (`syllabus`, `curriculum`, `notice`, `circular`, `exam`, `pyq`).
-* Employs polite request pacing with configurable delay (`CRAWLER_REQUEST_DELAY = 1.0s`) and depth bounds (`max_depth = 3`).
-* Built with resumability: avoids re-downloading pages visited within `CRAWLER_RECENCY_SKIP_HOURS`.
-* Falls back to headless Chromium (Playwright) when dynamic JavaScript client-rendering is detected.
-
-### 2. Syllabus Discovery & PyMuPDF Table Extractor
-* Implemented in [`app/services/syllabus_extractor.py`](file:///c:/Users/iamne/OneDrive/Desktop/ExamBuddy/app/services/syllabus_extractor.py).
-* **Portal Discovery**: Evaluates standard curriculum endpoints (`/curriculum-syllabus.php`, `/syllabus.php`, `/academics`) and navigation trees.
-* **Regulation Matcher**: Scores candidate syllabus documents by branch (`CSE`, `IT`, `ECE`, `ME`, `CE`, etc.) and regulation codes (`R25`, `R24`, `R23`, `R21`).
-* **Table Extraction**: Uses PyMuPDF's `fitz.Page.find_tables()` to parse course structures across semester pages.
-* **Robust Code Matching**: Captures single-letter, alphanumeric, and parenthesized course codes (e.g. `CS301`, `EC(CS)301`, `M(CS)301`, `HU(CS)501`, `CS391`).
-* **Modular Breakdown**: Scans subsequent pages for course outlines to extract individual modules (`Module 1`, `Module 2`, etc.) with comprehensive topic descriptions.
-
-### 3. PYQ Ingestion & Question Bank
-* Extracts numbered questions, section titles, allotted marks, and exam years from past university exam papers.
-* Supports both LLM-powered extraction (Claude 3.5 Sonnet) and zero-cost heuristic regex fallbacks.
-* Populates dedicated question records in [`PYQQuestion`](file:///c:/Users/iamne/OneDrive/Desktop/ExamBuddy/app/models/pyq.py) linked to the college and course.
-
-### 4. Mathematical Topic Scoring & Study Planner
-* Maps past examination questions to extracted syllabus units using token overlap and technical keyword analysis.
-* Evaluates topic frequency and penalizes aged appearances using mathematical decay.
-* Segregates topics into actionable revision tiers (**High Priority**, **Medium Priority**, **Low Priority**) with natural-language reasoning.
-
-### 5. Official Circular & Notice Monitor
-* Identifies exam schedules, postponement circulars, form fill-up deadlines, and PPR notifications.
-* Automatically matches circulars against enrolled students based on degree course and active semester.
-* Delivers live alerts in the web dashboard and sends email dispatches via Resend API.
 
 ---
 
@@ -181,15 +187,15 @@ $$S_{\text{final}}(T) = \min\left(100, \; \left( \frac{S_{\text{raw}}(T)}{\max_{
 
 | Layer | Technologies | Rationale |
 |---|---|---|
-| **Frontend Framework** | **React 18, TypeScript, Vite** | Fast SPA rendering, strict type safety, zero runtime bloat |
-| **Frontend Styling** | **Vanilla CSS (Design Tokens)** | Custom dark-mode glassmorphic theme without heavy Tailwind overhead |
+| **Frontend Framework** | **React 18.3, TypeScript 5.7, Vite 6.4** | Fast SPA rendering, strict type safety, sub-second HMR |
+| **Frontend Styling** | **Vanilla CSS (Design Tokens)** | Custom editorial botanical theme without heavy Tailwind overhead |
 | **Backend Framework** | **Python 3.12, FastAPI, Uvicorn** | High-performance asynchronous REST API, auto-generating OpenAPI docs |
-| **PDF Extraction** | **PyMuPDF (`fitz`) 1.25.1** | Fast C-compiled PDF table extraction, eliminates external LLM cost for syllabus |
-| **Crawler & Scraping** | **HTTPX, BeautifulSoup4, Playwright** | Async non-blocking network calls with headless browser fallback for JS portals |
+| **PDF Extraction** | **PyMuPDF (`fitz`) 1.25.1** | Fast C-compiled PDF table extraction, zero LLM cost for structured syllabi |
+| **Crawler & Scraping** | **HTTPX, BeautifulSoup4, Playwright** | Async non-blocking network calls with headless Chromium fallback for JS portals |
 | **Database & ORM** | **SQLAlchemy 2.0 (Async), aiosqlite / PostgreSQL, Alembic** | Async database access, seamless migrations, SQLite for local / Postgres for prod |
 | **AI / LLM Layer** | **Anthropic Claude 3.5 (Sonnet / Haiku)** | Deep document classification and semantic question boundary detection |
 | **Notification Engine**| **Resend API / SMTP** | Multi-channel student notice alert dispatcher |
-| **Cloud Deployment** | **Vercel (Frontend)**, **Docker / VPS (Backend)** | Edge-hosted frontend distribution with global CDN caching |
+| **Cloud Deployment** | **Vercel (Frontend)**, **Docker / Cloud VPS (Backend)** | Edge-hosted frontend distribution with global CDN caching |
 
 ---
 
@@ -234,19 +240,39 @@ ExamBuddy/
 │   │   ├── api/                    # Client API connectors
 │   │   │   └── client.ts           # Centralized typed fetch client (VITE_API_BASE)
 │   │   ├── components/             # Reusable UI components
-│   │   │   ├── Navbar.tsx          # Top navigation bar
-│   │   │   └── Sidebar.tsx         # Fixed left navigation sidebar (250px)
+│   │   │   ├── ContributionGraph.tsx # GitHub-style 53-week Learned Topics Heatmap
+│   │   │   ├── DocumentViewerModal.tsx # Multi-format document & image inspector
+│   │   │   ├── EditProfileModal.tsx # User profile & semester editor
+│   │   │   ├── Navbar.tsx          # Editorial top navigation bar with sync pill
+│   │   │   ├── Sidebar.tsx         # Left sidebar navigation with route badges
+│   │   │   ├── UploadPyqModal.tsx  # Multi-format PYQ uploader (PDF, Image, DOCX)
+│   │   │   └── UploadSyllabusModal.tsx # Syllabus regulation document uploader
+│   │   ├── data/                   # Structured curriculum & preset datasets
+│   │   │   ├── curriculumData.ts   # Official course blueprints and modules
+│   │   │   ├── documentsData.ts    # Seeded regulation documents archive
+│   │   │   ├── semesterSubjects.ts # Semester-wise subjects (Sem 1 to 8) & palettes
+│   │   │   ├── subjectPresets.ts   # Curated topics and chapter outlines
+│   │   │   └── suggestionsData.ts  # High-yield exam topics & YouTube video links
 │   │   ├── pages/                  # Top-level views
-│   │   │   ├── HomePage.tsx        # Hero landing page
-│   │   │   ├── LoginPage.tsx       # Sign in authentication
-│   │   │   ├── AuthPage.tsx        # Registration with college selection
-│   │   │   ├── Dashboard.tsx       # Student dashboard & overview statistics
-│   │   │   ├── SyllabusPage.tsx    # Curriculum explorer & PyMuPDF discovery
-│   │   │   ├── PyqPage.tsx         # Question bank & past exam archive
-│   │   │   └── StudyReportPage.tsx # AI revision planner & topic ranking
+│   │   │   ├── Dashboard.tsx       # Today's plan, dynamic subjects & stats
+│   │   │   ├── StudyReportPage.tsx # Learned Topics Heatmap & study time breakdown
+│   │   │   ├── SyllabusPage.tsx    # Interactive syllabus tracker & module viewer
+│   │   │   ├── PyqPage.tsx         # Question bank, year tabs & practice viewer
+│   │   │   ├── SuggestionsPage.tsx # Exam topics copilot with video references
+│   │   │   ├── NoticesPage.tsx     # Circulars board & notification manager
+│   │   │   ├── SettingsPage.tsx    # Profile configuration & college switcher
+│   │   │   ├── HomePage.tsx        # Hero landing showcase
+│   │   │   └── LoginPage.tsx       # Authentication view
+│   │   ├── styles/                 # Modular Vanilla CSS stylesheets
+│   │   │   ├── ContributionGraph.css # Heatmap styling matching GitHub layout
+│   │   │   ├── Dashboard.css       # Workspace & grid layouts
+│   │   │   ├── StudyReportPage.css # Study report charts & metric cards
+│   │   │   ├── SyllabusPage.css    # Syllabus explorer & topic checkboxes
+│   │   │   ├── PyqPage.css         # Question bank & paper cards
+│   │   │   └── SuggestionsPage.css # High-yield recommendations & pills
 │   │   ├── types/                  # Global TypeScript interface definitions
-│   │   ├── App.tsx                 # Client router & navigation state
-│   │   └── index.css               # Vanilla CSS design system & tokens
+│   │   ├── App.tsx                 # Route coordinator & authenticated session
+│   │   └── index.css               # Design tokens & botanical theme variables
 │   ├── package.json                # Dependencies & build scripts
 │   ├── vite.config.ts              # Vite bundle configuration
 │   └── vercel.json                 # Vercel deployment & SPA rewrite rules
@@ -331,7 +357,7 @@ cd ExamBuddy
    ```bash
    npm run dev
    ```
-   * Open your browser at [http://localhost:5173](http://localhost:5173) (or [http://127.0.0.1:8000](http://127.0.0.1:8000) when served via FastAPI).
+   * Open your browser at [http://localhost:5173](http://localhost:5173).
 
 4. **Build production bundle**:
    ```bash
@@ -378,7 +404,7 @@ cd ExamBuddy
 ## ☁️ Deployment Guide
 
 ### Deploying the Frontend to Vercel
-ExamBuddy is configured for Vercel deployment:
+ExamBuddy is configured for zero-config Vercel deployment:
 
 1. **Install Vercel CLI**:
    ```bash

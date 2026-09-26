@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../api/client';
 import type { Student, StudyReportResponse } from '../types';
+import { ContributionGraph } from '../components/ContributionGraph';
 import '../styles/StudyReportPage.css';
 
 interface StudyReportPageProps {
@@ -463,6 +464,12 @@ export const StudyReportPage: React.FC<StudyReportPageProps> = ({
             </div>
           </div>
         </div>
+
+        {/* ================= GITHUB-STYLE LEARNED TOPICS HEATMAP ================= */}
+        <ContributionGraph
+          studentSemester={student?.semester}
+          onNavigateTab={onNavigateTab}
+        />
 
         {/* ================= MAIN 2-COLUMN GRID ================= */}
         <div className="sr-main-grid">

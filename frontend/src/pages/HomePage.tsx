@@ -134,7 +134,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigateToLogin }) => {
           <div>
             <button
               type="button"
-              onClick={() => onNavigateToLogin('register')}
+              onClick={() => onNavigateToLogin('signin')}
               className="pm-btn-cta"
             >
               <span>Start Learning Today</span>
