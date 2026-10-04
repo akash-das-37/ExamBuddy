@@ -49,6 +49,7 @@ storage/
 # Frontend
 frontend/node_modules/
 frontend/dist/
+frontend/.vercel/
 
 # Scratch & temporary testing
 scratch/

@@ -27,8 +27,8 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="ExamBuddy API",
-    description="AI-powered exam preparation agent for college students",
-    version="0.2.0",
+    description="AI-powered exam preparation copilot for college students",
+    version="0.2.1",
     lifespan=lifespan,
 )
 

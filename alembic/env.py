@@ -12,7 +12,7 @@ from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from app.core.config import get_settings
-# Import Base and all models so metadata is populated
+# Import Base and all models so metadata is populated for schema migrations
 from app.models import Base  # noqa: F401
 
 # Alembic Config object

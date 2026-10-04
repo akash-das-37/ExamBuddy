@@ -7,6 +7,7 @@
 [![React](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org)
 [![Vite](https://img.shields.io/badge/Vite-6.4-646CFF?style=for-the-badge&logo=vite)](https://vitejs.dev)
+[![AI Engines](https://img.shields.io/badge/AI%20Engines-Backboard.io%20%7C%20Gemini-10a37f?style=for-the-badge)](https://app.backboard.io)
 
 > **ExamBuddy** is an autonomous academic intelligence copilot built for developers, engineers, and technical students. Tech students spend their semester building real projects, grinding LeetCode, and developing industry skills—leaving college academics for the last minute. When exams knock at the door, ExamBuddy uses automated portal crawling, **PyMuPDF table extraction**, a **recency-weighted mathematical decay algorithm**, and a **GitHub-style study activity heatmap** to distill massive syllabi and past papers into an actionable, high-yield revision blueprint.
 

@@ -1,3 +1,5 @@
+"""ExamBuddy Pytest Configuration & Test Fixtures."""
+
 import pytest
 from httpx import ASGITransport, AsyncClient
 

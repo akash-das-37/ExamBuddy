@@ -1,4 +1,5 @@
 #!/bin/bash
+# ExamBuddy Docker Entrypoint Script
 set -e
 
 echo "⏳ Waiting for PostgreSQL to be ready..."
