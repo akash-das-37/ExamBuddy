@@ -19,23 +19,10 @@ interface AiChatbotProps {
 
 export const AiChatbot: React.FC<AiChatbotProps> = ({ student, onNavigateTab }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [copiedCodeId, setCopiedCodeId] = useState<string | null>(null);
-
-  // API Key & Model Configuration
-  const [provider, setProvider] = useState<'anthropic' | 'openai' | 'gemini'>(() => {
-    return (localStorage.getItem('exambuddy_ai_provider') as any) || 'gemini';
-  });
-  const [apiKey, setApiKey] = useState<string>(() => {
-    return localStorage.getItem('exambuddy_ai_key') || '';
-  });
-  const [model, setModel] = useState<string>(() => {
-    return localStorage.getItem('exambuddy_ai_model') || '';
-  });
-  const [keySavedToast, setKeySavedToast] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -50,7 +37,7 @@ export const AiChatbot: React.FC<AiChatbotProps> = ({ student, onNavigateTab }) 
     const welcomeMsg: Message = {
       id: 'welcome-1',
       role: 'assistant',
-      content: `Hello **${studentName}**! 👋 I am your **ExamBuddy AI Problem Solver**.\n\nI am equipped to **directly solve any academic questions, homework problems, math derivations, and coding tasks** for **${course} ${branch} (Semester ${semester})**.\n\n💡 **What would you like me to solve?**\n- 💻 Write & explain code in C, C++, Java, or Python\n- 📐 Solve differential equations, Laplace transforms, or linear algebra numericals\n- ⚡ Solve Booth's multiplication, K-maps, or cache memory problems\n- 📝 Debug your code or explain an exam question step-by-step`,
+      content: `Hello **${studentName}**! 👋 I am your **ExamBuddy AI Problem Solver**, powered by **Backboard.io**.\n\nI am equipped to **directly solve any academic questions, homework problems, math derivations, and coding tasks** for **${course} ${branch} (Semester ${semester})**.\n\n💡 **What would you like me to solve?**\n- 💻 Write & explain code in C, C++, Java, or Python\n- 📐 Solve differential equations, Laplace transforms, or linear algebra numericals\n- ⚡ Solve Booth's multiplication, K-maps, or cache memory problems\n- 📝 Debug your code or explain an exam question step-by-step`,
       actions: [
         '💻 Solve: Dijkstra in C++ with test graph',
         "⚡ Solve: Booth's algorithm (+7 * -3)",
@@ -72,26 +59,10 @@ export const AiChatbot: React.FC<AiChatbotProps> = ({ student, onNavigateTab }) 
 
   // Focus input on open
   useEffect(() => {
-    if (isOpen && !showSettings) {
+    if (isOpen) {
       setTimeout(() => inputRef.current?.focus(), 150);
     }
-  }, [isOpen, showSettings]);
-
-  const handleSaveSettings = (e: React.FormEvent) => {
-    e.preventDefault();
-    localStorage.setItem('exambuddy_ai_provider', provider);
-    localStorage.setItem('exambuddy_ai_key', apiKey.trim());
-    if (model) {
-      localStorage.setItem('exambuddy_ai_model', model.trim());
-    } else {
-      localStorage.removeItem('exambuddy_ai_model');
-    }
-    setKeySavedToast(true);
-    setTimeout(() => {
-      setKeySavedToast(false);
-      setShowSettings(false);
-    }, 1200);
-  };
+  }, [isOpen]);
 
   const handleSend = async (textToSend?: string) => {
     const query = (textToSend || input).trim();
@@ -126,9 +97,7 @@ export const AiChatbot: React.FC<AiChatbotProps> = ({ student, onNavigateTab }) 
         message: query,
         history: historyPayload,
         context: contextPayload,
-        api_key: apiKey.trim() || undefined,
-        provider: provider,
-        model: model.trim() || undefined,
+        provider: 'backboard',
       });
 
       const assistantMsg: Message = {
@@ -136,7 +105,7 @@ export const AiChatbot: React.FC<AiChatbotProps> = ({ student, onNavigateTab }) 
         role: 'assistant',
         content: res.reply,
         actions: res.suggested_actions,
-        providerUsed: res.provider_used,
+        providerUsed: res.provider_used || 'Backboard.io',
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
 
@@ -145,8 +114,8 @@ export const AiChatbot: React.FC<AiChatbotProps> = ({ student, onNavigateTab }) 
       const errorMsg: Message = {
         id: `err-${Date.now()}`,
         role: 'assistant',
-        content: `⚠️ **Could not solve problem**: ${err?.message || 'Connection error'}.\n\nPlease ensure your API key is valid in **Settings (🔑)**, or check your internet connection.`,
-        actions: ['🔑 Open API Settings', 'Try again'],
+        content: `⚠️ **Could not solve problem**: ${err?.message || 'Connection error'}.\n\nPlease check your internet connection or try again.`,
+        actions: ['Try again', 'Show practice problem'],
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
       setMessages((prev) => [...prev, errorMsg]);
@@ -156,10 +125,6 @@ export const AiChatbot: React.FC<AiChatbotProps> = ({ student, onNavigateTab }) 
   };
 
   const handleActionClick = (action: string) => {
-    if (action.includes('API Settings') || action.includes('Connect API Key') || action.includes('Configure API Key')) {
-      setShowSettings(true);
-      return;
-    }
     if (action.includes('Suggestions') && onNavigateTab) {
       onNavigateTab('suggestions');
       return;
@@ -351,25 +316,14 @@ export const AiChatbot: React.FC<AiChatbotProps> = ({ student, onNavigateTab }) 
                   <span className="eb-chatbot-status-dot" title="Online" />
                 </h3>
                 <p className="eb-chatbot-subtitle">
-                  {apiKey ? (
-                    <span className="eb-chatbot-active-model">
-                      ⚡ {provider === 'anthropic' ? 'Claude 3.5' : provider === 'openai' ? 'OpenAI GPT' : 'Gemini'}
-                    </span>
-                  ) : (
-                    <span>Offline Engine (Tap 🔑 to connect live AI)</span>
-                  )}
+                  <span className="eb-chatbot-active-model" style={{ color: '#86efac', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    ⚡ Powered by Backboard.io
+                  </span>
                 </p>
               </div>
             </div>
 
             <div className="eb-chatbot-header-actions">
-              <button
-                className={`eb-chatbot-header-btn ${showSettings ? 'active' : ''}`}
-                onClick={() => setShowSettings(!showSettings)}
-                title="AI Model & API Key Settings"
-              >
-                <span className="material-symbols-outlined text-[18px]">key</span>
-              </button>
               <button
                 className="eb-chatbot-header-btn"
                 onClick={handleClear}
@@ -386,133 +340,6 @@ export const AiChatbot: React.FC<AiChatbotProps> = ({ student, onNavigateTab }) 
               </button>
             </div>
           </div>
-
-          {/* Settings Overlay Drawer */}
-          {showSettings && (
-            <div className="eb-chatbot-settings-panel">
-              <div className="eb-chatbot-settings-header">
-                <h4>🔑 Connect AI Engine</h4>
-                <button
-                  type="button"
-                  className="eb-chatbot-close-settings"
-                  onClick={() => setShowSettings(false)}
-                >
-                  <span className="material-symbols-outlined text-[16px]">close</span>
-                </button>
-              </div>
-
-              <form onSubmit={handleSaveSettings} className="eb-chatbot-settings-form">
-                <label className="eb-settings-label">Select AI Provider:</label>
-                <div className="eb-provider-selector">
-                  <button
-                    type="button"
-                    className={`eb-provider-btn ${provider === 'anthropic' ? 'active' : ''}`}
-                    onClick={() => {
-                      setProvider('anthropic');
-                      if (!model.includes('claude')) setModel('claude-3-5-sonnet-20241022');
-                    }}
-                  >
-                    Anthropic Claude
-                  </button>
-                  <button
-                    type="button"
-                    className={`eb-provider-btn ${provider === 'openai' ? 'active' : ''}`}
-                    onClick={() => {
-                      setProvider('openai');
-                      if (!model.includes('gpt')) setModel('gpt-4o-mini');
-                    }}
-                  >
-                    OpenAI
-                  </button>
-                  <button
-                    type="button"
-                    className={`eb-provider-btn ${provider === 'gemini' ? 'active' : ''}`}
-                    onClick={() => {
-                      setProvider('gemini');
-                      setModel('gemini-1.5-flash');
-                    }}
-                  >
-                    Gemini (Free)
-                  </button>
-                </div>
-
-                <label className="eb-settings-label" htmlFor="api-key-input">
-                  {provider === 'anthropic' ? 'Anthropic API Key (sk-ant-...):' : provider === 'openai' ? 'OpenAI API Key (sk-...):' : 'Google Gemini API Key:'}
-                </label>
-                <input
-                  id="api-key-input"
-                  type="password"
-                  className="eb-settings-input"
-                  placeholder={provider === 'anthropic' ? 'sk-ant-api03-...' : provider === 'openai' ? 'sk-proj-...' : 'AIzaSy...'}
-                  value={apiKey}
-                  onChange={(e) => setApiKey(e.target.value)}
-                />
-
-                <label className="eb-settings-label" htmlFor="model-select">Model Override (Optional):</label>
-                <select
-                  id="model-select"
-                  className="eb-settings-select"
-                  value={model}
-                  onChange={(e) => setModel(e.target.value)}
-                >
-                  {provider === 'anthropic' && (
-                    <>
-                      <option value="claude-3-5-sonnet-20241022">Claude 3.5 Sonnet (Best for Math & Code)</option>
-                      <option value="claude-3-5-haiku-20241022">Claude 3.5 Haiku (Fastest)</option>
-                    </>
-                  )}
-                  {provider === 'openai' && (
-                    <>
-                      <option value="gpt-4o-mini">GPT-4o Mini (Fast & Cost Effective)</option>
-                      <option value="gpt-4o">GPT-4o (Most Intelligent)</option>
-                    </>
-                  )}
-                  {provider === 'gemini' && (
-                    <>
-                      <option value="gemini-2.5-flash">Gemini 2.5 Flash (Recommended - Fast & Accurate)</option>
-                      <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
-                      <option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
-                    </>
-                  )}
-                </select>
-
-                <div className="eb-settings-help">
-                  {provider === 'anthropic' ? (
-                    <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noreferrer">
-                      Get an Anthropic API Key ↗
-                    </a>
-                  ) : provider === 'openai' ? (
-                    <a href="https://platform.openai.com/api-keys" target="_blank" rel="noreferrer">
-                      Get an OpenAI API Key ↗
-                    </a>
-                  ) : (
-                    <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noreferrer">
-                      Get a Free Gemini Key (Instant) ↗
-                    </a>
-                  )}
-                </div>
-
-                <div className="eb-settings-actions">
-                  <button type="submit" className="eb-settings-save-btn">
-                    {keySavedToast ? '✅ Saved Successfully!' : 'Save & Activate'}
-                  </button>
-                </div>
-              </form>
-            </div>
-          )}
-
-          {/* API Key status banner */}
-          {!apiKey && !showSettings && (
-            <div className="eb-chatbot-key-banner">
-              <span className="material-symbols-outlined text-[16px] text-emerald-600">verified</span>
-              <span className="eb-key-banner-text">
-                Live Google Gemini problem solver active.{' '}
-                <button type="button" onClick={() => setShowSettings(true)} className="eb-key-banner-link">
-                  Settings / Custom Key
-                </button>
-              </span>
-            </div>
-          )}
 
           {/* Messages Body */}
           <div className="eb-chatbot-messages">

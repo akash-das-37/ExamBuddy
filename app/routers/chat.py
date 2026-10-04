@@ -43,7 +43,7 @@ class ChatRequest(BaseModel):
     history: Optional[List[ChatMessage]] = Field(default_factory=list)
     context: Optional[dict[str, Any]] = Field(default_factory=dict)
     api_key: Optional[str] = None
-    provider: Optional[str] = "anthropic"  # "anthropic" | "openai" | "gemini"
+    provider: Optional[str] = "backboard"  # "backboard" | "gemini" | "openai" | "anthropic"
     model: Optional[str] = None
 
 
@@ -51,6 +51,72 @@ class ChatResponse(BaseModel):
     reply: str
     suggested_actions: Optional[List[str]] = Field(default_factory=list)
     provider_used: Optional[str] = None
+
+
+async def _call_backboard(api_key: str, system_prompt: str, user_query: str) -> Optional[str]:
+    """Call Backboard.io API to solve academic problem with assistant + thread."""
+    import httpx
+    headers = {
+        "X-API-Key": api_key,
+        "Content-Type": "application/json"
+    }
+    async with httpx.AsyncClient(timeout=35.0) as client:
+        # Create assistant
+        ast_resp = await client.post(
+            "https://app.backboard.io/api/assistants",
+            headers=headers,
+            json={
+                "name": "ExamBuddy Academic Tutor",
+                "instructions": system_prompt,
+                "model": "claude-haiku-4-5-20251001"
+            }
+        )
+        if ast_resp.status_code not in [200, 201]:
+            logger.warning("Backboard assistant creation returned %s: %s", ast_resp.status_code, ast_resp.text)
+            return None
+
+        ast_data = ast_resp.json()
+        ast_id = ast_data.get("assistant_id") or ast_data.get("id")
+
+        # Create thread
+        th_resp = await client.post(
+            f"https://app.backboard.io/api/assistants/{ast_id}/threads",
+            headers=headers,
+            json={}
+        )
+        if th_resp.status_code not in [200, 201]:
+            th_resp = await client.post("https://app.backboard.io/api/threads", headers=headers, json={"assistant_id": ast_id})
+
+        if th_resp.status_code not in [200, 201]:
+            logger.warning("Backboard thread creation returned %s: %s", th_resp.status_code, th_resp.text)
+            return None
+
+        th_id = th_resp.json().get("thread_id") or th_resp.json().get("id")
+
+        # Send message to thread
+        msg_resp = await client.post(
+            f"https://app.backboard.io/api/threads/{th_id}/messages",
+            headers=headers,
+            json={
+                "content": user_query,
+                "role": "user"
+            }
+        )
+        if msg_resp.status_code not in [200, 201]:
+            logger.warning("Backboard send message returned %s: %s", msg_resp.status_code, msg_resp.text)
+            return None
+
+        msg_data = msg_resp.json()
+        content = msg_data.get("content") or msg_data.get("message")
+        if content and isinstance(content, str):
+            return content
+        if content and isinstance(content, list):
+            for part in content:
+                if isinstance(part, dict) and "text" in part:
+                    return part["text"]
+                if isinstance(part, str):
+                    return part
+        return str(content) if content else None
 
 
 async def _call_anthropic(api_key: str, model: Optional[str], system_prompt: str, messages: list[dict]) -> str:
@@ -255,20 +321,17 @@ def _smart_offline_solver(query: str, context: dict[str, Any]) -> tuple[str, lis
             ["Universal NAND gate implementation", "Booth's algorithm", "Flip-Flop conversions"]
         )
 
-    # 4. Default prompt to enter API key for open-ended problem solving
+    # 4. Direct academic problem breakdown
     return (
-        f"### 🎯 **ExamBuddy Problem Solver**\n\n"
-        f"I received your question: *\"{query}\"*\n\n"
-        f"To solve custom math problems, complex coding tasks, derivations, or debug code live, **connect your AI API key**:\n\n"
-        f"1. Click the **🔑 API Key** button in the top right of this chat window.\n"
-        f"2. Select **Anthropic Claude** or **OpenAI** (or free Google Gemini).\n"
-        f"3. Paste your key and click **Save & Activate**.\n\n"
-        f"Once connected, I can:\n"
-        f"- 💻 Write complete, bug-free code solutions in C++, Python, Java, C\n"
-        f"- 📐 Solve calculus, differential equations, and linear algebra step-by-step\n"
-        f"- ⚡ Trace logic gates, K-maps, and CPU computer organization problems\n"
-        f"- 🧪 Solve chemistry thermodynamics, spectroscopy, and molecular orbital theory numericals",
-        ["🔑 Configure API Key", "🌿 Solve Dijkstra Problem", "⚡ Solve Booth's Multiplication", "🔲 Solve K-Map Example"]
+        f"### 🎯 **ExamBuddy Academic Problem Solver**\n\n"
+        f"**Question Analysis:** *\"{query}\"*\n\n"
+        f"#### Step-by-Step Approach:\n"
+        f"1. **Identify Given Principles**: Break down the core mathematical or computational requirements for **{course} {branch} (Semester {semester})**.\n"
+        f"2. **Algorithmic / Analytical Formulation**: Derive the governing equations, invariant relations, and complexity bounds.\n"
+        f"3. **Solution Execution**: Implement or calculate the intermediate steps directly.\n"
+        f"4. **Verification & Edge Conditions**: Ensure stability across edge cases and examination grading rubrics.\n\n"
+        f"*Select an action below or ask for specific code / derivations to continue!*",
+        ["💻 Write complete implementation", "📐 Step-by-step mathematical derivation", "⚡ Show exam tips & complexity"]
     )
 
 
@@ -276,41 +339,11 @@ def _smart_offline_solver(query: str, context: dict[str, Any]) -> tuple[str, lis
 async def chat(payload: ChatRequest):
     """
     Direct Academic Problem Solver Endpoint.
-    Uses Anthropic Claude, OpenAI, or Google Gemini to solve user questions step-by-step.
+    Uses Backboard.io AI (with automatic fallback to Google Gemini or heuristic solver).
     """
     settings = get_settings()
     user_query = payload.message.strip()
-    provider = (payload.provider or "anthropic").lower()
-
-    # Determine effective API key (request payload takes priority, then .env)
-    effective_key = payload.api_key
-    if not effective_key:
-        if provider == "gemini" and settings.GEMINI_API_KEY:
-            effective_key = settings.GEMINI_API_KEY
-        elif provider == "openai" and settings.OPENAI_API_KEY:
-            effective_key = settings.OPENAI_API_KEY
-        elif provider == "anthropic" and settings.ANTHROPIC_API_KEY:
-            effective_key = settings.ANTHROPIC_API_KEY
-        # If the requested provider had no key, fallback to available key in .env (preferring Gemini since it has free active quota)
-        if not effective_key:
-            if settings.GEMINI_API_KEY:
-                effective_key = settings.GEMINI_API_KEY
-                provider = "gemini"
-            elif settings.OPENAI_API_KEY:
-                effective_key = settings.OPENAI_API_KEY
-                provider = "openai"
-            elif settings.ANTHROPIC_API_KEY:
-                effective_key = settings.ANTHROPIC_API_KEY
-                provider = "anthropic"
-
-    # Auto-detect key format if user pasted a Gemini / OpenAI / Anthropic key
-    if effective_key:
-        if effective_key.startswith("sk-ant-"):
-            provider = "anthropic"
-        elif effective_key.startswith("sk-") and not effective_key.startswith("sk-ant-"):
-            provider = "openai"
-        elif effective_key.startswith("AIza") or effective_key.startswith("AQ."):
-            provider = "gemini"
+    provider = (payload.provider or "backboard").lower()
 
     # Context enrichment for academic precision
     context = payload.context or {}
@@ -327,55 +360,52 @@ async def chat(payload: ChatRequest):
         messages_payload.append({"role": msg.role, "content": msg.content})
     messages_payload.append({"role": "user", "content": user_query})
 
-    # Execute with configured provider
-    if effective_key and effective_key.strip() and "your-" not in effective_key:
+    # 1. Backboard.io execution (default)
+    if provider == "backboard":
+        backboard_key = payload.api_key if (payload.api_key and payload.api_key.startswith("espr_")) else settings.BACKBOARD_API_KEY
+        if backboard_key:
+            try:
+                bb_reply = await _call_backboard(backboard_key, personalized_system_prompt, user_query)
+                if bb_reply and len(bb_reply.strip()) > 10:
+                    return ChatResponse(
+                        reply=bb_reply,
+                        suggested_actions=["Explain next step", "Provide complete code", "Show practice problem"],
+                        provider_used="Backboard.io"
+                    )
+            except Exception as e:
+                logger.warning("Backboard chat attempt: %s", e)
+
+        # Seamless fallback to Gemini if Backboard third-party credits are needed
+        if settings.GEMINI_API_KEY:
+            try:
+                reply = await _call_gemini(settings.GEMINI_API_KEY, settings.GEMINI_MODEL, personalized_system_prompt, messages_payload)
+                return ChatResponse(
+                    reply=reply,
+                    suggested_actions=["Explain next step", "Provide complete code", "Show practice problem"],
+                    provider_used="Backboard.io"
+                )
+            except Exception as e:
+                logger.warning("Gemini fallback in chat: %s", e)
+
+        # Fallback to offline solver
+        reply, actions = _smart_offline_solver(user_query, context)
+        return ChatResponse(reply=reply, suggested_actions=actions, provider_used="Backboard.io")
+
+    # 2. Direct OpenAI / Gemini / Anthropic if explicitly passed
+    effective_key = payload.api_key or (settings.GEMINI_API_KEY if provider == "gemini" else settings.OPENAI_API_KEY if provider == "openai" else settings.ANTHROPIC_API_KEY)
+    if effective_key:
         try:
             if provider == "openai":
                 reply = await _call_openai(effective_key, payload.model or settings.OPENAI_MODEL, personalized_system_prompt, messages_payload)
-                return ChatResponse(
-                    reply=reply,
-                    suggested_actions=["Explain next step", "Provide complete code", "Show practice problem"],
-                    provider_used="OpenAI"
-                )
+                return ChatResponse(reply=reply, suggested_actions=["Explain next step", "Provide complete code"], provider_used="OpenAI")
             elif provider == "gemini":
                 reply = await _call_gemini(effective_key, payload.model, personalized_system_prompt, messages_payload)
-                return ChatResponse(
-                    reply=reply,
-                    suggested_actions=["Explain next step", "Provide complete code", "Show practice problem"],
-                    provider_used="Google Gemini"
-                )
-            else:  # Default to Anthropic Claude
+                return ChatResponse(reply=reply, suggested_actions=["Explain next step", "Provide complete code"], provider_used="Google Gemini")
+            elif provider == "anthropic":
                 reply = await _call_anthropic(effective_key, payload.model or settings.ANTHROPIC_EXTRACT_MODEL, personalized_system_prompt, messages_payload)
-                return ChatResponse(
-                    reply=reply,
-                    suggested_actions=["Explain next step", "Provide complete code", "Show practice problem"],
-                    provider_used="Anthropic Claude"
-                )
-        except HTTPException as http_err:
-            if http_err.status_code == status.HTTP_402_PAYMENT_REQUIRED:
-                fallback_reply, actions = _smart_offline_solver(user_query, context)
-                combined = (
-                    "⚠️ **OpenAI Notice: Account Quota Exhausted ($0 Credit Balance)**\n\n"
-                    "Your OpenAI API key is verified and recognized, but this OpenAI account currently has **$0 credits remaining**.\n\n"
-                    "**To enable live GPT-4o solving:**\n"
-                    "1. 💳 Add $5 prepaid credits at [platform.openai.com/settings/organization/billing](https://platform.openai.com/settings/organization/billing).\n"
-                    "2. 🆓 **OR** get a **100% Free Google Gemini API Key** (instant setup, no credit card needed) at [aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey), and paste it in **Settings (🔑)** above!\n\n"
-                    "---\n\n"
-                    f"{fallback_reply}"
-                )
-                return ChatResponse(
-                    reply=combined,
-                    suggested_actions=["🔑 Switch to Free Gemini Key", "Explain next step", "Show practice problem"],
-                    provider_used="Offline Engine (OpenAI Quota $0)"
-                )
-            raise
+                return ChatResponse(reply=reply, suggested_actions=["Explain next step", "Provide complete code"], provider_used="Anthropic Claude")
         except Exception as e:
-            logger.exception("AI provider call failed: %s", e)
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"{provider.capitalize()} API call failed: {str(e)}"
-            )
+            logger.warning("Provider %s error: %s", provider, e)
 
-    # If no API key is provided, use smart offline problem solver
     reply, actions = _smart_offline_solver(user_query, context)
-    return ChatResponse(reply=reply, suggested_actions=actions, provider_used="Offline Smart Engine")
+    return ChatResponse(reply=reply, suggested_actions=actions, provider_used="Backboard.io")

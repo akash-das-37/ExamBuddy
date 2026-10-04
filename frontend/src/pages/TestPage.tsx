@@ -106,7 +106,6 @@ export const TestPage: React.FC<TestPageProps> = ({ student, onNavigateTab }) =>
   const [aiTopic, setAiTopic] = useState<string>('');
   const [aiQuestionCount, setAiQuestionCount] = useState<number>(5);
   const [aiDifficulty, setAiDifficulty] = useState<string>('Medium');
-  const [aiProvider, setAiProvider] = useState<'backboard' | 'gemini'>('backboard');
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [aiError, setAiError] = useState<string | null>(null);
 
@@ -199,7 +198,7 @@ export const TestPage: React.FC<TestPageProps> = ({ student, onNavigateTab }) =>
     setIsSubmitted(false);
   };
 
-  // Generate new test using Backboard.io or Google Gemini
+  // Generate new test using Backboard.io
   const handleGenerateAiTest = async () => {
     setIsGenerating(true);
     setAiError(null);
@@ -211,7 +210,7 @@ export const TestPage: React.FC<TestPageProps> = ({ student, onNavigateTab }) =>
         topic: aiTopic.trim() || undefined,
         difficulty: aiDifficulty,
         question_count: aiQuestionCount,
-        provider: aiProvider,
+        provider: 'backboard',
       });
 
       const newPaper: TestPaper = {
@@ -500,7 +499,7 @@ export const TestPage: React.FC<TestPageProps> = ({ student, onNavigateTab }) =>
               type="button"
               className="eb-test-generate-ai-btn"
               onClick={() => setShowAiGenModal(true)}
-              title="Generate new exam questions with AI (Backboard / Gemini)"
+              title="Generate new exam questions with AI (Backboard.io)"
             >
               <span className="material-symbols-outlined text-[18px]">auto_awesome</span>
               <span>Generate with AI</span>
@@ -987,7 +986,7 @@ export const TestPage: React.FC<TestPageProps> = ({ student, onNavigateTab }) =>
               <div>
                 <h3 className="eb-test-modal-title">Generate Custom Test with AI</h3>
                 <p style={{ margin: '2px 0 0', fontSize: '13px', color: '#68796c' }}>
-                  Powered by <strong>Backboard.io</strong> & <strong>Google Gemini</strong>
+                  Powered by <strong>Backboard.io</strong>
                 </p>
               </div>
             </div>
@@ -1062,46 +1061,25 @@ export const TestPage: React.FC<TestPageProps> = ({ student, onNavigateTab }) =>
                 </div>
               </div>
 
-              {/* Provider Selection */}
+              {/* AI Generation Engine */}
               <div>
                 <label className="eb-test-modal-field-label">
                   AI Generation Engine
                 </label>
-                <div className="eb-test-provider-grid">
-                  <div
-                    className={`eb-test-provider-card ${aiProvider === 'backboard' ? 'active' : ''}`}
-                    onClick={() => !isGenerating && setAiProvider('backboard')}
-                  >
-                    <input
-                      type="radio"
-                      id="ai-prov-bb"
-                      name="aiProvider"
-                      checked={aiProvider === 'backboard'}
-                      onChange={() => setAiProvider('backboard')}
-                      disabled={isGenerating}
-                    />
-                    <label htmlFor="ai-prov-bb" style={{ cursor: 'pointer', margin: 0 }}>
-                      <span style={{ fontWeight: 700, display: 'block', color: '#1a231b' }}>Backboard.io</span>
-                      <span style={{ fontSize: '11px', color: '#687a6d' }}>Unified API Key (espr_...)</span>
-                    </label>
-                  </div>
-
-                  <div
-                    className={`eb-test-provider-card ${aiProvider === 'gemini' ? 'active' : ''}`}
-                    onClick={() => !isGenerating && setAiProvider('gemini')}
-                  >
-                    <input
-                      type="radio"
-                      id="ai-prov-gem"
-                      name="aiProvider"
-                      checked={aiProvider === 'gemini'}
-                      onChange={() => setAiProvider('gemini')}
-                      disabled={isGenerating}
-                    />
-                    <label htmlFor="ai-prov-gem" style={{ cursor: 'pointer', margin: 0 }}>
-                      <span style={{ fontWeight: 700, display: 'block', color: '#1a231b' }}>Google Gemini</span>
-                      <span style={{ fontSize: '11px', color: '#687a6d' }}>Gemini 2.5 Flash (Fast)</span>
-                    </label>
+                <div
+                  className="eb-test-provider-card active"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    cursor: 'default',
+                    padding: '10px 14px'
+                  }}
+                >
+                  <span className="material-symbols-outlined text-[22px] text-emerald-700">bolt</span>
+                  <div>
+                    <span style={{ fontWeight: 700, display: 'block', color: '#1a231b', fontSize: '13.5px' }}>Backboard.io</span>
+                    <span style={{ fontSize: '11px', color: '#687a6d' }}>Unified Academic Intelligence • Active</span>
                   </div>
                 </div>
               </div>

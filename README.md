@@ -7,7 +7,7 @@
 [![React](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org)
 [![Vite](https://img.shields.io/badge/Vite-6.4-646CFF?style=for-the-badge&logo=vite)](https://vitejs.dev)
-[![AI Engines](https://img.shields.io/badge/AI%20Engines-Backboard.io%20%7C%20Gemini-10a37f?style=for-the-badge)](https://app.backboard.io)
+[![AI Engine](https://img.shields.io/badge/AI%20Engine-Backboard.io-10a37f?style=for-the-badge)](https://app.backboard.io)
 
 > **ExamBuddy** is an autonomous academic intelligence copilot built for developers, engineers, and technical students. Tech students spend their semester building real projects, grinding LeetCode, and developing industry skills—leaving college academics for the last minute. When exams knock at the door, ExamBuddy uses automated portal crawling, **PyMuPDF table extraction**, a **recency-weighted mathematical decay algorithm**, and a **GitHub-style study activity heatmap** to distill massive syllabi and past papers into an actionable, high-yield revision blueprint.
 
@@ -96,7 +96,7 @@ Students in technical fields (Computer Science, Information Technology, AI/ML, E
 
 ### 4. Interactive Test Module & AI Question Generator
 * **Full-Featured Exam Practice (`TestPage.tsx` & `tests.py`)**: Realistic timed testing environment with multiple-choice questions, live timer countdown, question status tracker (Answered, Marked for Review, Unvisited), and instant grading with in-depth solution breakdowns.
-* **Dual AI Generation Engine (Backboard.io + Google Gemini)**: Generates bespoke university exam papers on demand using the student's unified **Backboard.io** API key or **Google Gemini 2.5 Flash** fallback engine.
+* **Backboard.io AI Question Synthesis**: Generates bespoke university exam papers on demand with zero manual configuration, seamlessly powered by unified **Backboard.io** intelligence.
 * **Granular Exam Customization**: Select specific focus chapters/topics (e.g. *Binary Trees*, *Dijkstra's Algorithm*, *Midterm Syllabus*), question counts (3, 5, 10, 15), and difficulty levels (*Easy*, *Medium*, *Hard*, *Mixed*).
 * **Subject Carousel Navigation**: Elegant horizontal carousel with subject icon badges, chapter progress counts, active green selection pill, and responsive navigation controls.
 
@@ -107,6 +107,7 @@ Students in technical fields (Computer Science, Information Technology, AI/ML, E
 
 ### 6. "Solve with AI" Floating Tutor Assistant
 * **Floating Academic Companion (`AiChatbot.tsx` & `chat.py`)**: An always-accessible smart tutor widget on the dashboard.
+* **Unified Backboard.io Intelligence**: Zero client setup or manual API keys needed—queries are processed directly via **Backboard.io** with instant step-by-step mathematical reasoning, algorithm tracing, and syllabus guidance.
 * **Context-Aware Assistance**: Answers doubts on complex formulas, algorithms, derivations, and exam tips tailored to the student's active semester syllabus.
 
 ### 7. AI Study Planner & Daily Goal Tracker
@@ -206,7 +207,7 @@ $$S_{\text{final}}(T) = \min\left(100, \; \left( \frac{S_{\text{raw}}(T)}{\max_{
 | **PDF Extraction** | **PyMuPDF (`fitz`) 1.25.1** | Fast C-compiled PDF table extraction, zero LLM cost for structured syllabi |
 | **Crawler & Scraping** | **HTTPX, BeautifulSoup4, Playwright** | Async non-blocking network calls with headless Chromium fallback for JS portals |
 | **Database & ORM** | **SQLAlchemy 2.0 (Async), aiosqlite / PostgreSQL, Alembic** | Async database access, seamless migrations, SQLite for local / Postgres for prod |
-| **AI / LLM Engines** | **Backboard.io, Google Gemini 2.5 Flash, Anthropic Claude 3.5, OpenAI GPT-4o-mini** | Unified test question synthesis, RAG memory, and document classification with automatic fallback |
+| **AI / LLM Engine** | **Backboard.io (Unified Academic Intelligence)** | Autonomous test question synthesis, RAG memory, and document classification |
 | **Notification Engine**| **Resend API / SMTP** | Multi-channel student notice alert dispatcher |
 | **Cloud Deployment** | **Vercel (Frontend)**, **Docker / Cloud VPS (Backend)** | Edge-hosted frontend distribution with global CDN caching |
 
@@ -235,7 +236,7 @@ ExamBuddy/
 │   │   ├── colleges.py             # /colleges (crawl, syllabus, pyqs, search-syllabus)
 │   │   ├── analysis.py             # /analysis (importance score compute, study reports)
 │   │   ├── notifications.py        # /notifications (student alerts & preferences)
-│   │   ├── tests.py                # /tests (AI question synthesis via Backboard / Gemini)
+│   │   ├── tests.py                # /tests (AI question synthesis via Backboard.io)
 │   │   └── chat.py                 # /chat (Solve with AI context-aware academic assistant)
 │   ├── schemas/                    # Pydantic validation and serialization models
 │   │   ├── auth.py                 # Login / signup payload schemas
@@ -422,7 +423,7 @@ cd ExamBuddy
 ### AI Question Generator & Tests (`/tests`)
 | Method | Endpoint | Description |
 |---|---|---|
-| `POST` | `/tests/generate` | Synthesize university-standard exam questions via Backboard.io or Gemini with answer explanations |
+| `POST` | `/tests/generate` | Synthesize university-standard exam questions via Backboard.io with answer explanations |
 
 ### AI Academic Tutor (`/chat`)
 | Method | Endpoint | Description |
