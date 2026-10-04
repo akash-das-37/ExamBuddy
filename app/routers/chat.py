@@ -108,15 +108,36 @@ async def _call_backboard(api_key: str, system_prompt: str, user_query: str) -> 
 
         msg_data = msg_resp.json()
         content = msg_data.get("content") or msg_data.get("message")
+        candidate = None
         if content and isinstance(content, str):
-            return content
-        if content and isinstance(content, list):
+            candidate = content
+        elif content and isinstance(content, list):
             for part in content:
                 if isinstance(part, dict) and "text" in part:
-                    return part["text"]
+                    candidate = part["text"]
+                    break
                 if isinstance(part, str):
-                    return part
-        return str(content) if content else None
+                    candidate = part
+                    break
+        elif content:
+            candidate = str(content)
+
+        if candidate:
+            lower = candidate.lower()
+            is_credit_notice = (
+                "free credit" in lower
+                or "reserved for memory" in lower
+                or "billing page" in lower
+                or "can't cover llm" in lower
+                or "cannot cover llm" in lower
+                or "start a subscription" in lower
+                or "auto-reload" in lower
+                or "credit balance" in lower
+                or "insufficient_quota" in lower
+            )
+            if not is_credit_notice and len(candidate.strip()) > 5:
+                return candidate
+        return None
 
 
 async def _call_anthropic(api_key: str, model: Optional[str], system_prompt: str, messages: list[dict]) -> str:

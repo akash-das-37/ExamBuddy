@@ -223,14 +223,39 @@ async function fetchBackboardDirect(userQuery: string, systemPrompt: string): Pr
         role: 'user',
       }),
     });
-    if (!msgResp.ok) return null;
     const msgData = await msgResp.json();
     const content = msgData.content || msgData.message;
-    if (typeof content === 'string' && content.trim()) return content;
-    if (Array.isArray(content)) {
+    let candidate = '';
+    if (typeof content === 'string' && content.trim()) {
+      candidate = content;
+    } else if (Array.isArray(content)) {
       for (const p of content) {
-        if (typeof p === 'object' && p?.text) return p.text;
-        if (typeof p === 'string' && p.trim()) return p;
+        if (typeof p === 'object' && p?.text) {
+          candidate = p.text;
+          break;
+        }
+        if (typeof p === 'string' && p.trim()) {
+          candidate = p;
+          break;
+        }
+      }
+    }
+
+    if (candidate) {
+      const lower = candidate.toLowerCase();
+      const isCreditNotice =
+        lower.includes('free credit') ||
+        lower.includes('reserved for memory') ||
+        lower.includes('billing page') ||
+        lower.includes("can't cover llm") ||
+        lower.includes('cannot cover llm') ||
+        lower.includes('start a subscription') ||
+        lower.includes('auto-reload') ||
+        lower.includes('credit balance') ||
+        lower.includes('insufficient_quota');
+
+      if (!isCreditNotice && candidate.length > 5) {
+        return candidate;
       }
     }
     return null;
