@@ -22,9 +22,11 @@
    - [1. GitHub-Style Learned Topics Heatmap](#1-github-style-learned-topics-heatmap)
    - [2. High-Yield Exam Suggestions & Video Drills](#2-high-yield-exam-suggestions--video-drills)
    - [3. Dynamic Semester Syllabus Blueprint](#3-dynamic-semester-syllabus-blueprint)
-   - [4. PYQ Question Bank & Multi-Format Ingestion](#4-pyq-question-bank--multi-format-ingestion)
-   - [5. AI Study Planner & Daily Goal Tracker](#5-ai-study-planner--daily-goal-tracker)
-   - [6. Autonomous College Crawler & Notice Watchdog](#6-autonomous-college-crawler--notice-watchdog)
+   - [4. Interactive Test Module & AI Question Generator](#4-interactive-test-module--ai-question-generator)
+   - [5. PYQ Question Bank & Multi-Format Ingestion](#5-pyq-question-bank--multi-format-ingestion)
+   - [6. "Solve with AI" Floating Tutor Assistant](#6-solve-with-ai-floating-tutor-assistant)
+   - [7. AI Study Planner & Daily Goal Tracker](#7-ai-study-planner--daily-goal-tracker)
+   - [8. Autonomous College Crawler & Notice Watchdog](#8-autonomous-college-crawler--notice-watchdog)
 5. [High-Level Architecture](#-high-level-architecture)
 6. [Mathematical Scoring Formulation](#-mathematical-scoring-formulation)
 7. [Technology Stack](#-technology-stack)
@@ -92,16 +94,26 @@ Students in technical fields (Computer Science, Information Technology, AI/ML, E
 * **Multi-Source Subject Aggregation**: Merges scanned university regulations, uploaded syllabi, user-added subjects, and official MAKAUT/AICTE curriculum presets.
 * **Seamless Cross-Navigation**: Clicking any subject on the Dashboard immediately opens that subject and chapter in the Syllabus explorer.
 
-### 4. PYQ Question Bank & Multi-Format Ingestion
+### 4. Interactive Test Module & AI Question Generator
+* **Full-Featured Exam Practice (`TestPage.tsx` & `tests.py`)**: Realistic timed testing environment with multiple-choice questions, live timer countdown, question status tracker (Answered, Marked for Review, Unvisited), and instant grading with in-depth solution breakdowns.
+* **Dual AI Generation Engine (Backboard.io + Google Gemini)**: Generates bespoke university exam papers on demand using the student's unified **Backboard.io** API key or **Google Gemini 2.5 Flash** fallback engine.
+* **Granular Exam Customization**: Select specific focus chapters/topics (e.g. *Binary Trees*, *Dijkstra's Algorithm*, *Midterm Syllabus*), question counts (3, 5, 10, 15), and difficulty levels (*Easy*, *Medium*, *Hard*, *Mixed*).
+* **Subject Carousel Navigation**: Elegant horizontal carousel with subject icon badges, chapter progress counts, active green selection pill, and responsive navigation controls.
+
+### 5. PYQ Question Bank & Multi-Format Ingestion
 * **Universal Uploader (`UploadPyqModal.tsx`)**: Supports multi-format question paper uploads across **PDF, Images (JPG, PNG), and Word documents (DOCX)**.
 * **Subject & Year Filtering**: Browse papers by academic year (`2024`, `2023`, `2022`, ...) and active semester subjects.
 * **Interactive Document Viewer (`DocumentViewerModal.tsx`)**: Native viewer for scanned question papers with zoom controls and safe deletion management.
 
-### 5. AI Study Planner & Daily Goal Tracker
+### 6. "Solve with AI" Floating Tutor Assistant
+* **Floating Academic Companion (`AiChatbot.tsx` & `chat.py`)**: An always-accessible smart tutor widget on the dashboard.
+* **Context-Aware Assistance**: Answers doubts on complex formulas, algorithms, derivations, and exam tips tailored to the student's active semester syllabus.
+
+### 7. AI Study Planner & Daily Goal Tracker
 * **Interactive Daily Goals**: 6-task structured study routine on the Dashboard with completion gauge and animated milestone checkmarks.
 * **Real-Time Cross-App Sync**: Checking off daily goals immediately updates today's activity on the Study Report heatmap.
 
-### 6. Autonomous College Crawler & Notice Watchdog
+### 8. Autonomous College Crawler & Notice Watchdog
 * **Priority Spider**: Asynchronous crawling engine (`app/services/crawler.py`) prioritizing academic schedules, postponements, and examination circulars.
 * **Smart Alert Matching**: Dispatches notifications tailored to the student's enrolled course and current semester.
 
@@ -194,7 +206,7 @@ $$S_{\text{final}}(T) = \min\left(100, \; \left( \frac{S_{\text{raw}}(T)}{\max_{
 | **PDF Extraction** | **PyMuPDF (`fitz`) 1.25.1** | Fast C-compiled PDF table extraction, zero LLM cost for structured syllabi |
 | **Crawler & Scraping** | **HTTPX, BeautifulSoup4, Playwright** | Async non-blocking network calls with headless Chromium fallback for JS portals |
 | **Database & ORM** | **SQLAlchemy 2.0 (Async), aiosqlite / PostgreSQL, Alembic** | Async database access, seamless migrations, SQLite for local / Postgres for prod |
-| **AI / LLM Layer** | **Anthropic Claude 3.5 (Sonnet / Haiku)** | Deep document classification and semantic question boundary detection |
+| **AI / LLM Engines** | **Backboard.io, Google Gemini 2.5 Flash, Anthropic Claude 3.5, OpenAI GPT-4o-mini** | Unified test question synthesis, RAG memory, and document classification with automatic fallback |
 | **Notification Engine**| **Resend API / SMTP** | Multi-channel student notice alert dispatcher |
 | **Cloud Deployment** | **Vercel (Frontend)**, **Docker / Cloud VPS (Backend)** | Edge-hosted frontend distribution with global CDN caching |
 
@@ -222,7 +234,9 @@ ExamBuddy/
 │   │   ├── auth.py                 # /auth (login, signup, /me)
 │   │   ├── colleges.py             # /colleges (crawl, syllabus, pyqs, search-syllabus)
 │   │   ├── analysis.py             # /analysis (importance score compute, study reports)
-│   │   └── notifications.py        # /notifications (student alerts & preferences)
+│   │   ├── notifications.py        # /notifications (student alerts & preferences)
+│   │   ├── tests.py                # /tests (AI question synthesis via Backboard / Gemini)
+│   │   └── chat.py                 # /chat (Solve with AI context-aware academic assistant)
 │   ├── schemas/                    # Pydantic validation and serialization models
 │   │   ├── auth.py                 # Login / signup payload schemas
 │   │   ├── extraction.py           # Syllabus, PYQ, and notice response schemas
@@ -232,7 +246,7 @@ ExamBuddy/
 │   │   ├── syllabus_extractor.py   # Discovery & PyMuPDF table extraction engine
 │   │   ├── processor.py            # Document classification & parsing pipeline
 │   │   ├── analysis_service.py     # Recency decay scoring & topic matching
-│   │   ├── llm_service.py          # Anthropic Claude client with heuristic fallbacks
+│   │   ├── llm_service.py          # Multi-LLM provider client (Backboard, Gemini, Claude, OpenAI)
 │   │   ├── email_service.py        # Email circular notifications (Resend / mock)
 │   │   └── storage.py              # Local disk storage service for PDFs
 │   └── main.py                     # FastAPI entrypoint, middleware, static mount
@@ -241,6 +255,7 @@ ExamBuddy/
 │   │   ├── api/                    # Client API connectors
 │   │   │   └── client.ts           # Centralized typed fetch client (VITE_API_BASE)
 │   │   ├── components/             # Reusable UI components
+│   │   │   ├── AiChatbot.tsx       # "Solve with AI" Floating Academic Tutor & Assistant
 │   │   │   ├── ContributionGraph.tsx # GitHub-style 53-week Learned Topics Heatmap
 │   │   │   ├── DocumentViewerModal.tsx # Multi-format document & image inspector
 │   │   │   ├── EditProfileModal.tsx # User profile & semester editor
@@ -253,9 +268,11 @@ ExamBuddy/
 │   │   │   ├── documentsData.ts    # Seeded regulation documents archive
 │   │   │   ├── semesterSubjects.ts # Semester-wise subjects (Sem 1 to 8) & palettes
 │   │   │   ├── subjectPresets.ts   # Curated topics and chapter outlines
-│   │   │   └── suggestionsData.ts  # High-yield exam topics & YouTube video links
+│   │   │   ├── suggestionsData.ts  # High-yield exam topics & YouTube video links
+│   │   │   └── testsData.ts        # Built-in practice tests, question sets & solutions
 │   │   ├── pages/                  # Top-level views
 │   │   │   ├── Dashboard.tsx       # Today's plan, dynamic subjects & stats
+│   │   │   ├── TestPage.tsx        # Interactive timed test engine & AI Custom Generator
 │   │   │   ├── StudyReportPage.tsx # Learned Topics Heatmap & study time breakdown
 │   │   │   ├── SyllabusPage.tsx    # Interactive syllabus tracker & module viewer
 │   │   │   ├── PyqPage.tsx         # Question bank, year tabs & practice viewer
@@ -265,8 +282,10 @@ ExamBuddy/
 │   │   │   ├── HomePage.tsx        # Hero landing showcase
 │   │   │   └── LoginPage.tsx       # Authentication view
 │   │   ├── styles/                 # Modular Vanilla CSS stylesheets
+│   │   │   ├── AiChatbot.css       # Floating tutor assistant & chat bubble styling
 │   │   │   ├── ContributionGraph.css # Heatmap styling matching GitHub layout
 │   │   │   ├── Dashboard.css       # Workspace & grid layouts
+│   │   │   ├── TestPage.css        # Test taking UI, score card, and AI generator modal
 │   │   │   ├── StudyReportPage.css # Study report charts & metric cards
 │   │   │   ├── SyllabusPage.css    # Syllabus explorer & topic checkboxes
 │   │   │   ├── PyqPage.css         # Question bank & paper cards
@@ -399,6 +418,16 @@ cd ExamBuddy
 |---|---|---|
 | `GET` | `/notifications/me` | Retrieve circular alerts delivered to the student |
 | `PATCH` | `/notifications/preferences` | Enable or disable email circular dispatch |
+
+### AI Question Generator & Tests (`/tests`)
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/tests/generate` | Synthesize university-standard exam questions via Backboard.io or Gemini with answer explanations |
+
+### AI Academic Tutor (`/chat`)
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/chat/ask` | Contextual Q&A session with AI Tutor for syllabus doubts and problem solving |
 
 ---
 
