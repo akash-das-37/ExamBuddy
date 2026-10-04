@@ -28,12 +28,14 @@
    - [7. AI Study Planner & Daily Goal Tracker](#7-ai-study-planner--daily-goal-tracker)
    - [8. Autonomous College Crawler & Notice Watchdog](#8-autonomous-college-crawler--notice-watchdog)
 5. [High-Level Architecture](#-high-level-architecture)
-6. [Mathematical Scoring Formulation](#-mathematical-scoring-formulation)
-7. [Technology Stack](#-technology-stack)
-8. [Project Structure](#-project-structure)
-9. [Getting Started (Local Development)](#-getting-started-local-development)
-10. [REST API Documentation](#-rest-api-documentation)
-11. [Deployment Guide (Vercel & Cloud)](#-deployment-guide)
+6. [Current Student Workflow & Lifecycle](#-current-student-workflow--lifecycle)
+7. [End-to-End Processing & Intelligence Pipeline](#-end-to-end-processing--intelligence-pipeline)
+8. [Mathematical Scoring Formulation](#-mathematical-scoring-formulation)
+9. [Technology Stack](#-technology-stack)
+10. [Project Structure](#-project-structure)
+11. [Getting Started (Local Development)](#-getting-started-local-development)
+12. [REST API Documentation](#-rest-api-documentation)
+13. [Deployment Guide (Vercel & Cloud)](#-deployment-guide)
 
 ---
 
@@ -163,6 +165,125 @@ flowchart TB
     Backend <--> Filesystem
     Crawler -->|Fetch HTTP/HTML| UniPortal["University Web Portal\n(e.g., jiscollege.ac.in)"]
 ```
+
+---
+
+## ⚡ Current Student Workflow & Lifecycle
+
+ExamBuddy orchestrates the entire preparation lifecycle for engineering and technical students from enrollment to exam morning:
+
+```mermaid
+journey
+    title Student Academic Preparation Journey with ExamBuddy
+    section 1. Onboarding
+      Sign up & profile setup (B.Tech CSE Sem 2): 5: Student
+      Auto-lock regulation curriculum & course tables: 5: ExamBuddy
+    section 2. Pareto Discovery
+      Explore High-Yield Topics (Suggestions page): 5: Student
+      Add Tier-1 concepts to "Today's Plan": 5: Student
+      Watch curated YouTube educator clips: 4: Student
+    section 3. Problem Solving
+      Ask complex doubts via floating AI Tutor: 5: Student
+      Backboard.io derives formulas & traces code: 5: ExamBuddy
+    section 4. Knowledge Validation
+      Configure AI Practice Test (Focus + Difficulty): 4: Student
+      Synthesize university questions & instant grading: 5: ExamBuddy
+    section 5. Habit & Accountability
+      Check off daily milestone goals: 5: Student
+      53-week GitHub-style heatmap updates live: 5: ExamBuddy
+    section 6. Exam Watchdog
+      Autonomous crawler monitors college circulars: 5: ExamBuddy
+      Student alerted on dates, postponements & forms: 5: Student
+```
+
+### Detailed Operational Step-by-Step
+
+| Step | Phase | Action & Technology | Outcome |
+| :---: | :--- | :--- | :--- |
+| **01** | **Onboarding & Regulation Lock** | Student registers with degree, branch, and active semester (`POST /auth/signup`). System binds active courses (`CS301`, `EC301`, `M301`, labs) with credits and contact hours. | Eliminates obsolete regulation confusion; establishes personalized dashboard context. |
+| **02** | **Pareto Syllabus Distillation** | `SuggestionsPage.tsx` applies recency-weighted PYQ analytics to highlight top 20% high-yield concepts ($S \ge 70$, e.g. *Booth's Algorithm 96% frequency*). | Student bypasses 500-page textbook overload and focuses strictly on high-probability questions. |
+| **03** | **Interactive Problem Solving** | Student clicks *"Solve with AI"* (`AiChatbot.tsx`). Queries are dispatched with zero manual setup via **Backboard.io** (`espr_...`), resolving complex second-order ODEs ($y''+4y=\sin(2x)$), K-maps, and graph algorithms. | Instant step-by-step mathematical reasoning and verified C++/Java/Python source code. |
+| **04** | **Custom Timed Mock Exams** | Student launches **AI Test Generator** (`TestPage.tsx`), selecting subject, target chapter (e.g. *Binary Trees*), difficulty, and question count (3, 5, 10, 15). Backboard.io synthesizes university-standard MCQs. | Realistic timed exam simulations with instant scorecards, correct answers, and pedagogical rationales. |
+| **05** | **Study Habit & Heatmap Sync** | Checking off items on the 6-task **Daily Goals** tracker increments the student's **53-Week GitHub-Style Activity Calendar** (`ContributionGraph.tsx`) with 5 visual green intensity levels. | Gamifies exam revision with visible daily momentum, retention metrics, and annual topic breakdowns. |
+| **06** | **Notice Watchdog Surveillance** | Background priority crawler (`crawler.py`) inspects university circular boards for schedules, postponements, and form deadlines, pushing targeted alerts (`notifications.py`). | Prevents missed exam form submission deadlines and administrative panics. |
+
+---
+
+## 🔄 End-to-End Processing & Intelligence Pipeline
+
+The ExamBuddy data pipeline bridges raw university portal documents to interactive student insights through 5 automated stages:
+
+```mermaid
+flowchart TD
+    subgraph S1["Stage 1: Autonomous Web Discovery"]
+        Portal["🏛️ University Portal / Notice Board\n(HTML / JS / ASP.NET)"]
+        Crawler["🕷️ Async Priority Spider (crawler.py)\n(HTTPX + Playwright Headless)"]
+        Portal -->|Crawl & Discover| Crawler
+    end
+
+    subgraph S2["Stage 2: Multi-Format Document Ingestion"]
+        DocClassifier["📑 Document Classifier & Filter"]
+        PyMuPDF["⚡ PyMuPDF (fitz) Table Parser\n(Extracts CS301, Credits, Topics)"]
+        PYQStore["📂 PYQ Bank Ingestion\n(PDF, Word DOCX, Image Scans)"]
+        Crawler -->|Raw Blobs| DocClassifier
+        DocClassifier -->|Regulation PDFs| PyMuPDF
+        DocClassifier -->|Past Question Papers| PYQStore
+    end
+
+    subgraph S3["Stage 3: Mathematical Pareto Analytics"]
+        Tokenizer["🔤 N-Gram Semantic Topic Matcher"]
+        DecayModel["📐 Recency-Weighted Decay Engine\nW_recency = 1 / (1 + 0.25 * ΔY)"]
+        TierClassifier["🎯 3-Tier Priority Generator\n(Tier 1 Core, Tier 2 Booster, Tier 3 Buffer)"]
+        PyMuPDF --> Tokenizer
+        PYQStore --> Tokenizer
+        Tokenizer --> DecayModel
+        DecayModel --> TierClassifier
+    end
+
+    subgraph S4["Stage 4: Autonomous AI Intelligence (Backboard.io)"]
+        BackboardEngine["⚡ Backboard.io Engine (Assistant + Threads API)\nUnified Key: espr_..."]
+        TestSynth["📝 Timed Practice Test Synthesizer\n(/tests/generate)"]
+        ChatTutor["💡 Solve with AI Problem Solver\n(/chat)"]
+        Resilience["🛡️ Automatic Resilience Fallback\n(Google Gemini & Local Engineering Solvers)"]
+        BackboardEngine --> TestSynth
+        BackboardEngine --> ChatTutor
+        BackboardEngine -.->|Credit Notice Caught| Resilience
+    end
+
+    subgraph S5["Stage 5: Presentation & Actionable Insights"]
+        Heatmap["🌿 53-Week GitHub Study Heatmap\n(Daily Habit Tracking)"]
+        SuggestionsUI["📊 High-Yield Suggestions & Video Drills\n(Neso, Abdul Bari, Striver)"]
+        NoticeAlerts["🔔 Targeted Circular Notifications\n(Course & Semester Matched)"]
+        TierClassifier --> SuggestionsUI
+        TierClassifier --> Heatmap
+        TestSynth --> Heatmap
+        Crawler --> NoticeAlerts
+    end
+```
+
+### In-Depth Pipeline Architecture
+
+#### Stage 1: Autonomous Web Discovery & Scraping
+* **Priority Spider (`crawler.py`)**: Crawls university domains using asynchronous HTTP connection pooling (`HTTPX`) and headless Chromium (`Playwright`) for JavaScript-rendered circular tables.
+* **Smart Filter & Deduplication**: Prioritizes URLs matching patterns like `*syllabus*`, `*regulation*`, `*notice*`, and `*exam*`, computing SHA-256 hashes of PDF blobs to prevent redundant processing.
+
+#### Stage 2: PyMuPDF Structural Extraction & Multi-Format Ingestion
+* **High-Speed C-Engine Extraction (`syllabus_extractor.py`)**: PyMuPDF (`fitz`) parses multi-page regulation tables in under 500ms without expensive vision models, extracting course codes (`CS201`, `M201`), credits, lecture/practical hours, and modular syllabus points.
+* **Universal PYQ Ingestion**: Ingests past examination question papers across **PDF, Word (.docx), and Scanned Images**, isolating marks, question numbers, and sub-questions.
+
+#### Stage 3: Recency-Weighted Scoring & Pareto Classification
+* **N-Gram Semantic Matching (`analysis_service.py`)**: Computes token overlap and stem matching between past exam questions and official syllabus topics.
+* **Time-Decay Metric**: Multiplies question marks by recency weights ($W_{\text{recency}} = \frac{1}{1 + 0.25 \times \Delta Y}$), promoting recent examination trends over decade-old papers.
+* **Tier Partitioning**: Segregates curriculum into **Tier 1 (Core Must-Pass $\ge 70$)**, **Tier 2 (Grade Booster $40–69$)**, and **Tier 3 (Breadth Buffer $< 40$)**.
+
+#### Stage 4: Backboard.io AI Question Synthesis & Problem Solving
+* **Unified Assistant Protocol (`chat.py` & `tests.py`)**: Interacts with Backboard.io using persistent assistant threads (`X-API-Key: espr_...`), resolving complex engineering problems, differential equations ($y'' + 4y = \sin(2x)$), Booth's multiplication tables, and algorithm proofs.
+* **Fail-Safe Resilience**: Backend and frontend clients automatically intercept third-party credit notices (*"free credit is reserved for Memory & RAG"*), routing requests instantly to Google Gemini or verified local academic solvers with zero user configuration.
+
+#### Stage 5: Editorial Botanical Visualization & Notification Dispatch
+* **53-Week Study Heatmap (`ContributionGraph.tsx`)**: Renders daily topic learning streaks inspired by GitHub's contribution layout with interactive day inspection and retention analytics.
+* **Dynamic Semester Syllabus (`SyllabusPage.tsx`)**: Adapts view dynamically to the student's enrolled semester.
+* **Targeted Notice Watchdog**: Filters scraped university circulars and notifies students based on enrolled branch and year.
 
 ---
 
