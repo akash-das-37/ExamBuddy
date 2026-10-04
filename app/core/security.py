@@ -63,6 +63,7 @@ async def get_current_student(
         headers={"WWW-Authenticate": "Bearer"},
     )
 
+    student_id = None
     try:
         payload = jwt.decode(
             token,
@@ -70,24 +71,53 @@ async def get_current_student(
             algorithms=[settings.JWT_ALGORITHM],
         )
         student_id_str: str | None = payload.get("sub")
-        if student_id_str is None:
-            raise credentials_exception
-        student_id = uuid.UUID(student_id_str)
+        if student_id_str is not None:
+            student_id = uuid.UUID(student_id_str)
     except (JWTError, ValueError, TypeError):
-        raise credentials_exception
+        pass
 
     from sqlalchemy.orm import selectinload
-    result = await db.execute(
-        select(Student).options(selectinload(Student.college)).where(Student.id == student_id)
-    )
-    student = result.scalar_one_or_none()
 
-    if student is None:
-        raise credentials_exception
-    if not student.is_active:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Account is deactivated",
+    if student_id is not None:
+        result = await db.execute(
+            select(Student).options(selectinload(Student.college)).where(Student.id == student_id)
         )
+        student = result.scalar_one_or_none()
+        if student is not None:
+            if not student.is_active:
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail="Account is deactivated",
+                )
+            return student
 
-    return student
+    # Fallback: check if this is a valid Supabase Auth token
+    if settings.SUPABASE_URL and settings.SUPABASE_ANON_KEY:
+        try:
+            import httpx
+            async with httpx.AsyncClient(timeout=6.0) as client:
+                resp = await client.get(
+                    f"{settings.SUPABASE_URL}/auth/v1/user",
+                    headers={
+                        "apikey": settings.SUPABASE_ANON_KEY,
+                        "Authorization": f"Bearer {token}",
+                    },
+                )
+                if resp.status_code == 200:
+                    supa_user = resp.json()
+                    supa_email = supa_user.get("email")
+                    if supa_email:
+                        stmt = select(Student).options(selectinload(Student.college)).where(Student.email == supa_email)
+                        st_res = await db.execute(stmt)
+                        student = st_res.scalar_one_or_none()
+                        if student:
+                            if not student.is_active:
+                                raise HTTPException(
+                                    status_code=status.HTTP_403_FORBIDDEN,
+                                    detail="Account is deactivated",
+                                )
+                            return student
+        except Exception:
+            pass
+
+    raise credentials_exception

@@ -206,18 +206,10 @@ export const api = {
           return data;
         }
 
-        if (response.status === 401 || response.status === 400) {
-          let errorMsg = 'Invalid email or password. Please verify your credentials.';
-          try {
-            const errData = await response.json();
-            if (errData && errData.detail) errorMsg = errData.detail;
-          } catch {}
-          throw new Error(errorMsg);
-        }
+        // Backend returned 401 or 400 (user might be registered in Supabase or password updated there)
+        // Do not throw immediately; fall through to Supabase cloud auth
       } catch (err: any) {
-        if (err.message && !err.message.includes('fetch') && !err.message.includes('NetworkError') && !err.message.includes('Failed')) {
-          throw err;
-        }
+        // Backend offline or network error; fall through to Supabase cloud auth
       }
     }
 
@@ -244,6 +236,24 @@ export const api = {
           };
           localStorage.setItem('exambuddy_token', data.session.access_token);
           localStorage.setItem('exambuddy_student_profile', JSON.stringify(studentObj));
+
+          // Sync to local backend in background if available
+          if (API_BASE) {
+            fetch(`${API_BASE}/auth/signup`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                name: studentObj.name,
+                email: studentObj.email,
+                password: password,
+                college_url: studentObj.college_url,
+                course: studentObj.course,
+                branch: studentObj.branch,
+                semester: studentObj.semester,
+              }),
+            }).catch(() => {});
+          }
+
           return { access_token: data.session.access_token, token_type: 'bearer' };
         }
       } catch (supaErr) {
@@ -257,7 +267,7 @@ export const api = {
     if (usersDb[normalizedEmail]) {
       const record = usersDb[normalizedEmail];
       if (record.password && record.password !== password) {
-        throw new Error('Invalid email or password. Please verify your credentials.');
+        throw new Error('Incorrect email or password. Please verify your credentials.');
       }
       const token = `eb_tok_${Date.now()}`;
       localStorage.setItem('exambuddy_token', token);
@@ -296,7 +306,7 @@ export const api = {
     }
 
     // 5. Account not found or wrong credentials: REJECT LOGIN!
-    throw new Error('Invalid email or password. Please check your credentials or register for an account.');
+    throw new Error('Incorrect email or password. Please check your credentials or register for an account.');
   },
 
   async register(studentData: {
@@ -328,6 +338,20 @@ export const api = {
         if (data && data.access_token) {
           localStorage.setItem('exambuddy_token', data.access_token);
         }
+
+        // Also best-effort register/sync to Supabase cloud auth
+        if (isSupabaseConfigured) {
+          supabaseAuth.signUp({
+            email: normalizedEmail,
+            password: studentData.password,
+            name: studentData.name,
+            college_url: studentData.college_url,
+            course: studentData.course,
+            branch: studentData.branch,
+            semester: studentData.semester,
+          }).catch((err) => console.warn('Supabase cloud signup sync:', err));
+        }
+
         return data;
       } catch (err: any) {
         if (err.message && !err.message.includes('fetch') && !err.message.includes('NetworkError') && !err.message.includes('Failed')) {
@@ -1170,6 +1194,67 @@ export const api = {
         syllabus_document: null,
       };
     }
+  },
+
+  /**
+   * Send a query or problem to ExamBuddy AI Copilot Chatbot.
+   */
+  async sendChatMessage(payload: {
+    message: string;
+    history?: { role: string; content: string }[];
+    context?: Record<string, any>;
+    api_key?: string;
+    provider?: string;
+    model?: string;
+  }): Promise<{ reply: string; suggested_actions?: string[]; provider_used?: string }> {
+    if (API_BASE) {
+      try {
+        return await request('/chat', {
+          method: 'POST',
+          body: JSON.stringify(payload),
+        });
+      } catch (err: any) {
+        if (err?.message && !err.message.includes('Failed to fetch') && !err.message.includes('NetworkError')) {
+          throw err;
+        }
+        console.warn('Backend chat API call failed, using client fallback:', err);
+      }
+    }
+
+    const msg = payload.message.toLowerCase();
+    const sem = payload.context?.semester || '2';
+    if (msg.includes('dijkstra') || msg.includes('prim')) {
+      return {
+        reply: "### 🌿 **Dijkstra's Algorithm (Greedy)**\n\nFinds single-source shortest paths on weighted directed/undirected graphs with **non-negative weights**.\n- **Data Structure**: Min-Heap Priority Queue\n- **Time Complexity**: $O((V + E) \\log V)$\n- **Relaxation Step**: `if (dist[u] + w < dist[v]) { dist[v] = dist[u] + w; }`\n\n> 🎯 **Exam Tip**: In Semester 2 exams, show the priority queue state table at each step for maximum marks.",
+        suggested_actions: ["⚡ Prim's MST Algorithm", "0/1 Knapsack DP Table", "High-Yield Topics"]
+      };
+    }
+    if (msg.includes('booth') || msg.includes('multiplication')) {
+      return {
+        reply: "### ⚡ **Booth's Multiplication Algorithm**\n\nFor multiplying signed 2's complement numbers:\n- Check bits $(Q_0, Q_{-1})$:\n  - `10` $\\implies A \\leftarrow A - M$, Arithmetic Shift Right ($ASHR$)\n  - `01` $\\implies A \\leftarrow A + M$, Arithmetic Shift Right ($ASHR$)\n  - `00` or `11` $\\implies ASHR$ only\n- Repeat for $n$ cycles (word length).\n\n> 💡 *Connect your Anthropic or OpenAI API key above to generate full custom numerical solutions live!*",
+        suggested_actions: ["K-Map Minimization", "Cache Mapping", "Logic Gates"]
+      };
+    }
+    return {
+      reply: `### 🎓 **ExamBuddy Problem Solver (Semester ${sem})**\n\nI received your problem: *"${payload.message}"*\n\nTo solve custom coding, math, numericals, or exam questions live, **connect your Anthropic Claude or OpenAI API key** using the **🔑 API Key** button at the top right of this chat window!`,
+      suggested_actions: ["🔑 Connect API Key", "🌿 Solve Dijkstra Problem", "⚡ Solve Booth's Multiplication"]
+    };
+  },
+
+  async generateTest(payload: {
+    subject: string;
+    semester?: number;
+    course?: string;
+    topic?: string;
+    difficulty?: string;
+    question_count?: number;
+    api_key?: string;
+    provider?: string;
+  }): Promise<any> {
+    return request<any>('/tests/generate', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
   },
 };
 

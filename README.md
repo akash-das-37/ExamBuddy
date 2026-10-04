@@ -1,7 +1,7 @@
 # 🎓 ExamBuddy — Autonomous AI Exam Preparation Copilot
 
 [![Live on Vercel](https://img.shields.io/badge/Vercel-Live%20Demo-black?style=for-the-badge&logo=vercel)](https://exambuddy-akr.vercel.app)
-[![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github)](https://github.com/akash-das-337/EXAM_BUDDY)
+[![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github)](https://github.com/akash-das-37/ExamBuddy)
 [![Python Version](https://img.shields.io/badge/Python-3.12%2B-blue?style=for-the-badge&logo=python)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115%2B-009688?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com)
 [![React](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react)](https://react.dev)
@@ -68,7 +68,7 @@ Students in technical fields (Computer Science, Information Technology, AI/ML, E
 ## 🌐 Live Application
 
 * **Production URL**: [https://exambuddy-akr.vercel.app](https://exambuddy-akr.vercel.app)
-* **GitHub Repository**: [https://github.com/akash-das-337/EXAM_BUDDY](https://github.com/akash-das-337/EXAM_BUDDY)
+* **GitHub Repository**: [https://github.com/akash-das-37/ExamBuddy](https://github.com/akash-das-37/ExamBuddy)
 
 ---
 
@@ -296,8 +296,8 @@ ExamBuddy/
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/akash-das-337/EXAM_BUDDY.git
-cd EXAM_BUDDY
+git clone https://github.com/akash-das-37/ExamBuddy.git
+cd ExamBuddy
 ```
 
 ---

@@ -24,11 +24,11 @@ interface NoticeItemData {
 const DEFAULT_NOTICES: NoticeItemData[] = [
   {
     id: 'nt-1',
-    title: 'Semester 2 Exam Schedule Released',
-    date: '20 Sep 2026',
+    title: 'Semester 2 Mid-Term Exam Schedule',
+    date: '03 Oct 2026',
     category: 'exams',
     description:
-      'The detailed timetable for Semester 2 (Even Semester) examinations has been released. Please check and plan your preparation accordingly.',
+      'The detailed timetable for Semester 2 Mid-Term and Practical Lab examinations starting 15th November 2026 has been published.',
     tags: [
       { label: 'Academic', type: 'academic' },
       { label: 'Exam', type: 'exam' },
@@ -39,14 +39,14 @@ const DEFAULT_NOTICES: NoticeItemData[] = [
   },
   {
     id: 'nt-2',
-    title: 'DECO Lab File Submission',
-    date: '18 Sep 2026',
+    title: 'DSA Mini-Project Submission Guidelines',
+    date: '01 Oct 2026',
     category: 'assignments',
     description:
-      'All students are required to submit their DECO lab files by 25th September 2026. Late submissions will not be accepted.',
+      'All students are required to submit their DSA mini-project reports and GitHub repository links by 16th October 2026.',
     tags: [
       { label: 'Assignment', type: 'assignment' },
-      { label: 'DECO', type: 'deco' },
+      { label: 'DSA', type: 'dsa' },
     ],
     icon: 'description',
     accentBg: '#e0f2fe',
@@ -54,33 +54,33 @@ const DEFAULT_NOTICES: NoticeItemData[] = [
   },
   {
     id: 'nt-3',
-    title: 'College Holiday Notice',
-    date: '15 Sep 2026',
-    category: 'college',
-    description:
-      'The college will remain closed on 2nd October 2026 on account of Gandhi Jayanti.',
-    tags: [
-      { label: 'College', type: 'college' },
-      { label: 'Holiday', type: 'holiday' },
-    ],
-    icon: 'info',
-    accentBg: '#dcfce7',
-    accentColor: '#16a34a',
-  },
-  {
-    id: 'nt-4',
-    title: 'Tech Talk: Career Opportunities in AI',
-    date: '14 Sep 2026',
+    title: 'Inter-College AI Hackathon 2026',
+    date: '28 Sep 2026',
     category: 'events',
     description:
-      'A guest lecture on "Career Opportunities in AI" will be held on 28th September 2026 at 3:00 PM in the Auditorium. All students are encouraged to attend.',
+      'Registrations are open for the annual Tech Fest and 24-hour AI Hackathon scheduled on 25th October 2026 in the main auditorium.',
     tags: [
       { label: 'Event', type: 'event' },
-      { label: 'AI', type: 'ai' },
+      { label: 'Hackathon', type: 'hackathon' },
     ],
     icon: 'group',
     accentBg: '#ede9fe',
     accentColor: '#7c3aed',
+  },
+  {
+    id: 'nt-4',
+    title: 'Semester 2 End-Term Examination Notice',
+    date: '25 Sep 2026',
+    category: 'academic',
+    description:
+      'University Semester 2 End-Term Examinations will commence from 10th December 2026. Examination portal registration opens next month.',
+    tags: [
+      { label: 'Academic', type: 'academic' },
+      { label: 'Notice', type: 'notice' },
+    ],
+    icon: 'feed',
+    accentBg: '#ffedd5',
+    accentColor: '#f97316',
   },
   {
     id: 'nt-5',
@@ -111,35 +111,35 @@ interface ImportantDateItem {
 const IMPORTANT_DATES: ImportantDateItem[] = [
   {
     id: 'id-1',
-    day: '25',
-    month: 'Sep',
+    day: '16',
+    month: 'Oct',
     color: 'red',
-    title: 'DECO Lab File Submission',
+    title: 'DSA Mini-Project Submission',
     subtitle: 'Assignment Deadline',
   },
   {
     id: 'id-2',
-    day: '28',
-    month: 'Sep',
+    day: '25',
+    month: 'Oct',
     color: 'blue',
-    title: 'Tech Talk: Career Opportunities in AI',
+    title: 'Inter-College AI Hackathon & Tech Fest',
     subtitle: 'College Event',
   },
   {
     id: 'id-3',
-    day: '02',
-    month: 'Oct',
-    color: 'green',
-    title: 'Gandhi Jayanti',
-    subtitle: 'College Holiday',
+    day: '15',
+    month: 'Nov',
+    color: 'purple',
+    title: 'Semester 2 Mid-Terms & Practical Exams',
+    subtitle: 'Examination',
   },
   {
     id: 'id-4',
     day: '10',
-    month: 'Oct',
-    color: 'purple',
-    title: 'Semester 2 Exams Begin',
-    subtitle: 'Examination',
+    month: 'Dec',
+    color: 'green',
+    title: 'Semester 2 End-Term Examinations',
+    subtitle: 'University Exam',
   },
 ];
 

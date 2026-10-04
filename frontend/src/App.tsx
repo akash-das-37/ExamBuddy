@@ -11,8 +11,10 @@ import { StudyReportPage } from './pages/StudyReportPage';
 import { SyllabusPage } from './pages/SyllabusPage';
 import { PyqPage } from './pages/PyqPage';
 import { SuggestionsPage } from './pages/SuggestionsPage';
+import { TestPage } from './pages/TestPage';
 import { EditProfileModal } from './components/EditProfileModal';
 import { SettingsPage } from './pages/SettingsPage';
+import { AiChatbot } from './components/AiChatbot';
 import { aiCollegeScraper, deriveCollegeNameFromUrl } from './services/aiCollegeScraper';
 import type { College, Notice, Student } from './types';
 
@@ -293,7 +295,7 @@ export const App: React.FC = () => {
       {/* Toast Notification */}
       {toast && (
         <div
-          className={`fixed bottom-5 right-5 z-50 px-4 py-2.5 rounded-xl text-xs font-semibold shadow-2xl flex items-center gap-2 border animate-fade-in ${
+          className={`fixed bottom-24 right-6 z-50 px-4 py-2.5 rounded-xl text-xs font-semibold shadow-2xl flex items-center gap-2 border animate-fade-in ${
             toast.type === 'success'
               ? 'bg-emerald-950/90 text-emerald-200 border-emerald-500/50'
               : toast.type === 'error'
@@ -307,6 +309,9 @@ export const App: React.FC = () => {
           <span>{toast.message}</span>
         </div>
       )}
+
+      {/* Floating AI Chatbot in bottom right corner */}
+      <AiChatbot student={student} onNavigateTab={setActiveTab} />
 
       {/* Edit Profile Modal */}
       {student && (
@@ -367,6 +372,10 @@ export const App: React.FC = () => {
 
           {activeTab === 'suggestions' && (
             <SuggestionsPage student={student} onNavigateTab={setActiveTab} />
+          )}
+
+          {activeTab === 'test' && (
+            <TestPage student={student} onNavigateTab={setActiveTab} />
           )}
 
           {activeTab === 'notices' && (

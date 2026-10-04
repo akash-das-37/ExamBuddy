@@ -34,10 +34,15 @@ class Settings(BaseSettings):
     AGENT_MAX_FILE_SIZE_MB: int = 50
     AGENT_MIN_CONFIDENCE_SCORE: float = 25.0
 
-    # LLM Settings (Anthropic Claude API)
+    # LLM Settings (Anthropic Claude, OpenAI, and Google Gemini)
     ANTHROPIC_API_KEY: str | None = None
     ANTHROPIC_FAST_MODEL: str = "claude-3-5-haiku-20241022"
     ANTHROPIC_EXTRACT_MODEL: str = "claude-3-5-sonnet-20241022"
+    OPENAI_API_KEY: str | None = None
+    OPENAI_MODEL: str = "gpt-4o-mini"
+    GEMINI_API_KEY: str | None = None
+    GEMINI_MODEL: str = "gemini-2.5-flash"
+    BACKBOARD_API_KEY: str | None = None
     LLM_MAX_INPUT_TOKENS: int = 25000
 
     # Email Settings (Resend API)

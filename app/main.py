@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.core.config import get_settings
-from app.routers import analysis, auth, colleges, notifications, syllabus_agent
+from app.routers import analysis, auth, chat, colleges, notifications, syllabus_agent, tests
 
 settings = get_settings()
 
@@ -48,6 +48,8 @@ app.include_router(colleges.router)
 app.include_router(notifications.router)
 app.include_router(analysis.router)
 app.include_router(syllabus_agent.router)
+app.include_router(chat.router)
+app.include_router(tests.router)
 
 
 @app.get("/health", tags=["System"])
